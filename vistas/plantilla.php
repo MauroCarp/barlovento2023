@@ -366,8 +366,8 @@ if($_SESSION["perfil"] == 'Agro' OR $_SESSION["perfil"] == 'Administrador Agro' 
 
 <?php
 }
-// SOLO EN AGRO
 
+// SOLO EN AGRO
 
 if($_SESSION["perfil"] == 'Agro' OR $_SESSION["perfil"] == 'Administrador Agro'){
 ?>
@@ -392,7 +392,17 @@ if($_SESSION["perfil"] == 'Ganadero' OR $_SESSION["perfil"] == 'Administrador Ga
 
 <?php
 }
+
+if($_SESSION['perfil'] == 'Trazabilidad'){ ?>
+
+  <script src="vistas/js/trazabilidad/trazabilidad.js"></script>
+
+<?php
+
+}
+
 ?>
+
 
 
 </body>

@@ -21,16 +21,50 @@
   </section>
 
   <section class="content">
-    <h1>Trazabilidad</h1>
-    <div class="row">
 
-          <div class="col-lg-12" style="padding: 50px">
-            <br>
-            <img src="vistas/img/plantilla/logo-barlovento.png" style="width:100%;">
+    <div class="box">
+
+      <div class="box-header with-border">
+
+        <button class="btn btn-primary" id="btn-faena">
           
-          </div>
+          Ingresar nueva Faena
 
-    </div>
+        </button>
+
+      </div>
+
+      <div class="box-body">
+        
+      <table class="table table-bordered table-striped dt-responsive tablas" width="100%">
+        
+        <thead>
+        
+        <tr>
+          
+          <th>Faena</th>
+          <th>Fecha</th>
+          <th style="width:50px;"></th>
+
+        </tr> 
+
+        </thead>
+
+        <tbody>
+
+        <?php
+
+          
+
+        ?> 
+
+        </tbody>
+
+      </table>
+
+      </div>
+
+      </div>
 
   </section>
  

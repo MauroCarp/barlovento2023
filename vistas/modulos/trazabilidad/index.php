@@ -176,14 +176,28 @@
         
                                   <div class="btn-group">
                                     <button class="btn btn-info btn-xl dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Reportes <i class="fa fa-files-o"></i> | &nbsp  <span class="caret"></span>
+                                      Reporte 1 <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
                                       <li>  
-                                        <a href="extensiones/tcpdf/pdf/reporteFaena1.php?idFaena=' . $faena['id'] . '" target="_blank">Reporte 1</a>  
+                                        <a href="extensiones/tcpdf/pdf/reporteFaena1.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-pdf-o"></i> Pdf </a>  
                                       </li>  
                                       <li>  
-                                        <a href="index.php?ruta=trazabilidad/reporte2&idFaena=' . $faena['id'] . '" target="_blank">Reporte 2</a>  
+                                        <a href="extensiones/phpExcel/reporteFaena1.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-excel-o"></i>Excel</a>  
+                                      </li>  
+                                    </ul>
+                                  </div>
+                                  
+                                  <div class="btn-group">
+                                    <button class="btn btn-info btn-xl dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Reporte 2 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                      <li>  
+                                        <a href="extensiones/tcpdf/pdf/reporteFaena2.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-pdf-o"></i> Pdf </a>  
+                                      </li>  
+                                      <li>  
+                                        <a href="extensiones/phpExcel/reporteFaena2.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-excel-o"></i>Excel</a>  
                                       </li>  
                                     </ul>
                                   </div>

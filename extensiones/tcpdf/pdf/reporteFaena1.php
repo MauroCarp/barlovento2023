@@ -26,7 +26,7 @@ $fecha = date('d-m-Y',strtotime($data['faena']['fecha']));
 $html = <<<EOF
  
 <h2>Reporte Principal Trazabilidad</h2>
-<h3>$nombre - $fecha</h3>
+<h3>$nombre | $fecha</h3>
 
 <table>
     <tr style="text-decoration:underline">
@@ -49,7 +49,7 @@ foreach ($data['animales'] as $key => $value) {
                 <td>' . $value['kgEgreso']. '</td>
                 <td>' . $value['clasificacion']. '</td>
                 <td>' . $value['kilos']. '</td>
-                <td>' . $value['tipificacion']. '</td>
+                <td>' . $value['tipificacion']. ' - ' . $value['gordo'] . '</td>
                 <td>' . $value['convMS']. '</td>
                 <td>' . $value['proveedor']. '</td>
             </tr>';

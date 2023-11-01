@@ -529,6 +529,12 @@ class ControladorTrazabilidad{
 		return ModeloTrazabilidad::mdlCargarExcel($tabla,$campos,$dataSql);
 
 	}
+
+	static public function ctrEliminarFaena($idFaena){
+
+		return ModeloTrazabilidad::mdlEliminarFaena($idFaena);
+		
+	}
 	
 }
 	

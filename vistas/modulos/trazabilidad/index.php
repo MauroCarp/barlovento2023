@@ -49,7 +49,7 @@
                       <div class="form-group">
       
                         <label for="nombreFaena">Nombre</label>
-                        <input type="text" class="form-control" name="nombreFaena" id="nombreFaena" required>
+                        <input type="text" class="form-control" name="nombreFaena" id="nombreFaena" value="MAuro">
       
                       </div>
       
@@ -63,7 +63,7 @@
                           <i class="fa fa-calendar"></i>
                           </div>
       
-                          <input type="date" class="form-control pull-right" id="fechaFaena" name="fechaFaena" required>
+                          <input type="date" class="form-control pull-right" id="fechaFaena" name="fechaFaena" value="2023-10-31">
                         </div>
       
                       </div>
@@ -72,7 +72,7 @@
 
                     <div class="col-lg-4" align="center">
 
-                      <button style="border-radius:5px;padding:5px 20px;background-color:transparent;font-family:calibri;color:rgb(200,200,200);font-size:2em;" id="btnPaso1">
+                      <button type="button" style="border-radius:5px;padding:5px 20px;background-color:transparent;font-family:calibri;color:rgb(200,200,200);font-size:2em;" id="btnPaso1">
                         <i class="fa fa-arrow-right" style="font-size:5em;"></i><br>
                         <b>Continuar</b>
                       </button>
@@ -88,21 +88,21 @@
                       <div class="form-group">
 
                         <label for="excelTD">Excel Toma Decisión</label>
-                        <input type="file" id="excelTD" required>
+                        <input type="file" name="excelTD" id="excelTD" required>
 
                       </div>
 
                       <div class="form-group">
 
                         <label for="excelWC">Excel Wincampo</label>
-                        <input type="file" id="excelWC" required>
+                        <input type="file" name="excelWC" id="excelWC" required>
 
                       </div>
 
                       <div class="form-group">
 
                         <label for="excelTrazabilidad">Excel Trazabilidad</label>
-                        <input type="file" id="excelTrazabilidad" required>
+                        <input type="file" name="excelTrazabilidad" id="excelTrazabilidad" required>
 
                       </div>
 
@@ -110,12 +110,12 @@
 
                     <div class="col-lg-4" align="center">
 
-                      <button style="border-radius:5px;padding:5px 20px;background-color:transparent;font-size:2em;font-family:calibri;color:rgb(200,200,200);margin-bottom:5px" id="btnVolver">
+                      <button type="button" style="border-radius:5px;padding:5px 20px;background-color:transparent;font-size:2em;font-family:calibri;color:rgb(200,200,200);margin-bottom:5px" id="btnVolver">
                         <i class="fa fa-arrow-left"></i>
                         <b>Volver</b>
                       </button>
 
-                      <button type="submit" style="border-radius:5px;padding:5px 20px;background-color:transparent;font-family:calibri;color:rgb(200,200,200);font-size:2em;" id="btnPaso2">
+                      <button type="submit" style="border-radius:5px;padding:5px 20px;background-color:transparent;font-family:calibri;color:rgb(200,200,200);font-size:2em;" name="btnCargarFaena" id="btnCargarFaena">
                         <i class="fa fa-upload" style="font-size:5em;"></i><br>
                         <b>Cargar</b>
                       </button>
@@ -218,7 +218,8 @@
 
 <?php 
 
-$nuevaFaena = new ControladorTrazabilidad();
-$nuevaFaena-> ctrNuevaFaena();
+$nuevaFaena = new ControladorTrazabilidad;
+
+$nuevaFaena->ctrNuevaFaena();
 
 ?>

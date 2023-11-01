@@ -180,7 +180,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                       <li>  
-                                        <a href="index.php?ruta=trazabilidad/reporte1&idFaena=' . $faena['id'] . '" target="_blank">Reporte 1</a>  
+                                        <a href="extensiones/tcpdf/pdf/reporteFaena1.php?idFaena=' . $faena['id'] . '" target="_blank">Reporte 1</a>  
                                       </li>  
                                       <li>  
                                         <a href="index.php?ruta=trazabilidad/reporte2&idFaena=' . $faena['id'] . '" target="_blank">Reporte 2</a>  

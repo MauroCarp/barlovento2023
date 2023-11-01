@@ -535,6 +535,27 @@ class ControladorTrazabilidad{
 		return ModeloTrazabilidad::mdlEliminarFaena($idFaena);
 		
 	}
+
+
+	static public function ctrDataReporte1($idFaena){
+
+		
+		$tabla = 'faenas';
+		$dataFaena = ModeloTrazabilidad::mdlDataReporte1($idFaena,$tabla);
+		
+		$tabla1 = 'tdanimales';
+		$tabla2 = 'trazanimales';
+		$tabla3 = 'wcanimales';
+		$dataAnimales = ModeloTrazabilidad::mdlDataReporte1($idFaena,$tabla1,$tabla2,$tabla3);
+
+		return array('faena'=>$dataFaena,'animales'=>$dataAnimales);
+		
+		
+
+
+	}
+
+
 	
 }
 	

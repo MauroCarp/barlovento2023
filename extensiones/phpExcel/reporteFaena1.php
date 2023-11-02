@@ -24,9 +24,11 @@ $fecha = date('d-m-Y',strtotime($data['faena']['fecha']));
 
 $hoja = $objPHPExcel->setActiveSheetIndex(0);
 
-$hoja->mergeCells('A1:I1');
+$hoja->mergeCells('A1:F1');
+$hoja->mergeCells('G1:H1');
 $hoja->mergeCells('A2:C2');
 $hoja->setCellValue('A1', 'Reporte Principal Trazabilidad')
+     ->setCellValue('G1', )
      ->setCellValue('A2', $nombre . ' | ' . $fecha)
      ->setCellValue('A3', 'Caravana')
      ->setCellValue('B3', 'Garrón')
@@ -75,7 +77,7 @@ $index = 4;
 
 foreach ($data['animales'] as $value) {
     
-    $hoja->setCellValue('A' . $index, $value['rfid'])
+    $hoja->setCellValue('A' . $index, $value['rfidTD'])
          ->setCellValue('B' . $index, $value['garron'])
          ->setCellValue('C' . $index, $value['kgEgreso'])
          ->setCellValue('D' . $index, $value['clasificacion'])
@@ -90,7 +92,7 @@ foreach ($data['animales'] as $value) {
 
 $hoja->calculateColumnWidths();
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Reporte Principal Faena.xlsx"');
+header('Content-Disposition: attachment;filename="Reporte Principal Trazabilidad.xlsx"');
 header('Cache-Control: max-age=0');
 
 

@@ -174,33 +174,8 @@
         
                                 <div class="btn-group" role="group" aria-label="...">
         
-                                  <div class="btn-group">
-                                    <button class="btn btn-info btn-xl dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Reporte 1 <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                      <li>  
-                                        <a href="extensiones/tcpdf/pdf/reporteFaena1.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-pdf-o"></i> Pdf </a>  
-                                      </li>  
-                                      <li>  
-                                        <a href="extensiones/phpExcel/reporteFaena1.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-excel-o"></i>Excel</a>  
-                                      </li>  
-                                    </ul>
-                                  </div>
-                                  
-                                  <div class="btn-group">
-                                    <button class="btn btn-info btn-xl dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Reporte 2 <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                      <li>  
-                                        <a href="extensiones/tcpdf/pdf/reporteFaena2.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-pdf-o"></i> Pdf </a>  
-                                      </li>  
-                                      <li>  
-                                        <a href="extensiones/phpExcel/reporteFaena2.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-excel-o"></i>Excel</a>  
-                                      </li>  
-                                    </ul>
-                                  </div>
+                                  <a class="btn btn-info btn-xl"" href="extensiones/phpExcel/reporteFaena1.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-excel-o"></i> Reporte 1</a>  
+                                  <a class="btn btn-info btn-xl"" href="extensiones/phpExcel/reporteFaena2.php?idFaena=' . $faena['id'] . '" target="_blank"><i class="fa fa-file-excel-o"></i> Reporte 2</a>  
                                   
                                   <button class="btn btn-danger btnEliminarFaena" idFaena="' . $faena['id'] . '"><i class="fa fa-times"></i></button>
                                   

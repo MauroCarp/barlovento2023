@@ -24,12 +24,27 @@ $nombre = $data['faena']['nombre'];
 $fecha = date('d-m-Y',strtotime($data['faena']['fecha']));
 
 $html = <<<EOF
- 
-<h2>Reporte Principal Trazabilidad</h2>
-<h3>$nombre | $fecha</h3>
+
 
 <table>
-    <tr style="text-decoration:underline">
+    <tr>
+        <td>
+            <h2>Reporte Principal Trazabilidad</h2>
+        </td>
+        <td align="right" style="padding-top:10px;">
+            <img src="../../../vistas/img/plantilla/logo-barlovento-impresion.png" width="200px" height="auto">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h3>$nombre | $fecha</h3>
+        </td>
+    </tr>
+</table>
+
+
+<table>
+    <tr style="font-size:.8em;text-decoration:underline">
         <th>Caravana</th>
         <th>Garr&oacute;n</th>
         <th>Peso Vivo</th>
@@ -43,7 +58,7 @@ EOF;
 
 foreach ($data['animales'] as $key => $value) {
     $color = ($key % 2) ? 'rgb(220,220,220)' : 'white';
-    $html .='<tr style="line-height:20em;background-color:' . $color . '">
+    $html .='<tr style="font-size:.7em;line-height:20em;background-color:' . $color . '">
                 <td>' . $value['rfid']. '</td>
                 <td>' . $value['garron']. '</td>
                 <td>' . $value['kgEgreso']. '</td>

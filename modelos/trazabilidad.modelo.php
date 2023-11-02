@@ -89,7 +89,22 @@ class ModeloTrazabilidad{
 
 		if($tabla != 'faenas'){
 
-			$stmt = Conexion::conectar()->prepare("SELECT trazanimales.rfid,trazanimales.garron,wcanimales.kgEgreso,tdanimales.clasificacion,trazanimales.kilos,trazanimales.tipificacion,trazanimales.gordo,wcanimales.convMS,wcanimales.proveedor FROM $tabla INNER JOIN $tabla2 ON $tabla.rfid = $tabla2.rfid INNER JOIN $tabla3 ON $tabla.rfid = $tabla3.rfid WHERE $tabla.idFaena = :idFaena");
+			$stmt = Conexion::conectar()->prepare("SELECT $tabla.rfid as rfidTD,
+														  $tabla.mmGrasa,	
+														  $tabla.peso,	
+														  $tabla.sexo,	
+														  $tabla.clasificacion,	
+														  $tabla.aob,	
+														  $tabla.refEco,	
+														  $tabla2.rfid as rfidTrazabilidad,
+														  $tabla2.correlacion,
+														  $tabla2.garron,
+														  $tabla2.kilos,
+														  $tabla2.denominacion,
+														  $tabla2.tipificacion,
+														  $tabla2.gordo,
+														  $tabla2.den,
+														  $tabla3.* FROM $tabla INNER JOIN $tabla2 ON $tabla.rfid = $tabla2.rfid INNER JOIN $tabla3 ON $tabla.rfid = $tabla3.rfid WHERE $tabla.idFaena = :idFaena AND $tabla2.idFaena = :idFaena AND $tabla3.idFaena = :idFaena");
 	
 			$stmt -> bindParam(":idFaena", $idFaena, PDO::PARAM_STR);
 	

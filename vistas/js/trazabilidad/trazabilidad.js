@@ -48,8 +48,13 @@ $('.tablaFaenas').on('click','.btnEliminarFaena',function(){
                 method:'post',
                 url,
                 data,
+                beforeSend:function(){
+                    node.find('i').removeClass('fa-times')
+                    node.find('i').addClass('fa-spinner')
+                    node.attr('disabled','disabled')
+                    return
+                },
                 success:function(response){
-                    console.log(response)
 
                     swal({
 
@@ -70,4 +75,11 @@ $('.tablaFaenas').on('click','.btnEliminarFaena',function(){
 
     })
 
+})
+
+
+$('#btnCargarFaena').on('click',function(e){
+    e.preventDefault();
+
+    $('#btnCargarFaena').html(`<img src="vistas/img/plantilla/loader.gif" width="150px">`)
 })

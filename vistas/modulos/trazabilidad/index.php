@@ -49,7 +49,7 @@
                       <div class="form-group">
       
                         <label for="nombreFaena">Nombre</label>
-                        <input type="text" class="form-control" name="nombreFaena" id="nombreFaena">
+                        <input type="text" class="form-control" name="nombreFaena" id="nombreFaena" value="Prueba">
       
                       </div>
       
@@ -63,7 +63,7 @@
                           <i class="fa fa-calendar"></i>
                           </div>
       
-                          <input type="date" class="form-control pull-right" id="fechaFaena" name="fechaFaena">
+                          <input type="date" class="form-control pull-right" id="fechaFaena" name="fechaFaena" value="2023-11-02">
                         </div>
       
                       </div>

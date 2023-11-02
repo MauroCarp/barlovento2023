@@ -62,9 +62,9 @@ class ControladorTrazabilidad{
 									if ($rowValida){	
 
 										if(in_array($Row[1],$rfidsTemp)){
-											
+
 											echo '<script>
-													alert("El RFID ' . $Row[1] . ' se repite en la planilla de Trazabilidad. La carga de uno de ellos no sera realiazada")
+													alert("El RFID ' . $Row[1] . ' se repite en la planilla de Toma de Decisión. La carga de uno de ellos no sera realiazada")
 												  </script>';
 										}
 
@@ -80,8 +80,8 @@ class ControladorTrazabilidad{
 										$rfidsTemp[] = $Row[1];
 										
 									}
-									
-									if ($rowNumber == 6){
+
+									if ($rowNumber == 14){
 
 										if($Row[0] == 'Fecha'){
 											$rowValida = true;
@@ -286,7 +286,7 @@ class ControladorTrazabilidad{
 								foreach ($Reader as $Row){
 
 									if ($rowValida){			
-										
+
 										if($Row[0] != ''){
 											$rfid = $Row[0]; 
 											$rfidTemp = $Row[0];
@@ -295,7 +295,7 @@ class ControladorTrazabilidad{
 										}
 
 										if(in_array($rfidTemp,$rfidsTemp) && $rfidTemp != ''){
-											
+
 											echo '<script>
 													alert("El RFID ' . $rfidTemp . ' se repite en la planilla de Trazabilidad. La carga de uno de ellos no sera realiazada")
 												  </script>';
@@ -316,7 +316,7 @@ class ControladorTrazabilidad{
 									
 									if ($rowNumber == 0){
 
-										if($Row[0] == 'Caravana'){
+										if($Row[0] == 'CARAVANA' || $Row[0] == 'Carvana'){
 											$rowValida = true;
 										} else {
 
@@ -348,7 +348,7 @@ class ControladorTrazabilidad{
 								}
 									
 							}
-								
+
 							$rfidsTemp = array();
 							
 						} else {
@@ -373,7 +373,7 @@ class ControladorTrazabilidad{
 							</script>';
 							die();				
 						}
-						
+
 						// CARGA DE EXCELS
 						$tabla = 'tdanimales';
 						

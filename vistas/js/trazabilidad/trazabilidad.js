@@ -79,7 +79,5 @@ $('.tablaFaenas').on('click','.btnEliminarFaena',function(){
 
 
 $('#btnCargarFaena').on('click',function(e){
-    e.preventDefault();
-
     $('#btnCargarFaena').html(`<img src="vistas/img/plantilla/loader.gif" width="150px">`)
 })

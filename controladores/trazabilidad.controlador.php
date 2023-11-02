@@ -34,7 +34,8 @@ class ControladorTrazabilidad{
 						$dataTD = array();
 						$dataWC = array();
 						$dataTrazabilidad = array();
-
+						$rfidsTemp = array();
+						
 						// TOMA DE DATOS CARGA EXCEL TD
 						if(in_array($_FILES["excelTD"]["type"],$allowedFileType)){
 			
@@ -58,8 +59,15 @@ class ControladorTrazabilidad{
 
 									if($Row[0] == 'KG TOTAL') $rowValida = false;
 
-									if ($rowValida){			
-										
+									if ($rowValida){	
+
+										if(in_array($Row[1],$rfidsTemp)){
+											
+											echo '<script>
+													alert("El RFID ' . $Row[1] . ' se repite en la planilla de Trazabilidad. La carga de uno de ellos no sera realiazada")
+												  </script>';
+										}
+
 										$dataTD[] = array(
 											'rfid'	 =>$Row[1],
 											'mmGrasa'=>$Row[2],
@@ -68,6 +76,9 @@ class ControladorTrazabilidad{
 											'clasificacion'=>$Row[5],
 											'aob'	=>$Row[6],
 											'refEco'=>$Row[7]);
+
+										$rfidsTemp[] = $Row[1];
+										
 									}
 									
 									if ($rowNumber == 6){
@@ -76,7 +87,7 @@ class ControladorTrazabilidad{
 											$rowValida = true;
 										} else {
 
-											// TODO ELIMINAR FAENA CREADA Y SUS ENLAZADOS
+											ModeloTrazabilidad::mdlEliminarFaena($idFaena);
 
 											echo '<script>
 
@@ -105,6 +116,8 @@ class ControladorTrazabilidad{
 								}
 									
 							}
+
+							$rfidsTemp = array();
 										
 						} else {
 
@@ -154,6 +167,13 @@ class ControladorTrazabilidad{
 
 									if ($rowValida){			
 										
+										if(in_array($Row[3],$rfidsTemp)){
+											
+											echo '<script>
+													alert("El RFID ' . $Row[3] . ' se repite en la planilla de Trazabilidad. La carga de uno de ellos no sera realiazada")
+												  </script>';
+										}
+
 										$dataWC[] = array('tropa' 		=> $Row[2],
 														  'rfid'		=> str_replace('9990540000','',$Row[3]),
 														  'caravana'	=> $Row[4],
@@ -179,6 +199,8 @@ class ControladorTrazabilidad{
 														  'clienteDestinoVenta'=> $Row[30],
 														  'corral'=> $Row[32]
 										);
+
+										$rfidsTemp[] = $Row[3];
 										
 									}
 									
@@ -214,7 +236,9 @@ class ControladorTrazabilidad{
 								}
 									
 							}
-										
+							
+							$rfidsTemp = array();
+							
 						} else {
 
 							ModeloTrazabilidad::mdlEliminarFaena($idFaena);
@@ -263,7 +287,19 @@ class ControladorTrazabilidad{
 
 									if ($rowValida){			
 										
-										$rfid = ($Row[0] != '') ? $Row[0] : $rfid;
+										if($Row[0] != ''){
+											$rfid = $Row[0]; 
+											$rfidTemp = $Row[0];
+										} else {
+											$rfidTemp = '';
+										}
+
+										if(in_array($rfidTemp,$rfidsTemp) && $rfidTemp != ''){
+											
+											echo '<script>
+													alert("El RFID ' . $rfidTemp . ' se repite en la planilla de Trazabilidad. La carga de uno de ellos no sera realiazada")
+												  </script>';
+										}
 
 										$dataTrazabilidad[] = array('rfid'		   => $rfid,
 																	'correlacion'  => $Row[1],
@@ -274,6 +310,8 @@ class ControladorTrazabilidad{
 																	'gordo'		   => $Row[6],
 																	'den'		   => $Row[7]);
 										
+										$rfidsTemp[] = $rfidTemp;
+
 									}
 									
 									if ($rowNumber == 0){
@@ -282,7 +320,7 @@ class ControladorTrazabilidad{
 											$rowValida = true;
 										} else {
 
-											// TODO ELIMINAR FAENA CREADA Y SUS ENLAZADOS
+											ModeloTrazabilidad::mdlEliminarFaena($idFaena);
 
 											echo'<script>
 
@@ -310,7 +348,9 @@ class ControladorTrazabilidad{
 								}
 									
 							}
-										
+								
+							$rfidsTemp = array();
+							
 						} else {
 
 							ModeloTrazabilidad::mdlEliminarFaena($idFaena);

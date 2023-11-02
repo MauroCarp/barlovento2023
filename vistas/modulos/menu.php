@@ -22,6 +22,11 @@
 					$inicio = 'contable';
 					break;
 
+				case 'Administrador Trazabilidad':
+				case 'Trazabilidad':
+					$inicio = 'trazabilidad';
+					break;
+
 				default:
 					# code...
 					break;
@@ -564,7 +569,7 @@
 
 				}
 
-				if($_SESSION["perfil"] == "Master" OR $_SESSION["usuario"] == "Gruben" OR $_SESSION["usuario"] == "Aruben" OR $_SESSION["usuario"] == "Cruben" OR $_SESSION["usuario"] == "tecnicoAgro" OR $_SESSION["usuario"] == "tecnicoGanadero" OR $_SESSION["usuario"] == "tecnicoContable"){
+				if($_SESSION["perfil"] == "Master" OR $_SESSION["usuario"] == "Gruben" OR $_SESSION["usuario"] == "Aruben" OR $_SESSION["usuario"] == "Cruben" OR $_SESSION["usuario"] == "tecnicoGanadero" OR $_SESSION["usuario"] == "tecnicoContable"){
 
 					echo '<li>
 			

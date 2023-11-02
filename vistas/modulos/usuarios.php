@@ -233,6 +233,8 @@ MODAL AGREGAR USUARIO
 
                   <option value="Contable">Contable</option>
 
+                  <option value="Trazabilidad">Trazabilidad</option>
+
                 </select>
 
               </div>
@@ -407,6 +409,8 @@ MODAL EDITAR USUARIO
                   <option value="Agro">Agro</option>
 
                   <option value="Contable">Contable</option>
+
+                  <option value="Trazabilidad">Trazabilidad</option>
 
                 </select>
 

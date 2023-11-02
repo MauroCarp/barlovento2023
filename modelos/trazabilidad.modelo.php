@@ -104,7 +104,7 @@ class ModeloTrazabilidad{
 														  $tabla2.tipificacion,
 														  $tabla2.gordo,
 														  $tabla2.den,
-														  $tabla3.* FROM $tabla INNER JOIN $tabla2 ON $tabla.rfid = $tabla2.rfid INNER JOIN $tabla3 ON $tabla.rfid = $tabla3.rfid WHERE $tabla.idFaena = :idFaena AND $tabla2.idFaena = :idFaena AND $tabla3.idFaena = :idFaena");
+														  $tabla3.* FROM $tabla INNER JOIN $tabla2 ON $tabla.rfid = $tabla2.rfid INNER JOIN $tabla3 ON $tabla.rfid = $tabla3.rfid WHERE $tabla.idFaena = :idFaena AND $tabla2.idFaena = :idFaena AND $tabla3.idFaena = :idFaena ORDER BY $tabla.rfid ASC");
 	
 			$stmt -> bindParam(":idFaena", $idFaena, PDO::PARAM_STR);
 	

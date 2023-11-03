@@ -201,7 +201,12 @@ class ControladorAgro{
 
                 $respuesta = ModeloAgro::mdlCargarArchivo($tabla,$campos,implode(',',$dataSql));
 
-                echo "<script> window.location = 'index.php?ruta=agro/agro&idFaena=" . $cargaPlanificacion . "&accion=costosCultivos'</script>"
+                if($respuesta == 'ok'){
+                    echo "<script> window.location = 'index.php?ruta=agro/agro&idPlanificacion=" . $cargaPlanificacion . "&accion=costosCultivos'</script>";
+                }else{
+                    // TODO HUBO UN ERROR AL CARGAR EL EXCEL
+                }
+
             }
             
         // CARGA EJECUCION
@@ -400,19 +405,9 @@ class ControladorAgro{
 	CARGAR COSTOS
 	=============================================*/
 
-	static public function ctrCargarCostos($tabla,$item,$cultivo,$item2,$campania1,$item3,$campania2,$costo){
+	static public function ctrCargarCostos($tabla,$dataSql){
 
-        $respuesta = ControladorAgro::ctrMostrarCostos($tabla,$item,$cultivo,$item2,$campania1,$item3,$campania2);
-
-        if(empty($respuesta)){
-
-            return $respuesta = ModeloAgro::mdlCargarCostos($tabla,$item,$cultivo,$item2,$campania1,$item3,$campania2,$costo);
-            
-        }else{
-            
-            return $respuesta = ModeloAgro::mdlEditarCosto($tabla,$item,$cultivo,$item2,$campania1,$item3,$campania2,$costo);
-
-        }
+        return $respuesta = ModeloAgro::mdlCargarCostos($tabla,$dataSql);
             
 	}
 
@@ -617,6 +612,27 @@ class ControladorAgro{
             }	
 
         }
+    }
+
+    
+    /*=============================================
+	ELIMINAR ARCHIVO
+	=============================================*/
+    
+	static public function ctrCultivosPorPlanificacion($idPlanificacion){
+        
+        $tabla = 'cultivosplanificacion';
+
+        $resultado = ModeloAgro::mdlCultivosPorPlanificacion($tabla,$idPlanificacion);
+
+        $cultivos = array();
+
+        foreach ($resultado as $key => $value) {
+            $cultivos[] = $value['cultivo'];
+        }
+
+        return $cultivos;
+
     }
 }
 

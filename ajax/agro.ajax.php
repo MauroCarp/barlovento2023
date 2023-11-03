@@ -9,6 +9,8 @@ class AjaxAgro{
 	EDITAR USUARIO
 	=============================================*/	
 
+	public $campania;
+	
 	public $campania1;
 
 	public $campania2;
@@ -18,6 +20,8 @@ class AjaxAgro{
     public $etapa;
 
     public $seccion;
+
+	public $data;
 
 	public function ajaxMostrarData(){
 
@@ -100,6 +104,26 @@ class AjaxAgro{
 
 	}
 
+	public function ajaxCargarCostos(){
+
+		$tabla = 'costocultivos';
+
+		$data = (array)$this->data;
+		
+		$cultivos = (array)$data['cultivos'];
+
+		$cultivosSql = array();
+		
+		foreach ($cultivos as $cultivo => $costo) {
+
+			$cultivosSql[] = '(' . $data['idPlanificacion'] . ',"' . $cultivo . '",' . $costo . ')';
+			
+		}
+
+
+		echo ControladorAgro::ctrCargarCostos($tabla,implode(',',$cultivosSql));
+		
+	}
 }
 
 /*=============================================
@@ -151,6 +175,13 @@ if(isset($_POST["accion"])){
         $mostrarData -> ajaxCerrarCampania();
 
     }
+
+	if($accion == 'cargarCostos'){
+		$data = json_decode($_POST['data']);
+		$cargarCostos = new AjaxAgro;
+		$cargarCostos->data = $data;
+		$cargarCostos-> ajaxCargarCostos();
+	}
 
 }
 

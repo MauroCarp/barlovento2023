@@ -55,30 +55,18 @@ class ModeloAgro{
 	CARGAR COSTO
 	=============================================*/
 
-	static public function mdlCargarCostos($tabla,$item,$value,$item2,$value2,$item3,$value3,$costo){
+	static public function mdlCargarCostos($tabla,$dataSql){
 
-		$tabla = 'costo'.$tabla;
-
-		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla($item,$item2,$item3,costo) VALUES (:$item,:$item2,:$item3,:costo)");
-	
-		$stmt->bindParam(":".$item, $value, PDO::PARAM_STR);
-		$stmt->bindParam(":".$item2, $value2, PDO::PARAM_STR);
-		$stmt->bindParam(":".$item3, $value3, PDO::PARAM_STR);
-		$stmt->bindParam(":costo", $costo, PDO::PARAM_STR);
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(idPlanificacion,cultivo,costo) VALUES $dataSql");
 
 		if($stmt->execute()){
 			
 			return "ok";	
 			
 		}else{
-			return $stmt->errorInfo();
-			return 'error';
-			
+			return json_encode($stmt->errorInfo());			
 		}
 		
-		
-		$stmt = null;
-	
 
 	}
 
@@ -266,4 +254,19 @@ class ModeloAgro{
 		}
 	
 	}
+
+
+	/*=============================================
+	CULTIVOS
+	=============================================*/
+	static public function mdlCultivosPorPlanificacion($tabla,$idPlanificacion){
+
+		$stmt = Conexion::conectar()->prepare("SELECT DISTINCT(cultivo) FROM $tabla WHERE idPlanificacion = :idPlanificacion");
+		$stmt -> bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_STR);
+		$stmt -> execute();
+		
+		return $stmt -> fetchAll();
+	}
+
+
 }

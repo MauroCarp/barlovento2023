@@ -5,8 +5,6 @@
 
                 <div class="box box-widget widget-user">
     
-                    <button type="button" class="close eliminarArchivoAgro" style="padding:15px;font-size:2.5em;" campo="<?php echo $campo;?>" seccion="planificacion">&times;</button>
-
                     <div class="widget-user-header bg-aqua-active infoAgro">
 
                         <h2 class="widget-user-username">
@@ -23,42 +21,41 @@
         
                         <div class="row"  style="font-size:1.5em;">
         
-                            <div class="col-sm-3 border-right">
+                            <div class="col-sm-4 border-right">
         
-                                <div class="description-block">
-                                    <h4 class="description-text"><span id="hasTrigoPlanificacion<?php echo $campoId;?>"></span> Has. <br><span id="totalCostoTrigoPlanificacion<?php echo $campoId;?>"></span> U$D</h4>
-                                    <span class="description-text">TRIGO</span>
+                                <div class="description-block btn" data-toggle="modal" data-target="#<?=strtolower($campoId)?>FinaDetalleModal">
+
+                                    <span class="description-text" style="font-size:1.5em">FINA</span>
+                                    <h4 class="description-text">
+                                        <span id="hasTrigoPlanificacion<?php echo $campoId;?>"></span> Has. <br>
+                                        <span id="totalCostoTrigoPlanificacion<?php echo $campoId;?>"></span> U$D <br>
+                                        <span id="costoFinaPlanificacionHas<?php echo $campoId;?>"></span> U$D/Has <br>
+                                    </h4>
                                 </div>
-        
                             </div>
         
-                            <div class="col-sm-3 border-right">
+                            <div class="col-sm-4 border-right">
         
-                                <div class="description-block">
+                                <div class="description-block btn" data-toggle="modal" data-target="#<?=strtolower($campoId)?>CoberturaDetalleModal">
+                                    <span class="description-text" style="font-size:1.5em">COBERTURA</span>
                                     <h4 class="description-text">
                                         <span id="hasCoberturaPlanificacion<?php echo $campoId;?>"></span> Has. <br>
                                         <span id="totalCostoCoberturaPlanificacion<?php echo $campoId;?>"></span> U$D <br>
                                         <span id="costoCoberturaPlanificacionHas<?php echo $campoId;?>"></span> U$D/Has <br>
                                     </h4>
-                                    <span class="description-text">COBERTURA</span>
                                 </div>
         
                             </div>
         
-                            <div class="col-sm-3 border-right">
+                            <div class="col-sm-4">
         
-                                <div class="description-block">
-                                    <h4 class="description-text"><span id="hasCarinataPlanificacion<?php echo $campoId;?>"></span> Has. <br><span id="totalCostoCarinataPlanificacion<?php echo $campoId;?>"></span> U$D</h4>
-                                    <span class="description-text">CARINATA</span>
-                                </div>
-        
-                            </div>
-        
-                            <div class="col-sm-3">
-        
-                                <div class="description-block">
-                                    <h4 class="description-text"><span id="hasRestoPlanificacion<?php echo $campoId;?>"></span> Has. <br><span id="totalCostoRestoPlanificacion<?php echo $campoId;?>"></span> U$D</h4>
-                                    <span class="description-text">RESTO</span>
+                                <div class="description-block btn" data-toggle="modal" data-target="#<?=strtolower($campoId)?>GruesaDetalleModal">
+                                    <span class="description-text" style="font-size:1.5em">GRUESA</span>
+                                    <h4 class="description-text">
+                                        <span id="hasRestoPlanificacion<?php echo $campoId;?>"></span> Has. <br>
+                                        <span id="totalCostoRestoPlanificacion<?php echo $campoId;?>"></span> U$D <br>
+                                        <span id="costoGruesaPlanificacionHas<?php echo $campoId;?>"></span> U$D/Has <br>
+                                    </h4>
                                 </div>
         
                             </div>

@@ -429,156 +429,156 @@ const mostrarInfoPlanificacion = (campania)=>{
 
 }
 
-if(campania){
+// if(campania){
 
-  mostrarInfoPlanificacion(campania)
+//   mostrarInfoPlanificacion(campania)
 
-  // PLANIFICACION
-  campania = campania.split('/')
+//   // PLANIFICACION
+//   campania = campania.split('/')
 
-  let props = {
-    campo: 'LA BETY',
-    idGrafico: 'graficoPlanifiacionBety',
-    idInfo:'Bety',
-    campania1: campania[0],
-    campania2: campania[1]
-  }
+//   let props = {
+//     campo: 'LA BETY',
+//     idGrafico: 'graficoPlanifiacionBety',
+//     idInfo:'Bety',
+//     campania1: campania[0],
+//     campania2: campania[1]
+//   }
 
-  cargarInfoPlanificacion(props)
+//   cargarInfoPlanificacion(props)
 
-  props = {
-    campo: 'EL PICHI',
-    idGrafico: 'graficoPlanifiacionPichi',
-    idInfo:'Pichi',
-    campania1: campania[0],
-    campania2: campania[1]
-  }
+//   props = {
+//     campo: 'EL PICHI',
+//     idGrafico: 'graficoPlanifiacionPichi',
+//     idInfo:'Pichi',
+//     campania1: campania[0],
+//     campania2: campania[1]
+//   }
 
-  cargarInfoPlanificacion(props)
+//   cargarInfoPlanificacion(props)
 
-  // EJECUCION
+//   // EJECUCION
 
-  props = {
-    etapa: '1',
-    campania1: campania[0],
-    campania2: campania[1]
-  }
+//   props = {
+//     etapa: '1',
+//     campania1: campania[0],
+//     campania2: campania[1]
+//   }
 
-  cargarInfoEjecucion(props)
+//   cargarInfoEjecucion(props)
 
-}
+// }
 
 const btnCostosPlanificacion = document.getElementById('btnCostosPlanificacion')
 
-setTimeout(() => {
+// setTimeout(() => {
   
-  if(btnCostosPlanificacion != null){
+//   if(btnCostosPlanificacion != null){
     
-    let campania = document.getElementById('campania').innerText.split('/')
+//     let campania = document.getElementById('campania').innerText.split('/')
     
-    let [campania1,campania2] = campania
+//     let [campania1,campania2] = campania
 
-    let url = 'ajax/agro.ajax.php'
+//     let url = 'ajax/agro.ajax.php'
   
-    let data = new FormData()
-    data.append('accion','mostrarCostos')
-    data.append('cultivo','')
-    data.append('campania1',campania1)
-    data.append('campania2',campania2)
-    data.append('seccion','planificacion')
+//     let data = new FormData()
+//     data.append('accion','mostrarCostos')
+//     data.append('cultivo','')
+//     data.append('campania1',campania1)
+//     data.append('campania2',campania2)
+//     data.append('seccion','planificacion')
   
-    fetch(url,{
-      method:'post',
-      body:data
-    }).then(resp => resp.json())
-    .then(respuesta=>{
+//     fetch(url,{
+//       method:'post',
+//       body:data
+//     }).then(resp => resp.json())
+//     .then(respuesta=>{
       
-      document.getElementById('tituloCostoPlanifiacion').innerText = 'Costos Planificación'
+//       document.getElementById('tituloCostoPlanifiacion').innerText = 'Costos Planificación'
 
-      let inputs = document.createDocumentFragment()
+//       let inputs = document.createDocumentFragment()
       
-      let inputCampania1 = document.createElement('INPUT')
-      let inputCampania2 = document.createElement('INPUT')
-      inputCampania1.setAttribute('name','campania1')      
-      inputCampania2.setAttribute('name','campania2')      
-      inputCampania1.setAttribute('type','hidden')      
-      inputCampania2.setAttribute('type','hidden')     
-      inputCampania1.setAttribute('value',campania1)      
-      inputCampania2.setAttribute('value',campania2)    
+//       let inputCampania1 = document.createElement('INPUT')
+//       let inputCampania2 = document.createElement('INPUT')
+//       inputCampania1.setAttribute('name','campania1')      
+//       inputCampania2.setAttribute('name','campania2')      
+//       inputCampania1.setAttribute('type','hidden')      
+//       inputCampania2.setAttribute('type','hidden')     
+//       inputCampania1.setAttribute('value',campania1)      
+//       inputCampania2.setAttribute('value',campania2)    
        
-      inputs.appendChild(inputCampania1)
-      inputs.appendChild(inputCampania2)
+//       inputs.appendChild(inputCampania1)
+//       inputs.appendChild(inputCampania2)
 
-      respuesta.map(reg=>{
+//       respuesta.map(reg=>{
 
-        let row = document.createElement('DIV')
-        let label = row.cloneNode(true)
-        let inputDiv = row.cloneNode(true)
-        let input = document.createElement('INPUT')
+//         let row = document.createElement('DIV')
+//         let label = row.cloneNode(true)
+//         let inputDiv = row.cloneNode(true)
+//         let input = document.createElement('INPUT')
 
-        row.setAttribute('class','row')
-        row.setAttribute('style','margin-bottom:5px;')
+//         row.setAttribute('class','row')
+//         row.setAttribute('style','margin-bottom:5px;')
         
-        label.setAttribute('class','col-md-7')
+//         label.setAttribute('class','col-md-7')
         
-        inputDiv.setAttribute('class','col-md-5')
-        input.setAttribute('class','form-control costosPlanificacion')
-        input.setAttribute('type','number')
-        input.setAttribute('step','0.01')
-        input.setAttribute('name',`${reg.cultivo}Costo`)
-        input.setAttribute('id',`${reg.cultivo}Costo`)
-        input.setAttribute('required','required')
-        input.setAttribute('value', reg.costo)
+//         inputDiv.setAttribute('class','col-md-5')
+//         input.setAttribute('class','form-control costosPlanificacion')
+//         input.setAttribute('type','number')
+//         input.setAttribute('step','0.01')
+//         input.setAttribute('name',`${reg.cultivo}Costo`)
+//         input.setAttribute('id',`${reg.cultivo}Costo`)
+//         input.setAttribute('required','required')
+//         input.setAttribute('value', reg.costo)
         
-        let regex = /(\d+)/g
+//         let regex = /(\d+)/g
         
-        let cultivoNumerico = reg.cultivo.match(regex)
+//         let cultivoNumerico = reg.cultivo.match(regex)
             
-        let cultivo = reg.cultivo
+//         let cultivo = reg.cultivo
 
-        if(cultivoNumerico != null){
+//         if(cultivoNumerico != null){
 
-            let index = reg.cultivo.indexOf(cultivoNumerico[0])
+//             let index = reg.cultivo.indexOf(cultivoNumerico[0])
 
-            cultivo = reg.cultivo.split('')
-            cultivo.splice(index, 0, ' ')
-            cultivo = cultivo.join('')
+//             cultivo = reg.cultivo.split('')
+//             cultivo.splice(index, 0, ' ')
+//             cultivo = cultivo.join('')
           
-        }
+//         }
                 
-        label.innerText = capitalizarPrimeraLetra(cultivo)        
+//         label.innerText = capitalizarPrimeraLetra(cultivo)        
 
-        inputDiv.appendChild(input)
-        row.appendChild(label)
-        row.appendChild(inputDiv)
+//         inputDiv.appendChild(input)
+//         row.appendChild(label)
+//         row.appendChild(inputDiv)
 
-        inputs.appendChild(row)
+//         inputs.appendChild(row)
 
-      })
+//       })
       
-      document.getElementById('formCostosPlanificacion').appendChild(inputs)
+//       document.getElementById('formCostosPlanificacion').appendChild(inputs)
       
-    })
-    .catch(er=>console.log(er))
+//     })
+//     .catch(er=>console.log(er))
   
-  }
+//   }
 
-  // ELIMINAR DATOS PLANIFICACION⁄
-  document.querySelectorAll('.eliminarArchivoAgro').forEach(btnEliminar => {
+//   // ELIMINAR DATOS PLANIFICACION⁄
+//   document.querySelectorAll('.eliminarArchivoAgro').forEach(btnEliminar => {
 
-    btnEliminar.addEventListener('click',()=>{
+//     btnEliminar.addEventListener('click',()=>{
 
-      let campo = btnEliminar.getAttribute('campo')    
-      let seccion = btnEliminar.getAttribute('seccion')
-      let [campania1,campania2] = document.getElementById('campania').innerText.split('/')
+//       let campo = btnEliminar.getAttribute('campo')    
+//       let seccion = btnEliminar.getAttribute('seccion')
+//       let [campania1,campania2] = document.getElementById('campania').innerText.split('/')
 
-      eliminarArchivoCampo(campo,seccion,campania1,campania2)
+//       eliminarArchivoCampo(campo,seccion,campania1,campania2)
     
-    })
+//     })
     
-  });
+//   });
 
-}, 200);
+// }, 200);
 
 
 const btnMostrarCampania = document.getElementById('btnMostrarCampania')
@@ -590,6 +590,3 @@ btnMostrarCampania.addEventListener('click',(e)=>{
   window.location = 'index.php?ruta=agro/agro'
 
 })
-
-
-

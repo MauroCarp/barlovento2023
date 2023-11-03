@@ -7,35 +7,10 @@ class ModeloAgro{
 	/*=============================================
 	CARGAR ARCHIVO AGRO
 	=============================================*/
-	static public function mdlCargarArchivo($tabla,$data){
+	static public function mdlCargarArchivo($tabla,$campos,$data){
 		
-		if($tabla == 'planificacion'){
-	
-			$data = implode(',',$data);
-			
-			$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(campania1,campania2,campo,tipoCultivo,lote,has,actual,cobertura,planificado,periodoTime) VALUES $data");
-			
-		}else{
-			
-			$stmt = Conexion::conectar()->prepare("INSERT INTO 
-			$tabla(campania1,campania2,etapa,campo,lote,has,cultivo,actividad,costoActividad,actividad2,costoActividad2,periodoTime) 
-			VALUES (:campania1,:campania2,:etapa,:campo,:lote,:has,:cultivo,:actividad,:costoActividad,:actividad2,:costoActividad2,:periodoTime)");
-			
-			$stmt -> bindParam(":campania1", $data['campania1'], PDO::PARAM_STR);
-			$stmt -> bindParam(":campania2", $data['campania2'], PDO::PARAM_STR);
-			$stmt -> bindParam(":etapa", $data['etapa'], PDO::PARAM_STR);
-			$stmt -> bindParam(":campo", $data['campo'], PDO::PARAM_STR);
-			$stmt -> bindParam(":lote", $data['lote'], PDO::PARAM_STR);
-			$stmt -> bindParam(":has", $data['has'], PDO::PARAM_STR);
-			$stmt -> bindParam(":cultivo", $data['cultivo'], PDO::PARAM_STR);
-			$stmt -> bindParam(":actividad", $data['actividad'], PDO::PARAM_STR);
-			$stmt -> bindParam(":costoActividad", $data['costoActividad'], PDO::PARAM_STR);
-			$stmt -> bindParam(":actividad2", $data['actividad2'], PDO::PARAM_STR);
-			$stmt -> bindParam(":costoActividad2", $data['costoActividad2'], PDO::PARAM_STR);
-			$stmt -> bindParam(":periodoTime", $data['periodoTime'], PDO::PARAM_STR);
-			
-		}
-	
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla($campos) VALUES $data");
+
 		if($stmt->execute()){
 			
 			return "ok";	
@@ -43,12 +18,8 @@ class ModeloAgro{
 		}else{
 			
 			return $stmt->errorInfo();
-			return 'error';
 			
 		}
-				
-		$stmt = null;
-	
 	}
 
 	/*=============================================
@@ -263,4 +234,36 @@ class ModeloAgro{
 
 	}
 
+	/*=============================================
+	ULTIMA PLANIFICACION CARGADA POR CAMPAÑA
+	=============================================*/
+	static public function mdlUltimaCarga($tabla,$campania){
+
+		$stmt = Conexion::conectar()->prepare("SELECT MAX(tipo) as lastUpload FROM $tabla WHERE campania = :campania");
+		$stmt -> bindParam(":campania", $campania, PDO::PARAM_STR);
+		$stmt -> execute();
+		
+		return $stmt -> fetch();
+	}
+
+	/*=============================================
+	CARGAR PLANIFICACION
+	=============================================*/
+	static public function mdlCargarPlanificacion($tabla,$data){
+		$conexion = Conexion::conectar();
+		$stmt = $conexion->prepare("INSERT INTO $tabla(campania,tipo) VALUES(:campania,:tipo)");
+		$stmt -> bindParam(":campania", $data['campania'], PDO::PARAM_STR);
+		$stmt -> bindParam(":tipo", $data['tipo'], PDO::PARAM_STR);
+		
+		if($stmt->execute()){ 
+			
+			return $conexion->lastInsertId();
+			
+		}else{
+			
+			return $stmt->errorInfo();
+			
+		}
+	
+	}
 }

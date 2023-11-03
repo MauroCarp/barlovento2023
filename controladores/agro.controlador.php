@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ERROR | E_PARSE);
 
-function tipoCultivo($cultivo){
+function tipoEstInv($cultivo){
 
     switch ($cultivo) {
         case 'trigo':
@@ -11,18 +11,45 @@ function tipoCultivo($cultivo){
         case 'vicia-triticale':
         case 'triticale-vicia':
         case 'avena':
-            $tipo = 'Invernal';
+        case 'sevadilla':
+        case 'camelina':
+            $tipo = 'invernal';
             break;
 
-        case 'maiz':
-        case 'soja':
-        case 'soja1ra':
-        case 'soja1era':
-        case 'soja2da':
-        case 'maiz1ra':
-        case 'maiz1era':
-        case 'maiz2da':
-            $tipo = 'Estival';
+        case 'maiz1':
+        case 'maiz2':
+        case 'soja1':
+        case 'soja2':
+            $tipo = 'estival';
+            break;
+    }
+
+    return $tipo;
+
+}
+
+function tipoCultivo($cultivo){
+
+    switch ($cultivo) {
+        case 'trigo':
+        case 'camelina':
+        case 'carinata':
+            $tipo = 'fina';
+            break;
+
+        case 'maiz1':
+        case 'maiz2':
+        case 'soja1':
+        case 'soja2':
+        case 'sorgo':
+            $tipo = 'gruesa';
+            break;
+
+        case 'triticale':
+        case 'sevadilla':
+        case 'vicia':
+        case 'avena':
+            $tipo = 'cobertura';
             break;
     }
 
@@ -75,196 +102,106 @@ class ControladorAgro{
             
             if(in_array($_FILES["nuevosDatosPlanificacion"]["type"],$allowedFileType)){
                 
-                $tabla = 'planificacion';
-
                 $ruta = "carga/" . $_FILES['nuevosDatosPlanificacion']['name'];
                 
                 move_uploaded_file($_FILES['nuevosDatosPlanificacion']['tmp_name'], $ruta);
-                
-                $nombreArchivo = str_replace(' ', '',$_FILES['nuevosDatosPlanificacion']['name']);
-                                        
+                                                        
                 $rowNumber = 0;
-                
-                $rowValida = false;
 
                 $data = array();
-
-                $cultivoCosto = array();
                 
-                $dateTime = date('Y-m-d H:i:s');
-
                 $Reader = new SpreadsheetReader($ruta);	
                 
                 $sheetCount = count($Reader->sheets());
         
+                $tabla = 'planificaciones';
+                $campania = '2023/2024';
+                $resultado = ModeloAgro::mdlUltimaCarga($tabla,$campania);
+                $lastUpload = (is_null($resultado['lastUpload'])) ? -1 : $resultado['lastUpload'];
+
+                $dataPlanificacion = array('tipo'=>$lastUpload + 1,'campania'=>$campania);
+
+                $cargaPlanificacion = ModeloAgro::mdlCargarPlanificacion($tabla,$dataPlanificacion);
+
                 for($i=0;$i<$sheetCount;$i++){
         
                     $Reader->ChangeSheet($i);
 
                     foreach ($Reader as $Row){
+                        // TODO RESOLVER DE QUE FORMA CONVERTIR ESA CELDA PARA PODER SER INTERPRETADA
 
-                        if($rowNumber == 3 AND $Row[0] != 'Plan de siembra'){
+                        // if($rowNumber == 0 && str_replace(' ','',$Row[0]) != 'Utilizacion_Campo_Lote
+                        //     var_dump('entre');
+                        //     // echo'<script>
 
-                            echo'<script>
+                        //     //     swal({
+                        //     //             type: "error",
+                        //     //             title: "La planilla seleccionada no corresponde a una planilla de Planificación",
+                        //     //             showConfirmButton: true,
+                        //     //             confirmButtonText: "Cerrar"
+                        //     //             }).then(function(result) {
+                        //     //                     if (result.value) {
 
-                                swal({
-                                        type: "error",
-                                        title: "La planilla seleccionada no corresponde a una planilla de Planificación",
-                                        showConfirmButton: true,
-                                        confirmButtonText: "Cerrar"
-                                        }).then(function(result) {
-                                                if (result.value) {
+                        //     //                         window.location = "index.php?ruta=agro/agro"
 
-                                                    window.location = "index.php?ruta=agro/agro"
+                        //     //                     }
+                        //     //                 })
 
-                                                }
-                                            })
+                        //     //     </script>';
+                        //     die();
 
-                                </script>';
-                            die();
+                        // }
 
-                        }
+                        // var_dump($Row[1]);
 
-                        if($rowNumber  > 0 AND $Row[8] != ''){
+                        $cultivo = strtolower(trim(str_replace(' ','',str_replace('°','',$Row[1]))));
 
-                            $costo = trim(str_replace(',','.',str_replace('u$s/ha','',$Row[9])), "\xC2\xA0");
-                            $cultivo = htmlentities(str_replace(' ','',$Row[8]));
-                            $cultivo = strtolower(str_replace('&nbsp;','',$cultivo));
-
-                            $cultivoCosto[$cultivo] = trim($costo);
-
-                            
-                        }
+                        if(trim($Row[1]) == 'EL PICHI') $campo = 'pichi';
                         
-                        if($rowNumber == 1){
-                            
+                        if(trim($Row[1]) == 'LA BETY') $campo = 'bety';
+
+                        if($rowValida && $cultivo != 'cerealesyoleaginosas' && $cultivo != 'elpichi' && $cultivo != 'labety' && $cultivo != ''){
+
+                            $data[] = array('cultivo'=>$cultivo,
+                                                 'tipo'=>tipoCultivo($cultivo),
+                                                 'tipoEstInv'=>tipoEstInv($cultivo),
+                                                 'lote'=>$Row[2],
+                                                 'has'=>$Row[7],
+                                                 'idPlanificacion'=>$cargaPlanificacion,
+                                                 'campo'=> $campo
+                            );
+
+                        }
+
+                        if($rowNumber == 3)
                             $rowValida = true;
-                            
-                            $campania = explode('/',$Row[0]);
-                            $campania1 = substr($campania[0],-4,4);
-                            $campania2 = $campania[1];
-                            
-                        }
-                        
-                        if($Row[0] == 'TOTAL'){
-                            
-                            $rowValida = false;
 
-                        }
-                        
-                        if($rowValida){
-                            
-                            if($rowNumber != 1 AND $rowNumber != 2 AND $rowNumber != 3 AND $rowNumber != 6 AND $rowNumber != 5){
-                                
-                                if($rowNumber == 4){
-                                    
-                                    $campo = $Row[0];
-
-                                    // VALIDAR SI YA ESTA CARGADA⁄
-
-                                    $tabla = 'planificacion';
-
-                                    $item = 'campania1';
-                                    
-                                    $item2 = 'campania2';
-                                    
-                                    $item3 = 'campo';
-
-                                    $resultado = ControladorAgro::ctrMostrarData($tabla,$item,$campania1,$item2,$campania2,$item3,$campo);
- 
-                                    if(sizeof($resultado) > 0){
-                                        echo'<script>
-
-                                            swal({
-                                                    type: "error",
-                                                    title: "La planilla del campo '.$campo.' en la campaña '.$campania1.'-'.$campania2.' ya ha sido cargada.",
-                                                    showConfirmButton: true,
-                                                    confirmButtonText: "Cerrar"
-                                                    }).then(function(result) {
-                                                    if (result.value) {
-                                                        
-                                                        window.location = "index.php?ruta=agro/agro"
-
-                                                    }
-                                                })
-
-                                            </script>';
-                                            die();
-                                    }
-
-                                }else{
-
-                                    $lote = $Row[0];
-
-                                    $has = $Row[1];
-                                    $actual = $Row[2];
-                                    $variedad = $Row[3];
-                                    $cobertura = strtolower($Row[5]);
-                                    $dobleCultivoValido = strpos($Row[6],'/');
-
-                                    if($dobleCultivoValido){
-
-                                        $cultivos = explode('/',$Row[6]);
-
-                                        $first = true;
-
-                                        for ($i=0; $i < sizeof($cultivos) ; $i++) { 
-
-                                            $planificado = str_replace(' ','',trim(strtolower($cultivos[$i])));
-                                            
-                                            $tipoCultivo = tipoCultivo($planificado);
-                                            
-                                            $coberturaValida = '';
-
-                                            if($first){
-                                                $coberturaValida = $cobertura;
-                                                $first = false;
-                                            }
-                                            
-                                            $data[] = "('$campania1','$campania2','$campo','$tipoCultivo','$lote',$has,'$actual','$coberturaValida','$planificado','$dateTime')";
-                                        
-                                        }
-
-                                    }else{
-
-                                        $planificado = str_replace(' ','',trim(strtolower($Row[6])));
-                                        
-                                        $tipoCultivo = tipoCultivo($planificado);
-
-                                        $data[] = "('$campania1','$campania2','$campo','$tipoCultivo','$lote',$has,'$actual','$cobertura','$planificado','$dateTime')";
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-    
                         $rowNumber++;
 
                     }
                         
                 }
 
-                $respuesta = ModeloAgro::mdlCargarArchivo($tabla,$data);
+                $campos = implode(',',array_keys($data[0]));
+                $dataSql = array();
 
-                $errors = array($respuesta);
-                
-                $item = 'cultivo';
-                
-                $item2 = 'campania1';
+                foreach ($data as $value) {
 
-                $item3 = 'campania2';
-
-                foreach ($cultivoCosto as $cultivo => $costo) {
-
-                    $respuesta = ControladorAgro::ctrCargarCostos($tabla,$item,$cultivo,$item2,$campania1,$item3,$campania2,$costo);
-
-                    $errors[] = $respuesta;
-
+                    $tmp = array();
+        
+                    foreach ($value as $val) {
+                        $tmp[] = (is_numeric($val)) ? $val : "'" . $val . "'";
+                    }
+        
+                    $dataSql[] = "(" . implode(',',$tmp) . ")";
                 }
+        
+                
+                $tabla = 'cultivosplanificacion';
 
+                $respuesta = ModeloAgro::mdlCargarArchivo($tabla,$campos,implode(',',$dataSql));
+
+                echo "<script> window.location = 'index.php?ruta=agro/agro&idFaena=" . $cargaPlanificacion . "&accion=costosCultivos'</script>"
             }
             
         // CARGA EJECUCION

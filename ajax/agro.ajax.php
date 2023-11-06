@@ -49,7 +49,10 @@ class AjaxAgro{
 	public function ajaxMostrarCostos(){
 
 		$tabla = 'planificaciones';
-		$respuesta = ControladorAgro::ctrMostrarCostos($tabla,$this->campania,$this->idPlanificacion);
+
+		$idCampania = ControladorAgro::ctrGetCampaignId($this->campania,$this->carga);
+		// echo json_encode($idCampania);
+		$respuesta = ControladorAgro::ctrMostrarCostos($tabla,$this->campania,$idCampania);
 
 		echo json_encode($respuesta);
 
@@ -105,7 +108,7 @@ if(isset($_POST["accion"])){
 
 		$mostrarData = new AjaxAgro();
         $mostrarData -> campania = $_POST["campania"];
-        $mostrarData -> idPlanificacion = $_POST["idPlanificacion"];
+        $mostrarData -> carga = $_POST["cargaCampania"];
         $mostrarData -> ajaxMostrarCostos();
 
     }

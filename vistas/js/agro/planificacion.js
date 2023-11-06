@@ -10,6 +10,7 @@ const cargarInfoPlanificacion = (campania,carga)=>{
   data.append('campania',campania)
 
   let url = 'ajax/agro.ajax.php'
+  let graficos = []
 
   fetch(url,{
       method:'post',
@@ -139,7 +140,7 @@ const cargarInfoPlanificacion = (campania,carga)=>{
       $('#totalInversionPlanificada').text((data.bety.costoTotal + data.pichi.costoTotal).toLocaleString('de-DE'))
 
       let arr = ['bety','pichi']
-
+      
       arr.forEach(campo => {      
 
         $(`#hasInvPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].invernal.hasTotal)
@@ -228,13 +229,14 @@ const cargarInfoPlanificacion = (campania,carga)=>{
           }
         }
             
-        generarGraficoBar(`graficoPlanifiacion${capitalizarPrimeraLetra(campo)}`,configPlanificacion,'noOption');
+        generarGraficoBar(`graficoPlanificacion${capitalizarPrimeraLetra(campo)}`,configPlanificacion,'noOption')
 
       });
 
-      console.log(data)
   })
   .catch( err=>console.log(err))
+
+  return graficos
 
 }
 
@@ -359,6 +361,8 @@ if(btnCostosPlanificacion != null){
 
     let url = 'ajax/agro.ajax.php'
   
+    console.log(cargaCampania)
+
     let data = new FormData()
     data.append('accion','mostrarCostos')
     data.append('campania',campania)
@@ -425,5 +429,17 @@ if(btnCostosPlanificacion != null){
     .catch(er=>console.log(er))
   
 }
+
+$('select[name="cargaPlanificacion"]').on('change',function(){
+
+  let cargaPlanificacion = $(this).val()
+
+  window.graficoPlanificacionBety.destroy()
+  window.graficoPlanificacionPichi.destroy()
+
+  cargarInfoPlanificacion(campania,cargaPlanificacion)
+
+})
+
 
 

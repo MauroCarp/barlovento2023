@@ -15,12 +15,14 @@ for (const menu of btnsMenusCarga) {
     menu.addEventListener('click',()=>{
 
         let menuCarga = menu.getAttribute('data-carga')
-        console.log(menuCarga)
+
         document.getElementById('tituloCarga').innerText = `Cargar ${menuCarga}`
         document.getElementById('btnCargar').setAttribute('data-carga',menuCarga.replace(' ',''))
         document.getElementById('nuevosDatosCarga').setAttribute('name',`nuevosDatos${menuCarga.replace(' ','')}`)
         document.getElementById('btnCargar').innerText = `Cargar ${menuCarga}`
 
+        if(menuCarga == 'Planificacion') 
+            document.getElementById('inputCampania').classList.remove('hidden')
 
         if(menuCarga == 'Paihuen'){
 

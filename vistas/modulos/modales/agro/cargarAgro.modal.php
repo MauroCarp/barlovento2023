@@ -26,13 +26,37 @@
 
           <div class="box-body">
 
-            <!-- ENTRADA PARA SUBIR FOTO -->
-
             <div class="form-group hidden" id="inputPeriodoContable">
               
               <div class="panel">Periodo</div>
 
               <input type="month" id="periodoContable" name="periodoContable">
+
+            </div>
+
+            <div class="form-group hidden" id="inputCampania">
+              
+              <div>Campa&ntilde;a</div>
+
+              <div class="row">
+
+                <div class="col-lg-4">
+
+                  <input type="number" class="form-control" name="campania1">
+
+                </div>
+
+                <div class="col-lg-1">
+                    <span style="font-size:1.5em">/</span>
+                </div>
+
+                <div class="col-lg-4">
+
+                  <input type="number" class="form-control" name="campania2">
+
+                </div>
+
+              </div>
 
             </div>
 

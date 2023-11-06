@@ -115,7 +115,7 @@ class ControladorAgro{
                 $sheetCount = count($Reader->sheets());
         
                 $tabla = 'planificaciones';
-                $campania = '2023/2024';
+                $campania = $_POST['campania1'] . '/' . $_POST['campania2'];
                 $resultado = ModeloAgro::mdlUltimaCarga($tabla,$campania);
                 $lastUpload = (is_null($resultado['lastUpload'])) ? -1 : $resultado['lastUpload'];
 
@@ -214,7 +214,7 @@ class ControladorAgro{
                             confirmButtonText: "Cerrar"
                             }).then(function(result) {
                                     if (result.value) {
-
+                                        localStorage.removeItem("campaniaAgro")
                                         window.location = "index.php?ruta=agro/agro"
 
                                     }
@@ -434,7 +434,7 @@ class ControladorAgro{
 
 	static public function ctrMostrarCostos($tabla,$campania,$idPlanificacion){
 
-        return $respuesta = ModeloAgro::mdlMostrarCostos($tabla,$campania,$idPlanificacion);
+        return ModeloAgro::mdlMostrarCostos($tabla,$campania,$idPlanificacion);
 
 	}
 

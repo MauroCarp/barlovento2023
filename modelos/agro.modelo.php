@@ -28,8 +28,9 @@ class ModeloAgro{
 	static public function mdlMostrarCostos($tabla,$campania,$idPlanificacion){
 
 		
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla INNER JOIN costocultivos ON $tabla.id = costocultivos.idPlanificacion WHERE $tabla.campania = '$campania'");
-
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla INNER JOIN costocultivos ON $tabla.id = costocultivos.idPlanificacion WHERE $tabla.campania = '$campania' AND costocultivos.idPlanificacion = :idPlanificacion");
+		$stmt->bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_STR);
+		
 		$stmt -> execute();
 		
 		return $stmt -> fetchAll();

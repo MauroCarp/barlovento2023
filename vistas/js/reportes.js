@@ -329,6 +329,8 @@ function generarGraficoBar(idDiv,configuracion,opcion){
 
   }
 
+  window[idDiv] = grafico
+
   return grafico;
 
 }

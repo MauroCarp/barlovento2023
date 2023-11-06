@@ -21,7 +21,7 @@ if(isset($_GET['accion']) && $_GET['accion'] == 'costosCultivos'){
                 ' . $cultivo . ':
               </div>
               <div class="col-lg-4">
-                <input type="number" name="' . $cultivoRaw . '" class="swal2-input cultivos" value="10">
+                <input type="number" name="' . $cultivoRaw . '" class="swal2-input cultivos" value="0">
               </div>';
   }
     
@@ -38,7 +38,6 @@ if(isset($_GET['accion']) && $_GET['accion'] == 'costosCultivos'){
       allowOutsideClick: false, // Impide cerrar haciendo clic fuera del SweetAlert
       allowEscapeKey: false,
       confirmButtonText: 'Cargar',
-      showLoaderOnConfirm: true,
     }).then((result) => {
 
       if (result) {

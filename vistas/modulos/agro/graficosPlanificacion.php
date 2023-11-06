@@ -14,7 +14,7 @@
             
             <?php
         
-                $idGraficoPlanificacion = 'graficoPlanifiacionBety';
+                $idGraficoPlanificacion = 'graficoPlanificacionBety';
                 
                 include 'graficos/planificacion.php';
                 
@@ -26,7 +26,7 @@
 
         <?php 
         
-            $idGraficoPlanificacion = 'graficoPlanifiacionPichi';
+            $idGraficoPlanificacion = 'graficoPlanificacionPichi';
 
             include 'graficos/planificacion.php';
             

@@ -25,22 +25,10 @@ class ModeloAgro{
 	/*=============================================
 	MOSTRAR COSTO
 	=============================================*/
-	static public function mdlMostrarCostos($tabla,$item,$value,$item2,$value2,$item3,$value3){
+	static public function mdlMostrarCostos($tabla,$campania,$idPlanificacion){
 
-		$tabla = 'costo'.$tabla;
-
-		if($value2 != ''){
-
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2 AND $item3 = :$item3");
-			$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
-			$stmt -> bindParam(":".$item2, $value2, PDO::PARAM_STR);
-			$stmt -> bindParam(":".$item3, $value3, PDO::PARAM_STR);
-			
-		}else{
-			
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item3 = (SELECT MAX($item3) FROM $tabla)");
-
-		}
+		
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla INNER JOIN costocultivos ON $tabla.id = costocultivos.idPlanificacion WHERE $tabla.campania = '$campania'");
 
 		$stmt -> execute();
 		
@@ -109,52 +97,36 @@ class ModeloAgro{
 	MOSTRAR DATA
 	=============================================*/
 	static public function mdlMostrarData($tabla, $item, $value, $item2, $value2, $item3, $value3){
+		
+		if($value3 != ''){
 
-		if($value != ''){
-
-			if($tabla == 'info_planificacion'){
-				
-				if($item2 != null){
-					
-					$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item OR $item2 = :$item2");
-					$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
-					$stmt -> bindParam(":".$item2, $value2, PDO::PARAM_STR);
-					
-				}else{
-
-					$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item ");
-					$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
-					
-				}
-						
-
-			}else{
-
-				$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2 AND $item3 = :$item3 ");
-				
-				$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
-				$stmt -> bindParam(":".$item2, $value2, PDO::PARAM_STR);
-				$stmt -> bindParam(":".$item3, $value3, PDO::PARAM_STR);
-
-			}
-
-			
-			$stmt -> execute();
-
-			return $stmt -> fetchAll();
-			
-		}else{
-			
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item2 = (SELECT MAX($item2) FROM $tabla) AND $item3 = :$item3");
-			
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2 AND $item3 = :$item3 ");
+			$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
+			$stmt -> bindParam(":".$item2, $value2, PDO::PARAM_STR);
 			$stmt -> bindParam(":".$item3, $value3, PDO::PARAM_STR);
-
-			$stmt -> execute();
 			
-			return $stmt -> fetchAll();
+		}else if($value2 != ''){
+			
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2");
+			$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
+			$stmt -> bindParam(":".$item2, $value2, PDO::PARAM_STR);			
+			
+		} else if($value != ''){
+
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
+			$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
+			
+		} else {
+			
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
 
 		}
 
+		if($stmt -> execute()){
+			
+		};
+
+		return $stmt -> fetchAll();
 
 		$stmt = null;
 
@@ -259,13 +231,67 @@ class ModeloAgro{
 	/*=============================================
 	CULTIVOS
 	=============================================*/
-	static public function mdlCultivosPorPlanificacion($tabla,$idPlanificacion){
+	static public function mdlCultivosUnicosPorPlanificacion($tabla,$idPlanificacion){
 
 		$stmt = Conexion::conectar()->prepare("SELECT DISTINCT(cultivo) FROM $tabla WHERE idPlanificacion = :idPlanificacion");
 		$stmt -> bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_STR);
 		$stmt -> execute();
 		
 		return $stmt -> fetchAll();
+	}
+
+
+	static public function mdlMostrarCampanias($tabla, $idPlanificacion,$campos,$full){
+
+		$where = (!is_null($idPlanificacion)) ? 'WHERE idPlanificacion = :idPlanificacion' : '';
+
+		if($full){
+
+		} else { 
+
+			$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $where");
+
+		}
+
+		if(!is_null($idPlanificacion)) $stmt -> bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_STR);
+
+		$stmt -> execute();
+		
+		return $stmt -> fetchAll();
+
+	}
+
+	static public function mdlMostrarCargasPorCampania($tabla, $campania){
+
+		$stmt = Conexion::conectar()->prepare("SELECT tipo,created_at FROM $tabla WHERE campania = :campania ORDER BY created_at DESC");
+
+		$stmt -> bindParam(":campania", $campania, PDO::PARAM_STR);
+		$stmt -> execute();
+		
+		return $stmt -> fetchAll();
+	}
+
+	static public function mdlMostrarDataCultivosPlanificacion($tabla, $idPlanificacion){
+
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE idPlanificacion = :idPlanificacion");
+		$stmt -> bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_STR);
+
+		$stmt -> execute();
+		
+		return $stmt -> fetchAll();
+
+	}
+
+	static public function mdlGetCampaignId($tabla, $campania,$cargaPlanificacion){
+
+		$stmt = Conexion::conectar()->prepare("SELECT id FROM $tabla WHERE tipo = :tipo AND campania = :campania");
+		$stmt -> bindParam(":tipo", $cargaPlanificacion, PDO::PARAM_STR);
+		$stmt -> bindParam(":campania", $campania, PDO::PARAM_STR);
+
+		$stmt -> execute();
+		
+		return $stmt -> fetch();
+
 	}
 
 

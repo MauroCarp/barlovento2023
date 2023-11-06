@@ -4,7 +4,7 @@
     
     <div class="col-lg-5">
 
-        <div class="row">
+        <div class="row" sty>
 
             <div class="col-lg-8">
 
@@ -12,13 +12,17 @@
                 
                     <label>Planificaci&oacute;n</label>
                 
-                    <select class="form-control">
-                
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
+                    <select class="form-control" name="cargaPlanificacion">
+
+                        <?php
+                            $cargas = ControladorAgro::ctrMostrarCargasPorCampania($_GET['campania']);
+
+                            foreach ($cargas as $carga) { ?>
+                                
+                             <option value="<?=$carga['tipo']?>">Carga <?=date('d-m-Y',strtotime($carga['created_at']))?> <?=($carga['tipo'] == 0) ? '(Original)' : ''?> </option>   
+                        <?php
+                            }
+                        ?>
                 
                     </select>
                 
@@ -42,6 +46,42 @@
 
             </div>
 
+        </div>
+
+        <div class="row">
+            
+            <div class="col-lg-6">
+                
+                <div class="info-box">
+
+                    <span class="info-box-icon bg-aqua"><i class="fa fa-map-o"></i></span>      
+
+                    <div class="info-box-content">
+
+                        <span class="info-box-text">Hectareas Totales</span>
+                        
+                        <span class="info-box-number"><span id="totalHasPlanificadas"></span> Has.</span>
+
+                    </div>
+        
+                </div>
+
+            </div>
+     
+            <div class="col-lg-6">
+                
+                <div class="info-box">
+
+                    <span class="info-box-icon bg-aqua"><i class="fa fa-dollar"></i></span>
+                    <div class="info-box-content">
+                    <span class="info-box-text">Inversion <br> Total Proyectada</span>
+                    <span class="info-box-number">U$D <span id="totalInversionPlanificada"></span></span>
+                    </div>
+        
+                </div>
+
+            </div>
+        
         </div>
         
             

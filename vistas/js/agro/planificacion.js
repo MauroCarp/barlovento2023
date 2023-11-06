@@ -1,15 +1,14 @@
 const cobertura = ['vicia','triticale','avena','avena cobertura','cebada','vicia-triticale','cebadilla','triticale espinillo','camelina']
 
-const cargarInfoPlanificacion = (props)=>{
+const cargarInfoPlanificacion = (campania,carga)=>{
   
   // Obtener DATA
   
   let data = new FormData()
-  data.append('accion','mostrarData')
-  data.append('campania1',props.campania1)
-  data.append('campania2',props.campania2)
-  data.append('seccion','planificacion')
-  data.append('campo',props.campo)
+  data.append('accion','mostrarDataPlanificacion')
+  data.append('carga',carga)
+  data.append('campania',campania)
+
   let url = 'ajax/agro.ajax.php'
 
   fetch(url,{
@@ -17,301 +16,223 @@ const cargarInfoPlanificacion = (props)=>{
       body:data
   }).then(resp=>resp.json())
   .then(respuesta=>{
-
-    if(respuesta.length > 0){
-        
-      let datos = {
-        'label': [],
-        'costos':{
-          'lote': [],
-          'trigo':[],
-          'carinata':[],
-          'cobertura':[],
-          'resto':[],
-          'total':[]
-        },
-        'has':{
-          'lote': [],
-          'invernales': [],
-          'cobertura': [],
-          'estivales': [],
-          'trigo':[],
-          'carinata':[],
-          'resto':[],
-          'total':0
-        },
-      }
+      console.log(respuesta)
       
-      respuesta.forEach(registro => {
-        
-        // DATA PARA GRAFICOS          
-        
-        if(registro.planificado != ''){
-          
-          let regex = /(\d+)/g
-        
-          let cultivoNumerico = registro.planificado.match(regex)
-          
-          let cultivo = registro.planificado
+      let data = {
+        'pichi':{
+          'fina':{
+            'hasTotal':0,
+            'costo':0,
+          },
+          'gruesa':{
+            'hasTotal':0,
+            'costo':0,
+          },
+          'cobertura':{
+            'hasTotal':0,
+            'costo':0,
+          },
+          'estival':{
+            'hasTotal':0,
+          },
+          'invernal':{
+            'hasTotal':0,
+          },
+          'grafico':{
+            'labels': [],
+            'has': [],
+            'costoHas':[]
+          },
+          'hasTotal':0,
+          'costoTotal':0,
+        },
+        'bety':{
+          'fina':{
+            'hasTotal':0,
+            'costo':0,
+          },
+          'gruesa':{
+            'hasTotal':0,
+            'costo':0,
+          },
+          'cobertura':{
+            'hasTotal':0,
+            'costo':0,
+          },
+          'estival':{
+            'hasTotal':0,
+          },
+          'invernal':{
+            'hasTotal':0,
+          },
+          'grafico':{
+            'labels': [],
+            'has': [],
+            'costoHas':[]
+          },
+          'hasTotal':0,
+          'costoTotal':0,
+        }
 
-          if(cultivoNumerico != null){
+      }
 
-            let index = registro.planificado.indexOf(cultivoNumerico[0])
+      respuesta['cultivos'].forEach(cultivo => {
 
-            cultivo = registro.planificado.split('')
-            cultivo.splice(index, 0, ' ')
-            cultivo = cultivo.join('')
+        let costo = (parseInt(cultivo.has) * parseInt(respuesta['costos'][cultivo.cultivo]))
+        let has = parseInt(cultivo.has)
+        data[cultivo.campo].hasTotal += has
 
-          }
+        if (cultivo.tipoEstInv === 'estival') {
+          data[cultivo.campo].estival.hasTotal += has;
+        }
 
-          datos.label.push(`${registro.lote} / ${capitalizarPrimeraLetra(cultivo)}`)
+        if (cultivo.tipoEstInv === 'invernal') {
+          data[cultivo.campo].invernal.hasTotal += has;
+        }
 
-          datos.has.lote.push(Number(registro.has))
-          datos.has.total += Number(registro.has)
-          
-          // DATA PARA INFO
-          if(registro.tipoCultivo == 'Invernal' && registro.tipoCultivo != '')
-            datos.has.invernales.push(Number(registro.has))
-          
-          if(registro.tipoCultivo == 'Estival' && registro.tipoCultivo != '')
-            datos.has.estivales.push(Number(registro.has))
-          
-          if(registro.planificado == 'trigo')
-            datos.has.trigo.push(Number(registro.has))
-          
-          if(registro.planificado == 'carinata')
-            datos.has.carinata.push(Number(registro.has))
-          
-          if(registro.planificado != 'trigo' && registro.planificado != 'carinata' && registro.planificado != ''){
-            
-            let cultivoHas = {
-              'cultivo': registro.planificado,
-              'has': Number(registro.has)
-            }  
-            
-            datos.has.resto.push(cultivoHas)
-            
-          }
-        
+        if (cultivo.tipo === 'fina') {
+          data[cultivo.campo].fina.hasTotal += has
+
+          data[cultivo.campo].fina.cultivos = data[cultivo.campo].fina.cultivos || {}
+          data[cultivo.campo].fina.cultivos[cultivo.cultivo] = data[cultivo.campo].fina.cultivos[cultivo.cultivo] || {}
+          data[cultivo.campo].fina.cultivos[cultivo.cultivo].has = (data[cultivo.campo].fina.cultivos[cultivo.cultivo].has || 0) + has
+          data[cultivo.campo].fina.cultivos[cultivo.cultivo].costo = (data[cultivo.campo].fina.cultivos[cultivo.cultivo].costo || 0) + costo
+          data[cultivo.campo].fina.costo += costo
+
+        }
+
+        if (cultivo.tipo === 'cobertura') {
+          data[cultivo.campo].cobertura.hasTotal += has
+
+          data[cultivo.campo].cobertura.cultivos = data[cultivo.campo].cobertura.cultivos || {}
+          data[cultivo.campo].cobertura.cultivos[cultivo.cultivo] = data[cultivo.campo].cobertura.cultivos[cultivo.cultivo] || {}
+          data[cultivo.campo].cobertura.cultivos[cultivo.cultivo].has = (data[cultivo.campo].cobertura.cultivos[cultivo.cultivo].has || 0) + has
+          data[cultivo.campo].cobertura.cultivos[cultivo.cultivo].costo = (data[cultivo.campo].cobertura.cultivos[cultivo.cultivo].costo || 0) + costo
+          data[cultivo.campo].cobertura.costo += costo
+
         }
         
-        if(registro.cobertura != ''){
-                          
-            let cultivoHas = {
-              'cultivo': registro.cobertura,
-              'has': Number(registro.has)
-            }  
+        if (cultivo.tipo === 'gruesa') {
 
-            datos.has.total += Number(registro.has)
+          data[cultivo.campo].gruesa.hasTotal += has;
 
-            datos.has.cobertura.push(cultivoHas)
+          data[cultivo.campo].gruesa.cultivos = data[cultivo.campo].gruesa.cultivos || {}
+          data[cultivo.campo].gruesa.cultivos[cultivo.cultivo] = data[cultivo.campo].gruesa.cultivos[cultivo.cultivo] || {}
+          data[cultivo.campo].gruesa.cultivos[cultivo.cultivo].has = (data[cultivo.campo].gruesa.cultivos[cultivo.cultivo].has || 0) + has
+          data[cultivo.campo].gruesa.cultivos[cultivo.cultivo].costo = (data[cultivo.campo].gruesa.cultivos[cultivo.cultivo].costo || 0) + costo
+          data[cultivo.campo].gruesa.costo += costo
 
-        }
+
+        }          
         
+        data[cultivo.campo].grafico.labels.push(`${cultivo.cultivo} / ${cultivo.lote}`)
+        data[cultivo.campo].grafico.has.push(has)
+        data[cultivo.campo].grafico.costoHas.push(costo)
 
       });
-            
-      let data = new FormData()
-      data.append('accion','mostrarCostos')
-      data.append('cultivo','')
-      data.append('campania1',respuesta.campania1)
-      data.append('campania2',respuesta.campania2)
-      data.append('seccion','planificacion')
-      
-      fetch(url,{
-        method:'post',
-        body:data
-      }).then(res=>res.json())
-      .then(costos=>{
+
+      data.pichi.costoTotal = data.pichi.fina.costo + data.pichi.cobertura.costo + data.pichi.gruesa.costo
+      data.bety.costoTotal = data.bety.fina.costo + data.bety.cobertura.costo + data.bety.gruesa.costo              
+
+      // PINTAR DATOS
+      $('#totalHasPlanificadas').text(data.bety.hasTotal + data.pichi.hasTotal)
+      $('#totalInversionPlanificada').text((data.bety.costoTotal + data.pichi.costoTotal).toLocaleString('de-DE'))
+
+      let arr = ['bety','pichi']
+
+      arr.forEach(campo => {      
+
+        $(`#hasInvPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].invernal.hasTotal)
+        $(`#hasCobPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].cobertura.hasTotal)
+        $(`#hasEstPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].estival.hasTotal)
+        let ratio = (data[campo].invernal.hasTotal + data[campo].cobertura.hasTotal) / data[campo].estival.hasTotal 
+        $(`#ratioPlanificacion${capitalizarPrimeraLetra(campo)}`).text(ratio.toFixed(2))
+  
+        $(`#hasFinaPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].fina.hasTotal)
+        $(`#totalCostoFinaPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].fina.costo.toLocaleString('de-DE'))
+        $(`#costoFinaPlanificacionHas${capitalizarPrimeraLetra(campo)}`).text((data[campo].fina.costo / data[campo].fina.hasTotal || 0).toFixed(2).toLocaleString('de-DE'))
+  
+        $(`#hasCoberturaPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].cobertura.hasTotal)
+        $(`#totalCostoCoberturaPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].cobertura.costo.toLocaleString('de-DE'))
+        $(`#costoCoberturaPlanificacionHas${capitalizarPrimeraLetra(campo)}`).text((data[campo].cobertura.costo / data[campo].cobertura.hasTotal || 0).toFixed(2))
+  
+        $(`#hasGruesaPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].gruesa.hasTotal)
+        $(`#totalCostoGruesaPlanificacion${capitalizarPrimeraLetra(campo)}`).text(data[campo].gruesa.costo.toLocaleString('de-DE'))
+        $(`#costoGruesaPlanificacionHas${capitalizarPrimeraLetra(campo)}`).text((data[campo].gruesa.costo / data[campo].gruesa.hasTotal || 0).toFixed(2))
+  
+        $(`#totalHasPlanificadas${capitalizarPrimeraLetra(campo)}`).text(data[campo].hasTotal)
+        $(`#totalInversionPlanificada${capitalizarPrimeraLetra(campo)}`).text(data[campo].costoTotal.toLocaleString('de-DE'))
         
-        for (const reg of costos) {
+        cargarDetallesCulltivos(data[campo].fina.cultivos,`${campo}Fina`)
+        cargarDetallesCulltivos(data[campo].cobertura.cultivos,`${campo}Cobertura`)
+        cargarDetallesCulltivos(data[campo].gruesa.cultivos,`${campo}Gruesa`)
 
-            if(reg.cultivo == 'trigo'){
-              
-                let totalHas = (datos.has.trigo.length > 0) ? datos.has.trigo.reduce((acc,cur)=> acc + cur) : 0
-                
-                datos.costos.trigo =  totalHas * reg.costo
-              
-            }
-            
-            if(reg.cultivo == 'carinata'){
-              
-                let totalHas = (datos.has.carinata.length > 0) ? datos.has.carinata.reduce((acc,cur)=> acc + cur) : 0
-                  
-                datos.costos.carinata =  totalHas * reg.costo
-          
-            }
-
-            for (const cultivo of datos.has.resto) {
-
-              let cult = (cultivo.cultivo == 'soja') ? 'soja1era' : cultivo.cultivo        
-
-              if(cult.replace(' ','') == reg.cultivo){              
-                
-                datos.costos.resto.push( cultivo.has * reg.costo)
-                
-              }
-    
-            }
-
-            for (const cultivo of datos.has.cobertura) {
-
-              if(cultivo.cultivo.replace(' ','') == reg.cultivo){              
-                
-                datos.costos.cobertura.push( cultivo.has * reg.costo)
-
-                datos.costos.total.push(reg.costo * cultivo.has);
-                
-                
-              }
-    
-            }
-            
-          }
-          
-        for (const lote of respuesta) {
-          
-          let cultivo = (lote.planificado == 'soja') ? 'soja1era' : lote.planificado
-          
-          for (const reg of costos) {       
-            
-            if(reg.cultivo == cultivo.replace(' ','')){
-              
-              datos.costos.lote.push(Number(reg.costo));
-              datos.costos.total.push(reg.costo * lote.has);
-
-            }
-          
-          }
-
-        }        
-        
-        let hasInvernales =  (datos.has.invernales.length > 0) ? datos.has.invernales.reduce((acc,cur)=> acc + cur) : 0
-        let hasEstivales =  (datos.has.estivales.length > 0) ? datos.has.estivales.reduce((acc,cur)=> acc + cur) : 0
-
-        let hasCobertura = 0  
-        if(datos.has.cobertura.length > 0){
-            for(let cobertura of datos.has.cobertura) hasCobertura+= cobertura.has
-        }
-          
-        let ratio = (hasInvernales + hasCobertura) / hasEstivales 
-
-
-        // RENDER NUMERO CAMPAÑA
-        let campania = `${costos[0].campania1}/${costos[0].campania2}`
-
-        document.getElementById('campania').innerText = campania
-
-
-        // HAS -> INV- EST- COB
-        document.getElementById(`hasInvPlanificacion${props.idInfo}`).innerText = hasInvernales
-        document.getElementById(`hasCobPlanificacion${props.idInfo}`).innerText = hasCobertura
-        document.getElementById(`hasEstPlanificacion${props.idInfo}`).innerText = hasEstivales
-        // RATIO-> INV+COB / EST
-        document.getElementById(`ratioPlanificacion${props.idInfo}`).innerText = ratio.toFixed(2);
-        
-
-        // HAS-> TRIGO-COB-CAR-REST
-        document.getElementById(`hasTrigoPlanificacion${props.idInfo}`).innerText = (datos.has.trigo.length > 0) ? datos.has.trigo.reduce((acc,cur)=> acc + cur) : 0;
-        document.getElementById(`hasCarinataPlanificacion${props.idInfo}`).innerText = (datos.has.carinata.length > 0) ? datos.has.carinata.reduce((acc,cur)=> acc + cur) : 0;
-        
-        let totalHasResto = 0
-        for(let resto of datos.has.resto) totalHasResto+= resto.has
-        document.getElementById(`hasRestoPlanificacion${props.idInfo}`).innerText = totalHasResto
-        
-        
-        let totalHasCobertura = 0
-        for(let cobertura of datos.has.cobertura) totalHasCobertura+= cobertura.has
-        document.getElementById(`hasCoberturaPlanificacion${props.idInfo}`).innerText = totalHasCobertura
-        
-        // $->TRIGO-COB-CAR-REST
-        document.getElementById(`totalCostoTrigoPlanificacion${props.idInfo}`).innerText = datos.costos.trigo.toLocaleString('de-DE')
-        
-        document.getElementById(`totalCostoCarinataPlanificacion${props.idInfo}`).innerText = datos.costos.carinata.toLocaleString('de-DE')
-        
-        let totalCostoCoberturaPlanificacion = datos.costos.cobertura.reduce((acc,cur)=> acc + cur)
-
-        document.getElementById(`totalCostoCoberturaPlanificacion${props.idInfo}`).innerText = (datos.costos.cobertura.length > 0) ? totalCostoCoberturaPlanificacion.toLocaleString('de-DE') : 0;
-
-        let costoHasPlanificacion = totalCostoCoberturaPlanificacion / totalHasCobertura
-        
-        document.getElementById(`costoCoberturaPlanificacionHas${props.idInfo}`).innerText = costoHasPlanificacion.toFixed(2)
-
-        document.getElementById(`totalCostoRestoPlanificacion${props.idInfo}`).innerText = (datos.costos.resto.length > 0) ? (datos.costos.resto.reduce((acc,cur)=> acc + cur)).toLocaleString('de-DE') : 0;
- 
-        // TOTAL ->HAS - COSTO
-        // document.getElementById(`totalHasPlanificadas${props.idInfo}`).innerText = datos.has.lote.reduce((acc,cur)=> acc + cur)
-        document.getElementById(`totalHasPlanificadas${props.idInfo}`).innerText =  datos.has.total
-        
-        document.getElementById(`totalInversionPlanificada${props.idInfo}`).innerText = (datos.costos.total.reduce((acc,cur)=> acc + cur)).toLocaleString('de-DE')        
-        
+        // PINTAR GRAFICO
         let configPlanificacion = {
-            type: 'bar',
-            data: {
-              labels: datos.label,
-              datasets: [
-                {
-                  type: 'line',
-                  label: 'Inversión U$D',
-                  borderColor: window.chartColors.red,
-                  fill:false,
-                  yAxisID: 'A',
-                  data: datos.costos.lote
+          type: 'bar',
+          data: {
+            labels: data[campo].grafico.labels,
+            datasets: [
+              {
+                type: 'line',
+                label: 'Inversión U$D/Has',
+                borderColor: window.chartColors.red,
+                fill:false,
+                yAxisID: 'A',
+                data: data[campo].grafico.costoHas
+              }
+              ,
+              {
+                label: 'Has.',
+                type: 'bar',
+                backgroundColor: window.chartColors.green,
+                yAxisID: 'B',
+                data: data[campo].grafico.has,
+                borderColor: 'white',
+                borderWidth: 2
+              }
+            ]
+          },
+          options: {
+            scaleShowValues: true,
+            scales: {
+              xAxes: [{
+                display:true,
+                ticks: {
+                  autoSkip: false
                 }
-                ,
-                {
-                  label: 'Has.',
-                  type: 'bar',
-                  backgroundColor: window.chartColors.green,
-                  yAxisID: 'B',
-                  data: datos.has.lote,
-                  borderColor: 'white',
-                  borderWidth: 2
-                }
-              ]
+              }],
+              yAxes: [{
+                id: 'A',
+                type: 'linear',
+                position: 'left',
+              
+              }, {
+                id: 'B',
+                type: 'linear',
+                position: 'right',
+              }]
             },
-            options: {
-              scaleShowValues: true,
-              scales: {
-                xAxes: [{
-                  display:true,
-                  ticks: {
-                    autoSkip: false
-                  }
-                }],
-                yAxes: [{
-                  id: 'A',
-                  type: 'linear',
-                  position: 'left',
-                
-                }, {
-                  id: 'B',
-                  type: 'linear',
-                  position: 'right',
-                }]
-              },
-              plugins:{
-                labels:{                  
-                    render:'value',
-                }
-              },
-              legend:{
-                labels: {
-                      boxWidth: 5
-                }
+            plugins:{
+              labels:{                  
+                  render:function(reg){
+                      return reg.value.toLocaleString('de-DE')
+                  },
+              }
+            },
+            legend:{
+              labels: {
+                    boxWidth: 5
               }
             }
+          }
         }
-                
-        generarGraficoBar(props.idGrafico,configPlanificacion,'noOption');
-        
-  
-      })
-      .catch(err=>console.log(err))
-  
-    }else{
-    }
+            
+        generarGraficoBar(`graficoPlanifiacion${capitalizarPrimeraLetra(campo)}`,configPlanificacion,'noOption');
 
+      });
+
+      console.log(data)
   })
   .catch( err=>console.log(err))
 
@@ -340,253 +261,169 @@ const eliminarArchivoCampo = (campo,seccion,campania1,campania2)=>{
   
 }
 
-const mostrarInfoPlanificacion = (campania)=>{
+const cargarDetallesCulltivos = (cultivos,idDetalle)=>{
 
-  let url = 'ajax/agro.ajax.php'
-  let dataInfo = new FormData()
-  dataInfo.append('accion','mostrarInfo')
-  dataInfo.append('campania',campania)
-  dataInfo.append('seccion','info_planificacion')
+  let table = document.createElement('TABLE')                
+  table.setAttribute('class','table table-striped')
   
-  fetch(url,{
-      method:'post',
-      body:dataInfo
-    }).then(resp=>resp.json())
-    .then(respuesta=>{
+  let thead = document.createElement('THEAD')
+  let thCultivo = document.createElement('TH')
+  let thHas = thCultivo.cloneNode(true)
+  let thCostoHas = thCultivo.cloneNode(true)
 
-      if(respuesta[0].cerrada == 1){
-        document.getElementById('btnCerrarPlanificacion').style.display = 'none'
-        document.getElementById('btnEditarCosto').style.display = 'none'
+  thCultivo.innerText = 'Cultivo'
+  thHas.innerText = 'Has'
+  thCostoHas.innerText = 'u$s/Has'
 
-        setTimeout(() => {
-          let inputCostos = document.querySelectorAll('.costosPlanificacion')
-          inputCostos.forEach(element => {
-            element.setAttribute('readOnly','readOnly')
-          });
-        }, 500);
+  thead.append(thCultivo)
+  thead.append(thHas)
+  thead.append(thCostoHas)
 
-        let btnsEliminar = document.querySelectorAll('.eliminarArchivoAgro')
-        btnsEliminar.forEach(el => {
-          el.style.display = 'none'
-        })
+  table.append(thead)
 
-      }else{
+  let tbody = document.createElement('TBODY')
 
-        document.getElementById('btnCerrarPlanificacion').addEventListener('click',()=>{
+  let content = document.createDocumentFragment()
 
-          swal({
-            title: '¿Está seguro de cerrar la planificación?',
-            text: "¡Si no lo está puede cancelar la acción!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
-            confirmButtonText: 'Si, cerrar Planificación'
-          }).then(function(result){
-       
-            if(result.value){
+  for (const key in cultivos) {
 
-              let dataUpdate = new FormData()
-              dataUpdate.append('accion','cerrarPlanifiacion')
-              dataUpdate.append('campania',campania)
-              dataUpdate.append('seccion','info_planificacion')
-              
-              fetch(url,{
-                  method:'post',
-                  body:dataUpdate
-                }).then(res=>res.json())
-                .then(close=>{
+    let tr = document.createElement('TR')
+    let tdCultivo = document.createElement('TD')
+    let tdHas = tdCultivo.cloneNode(true)
+    let tdCostoHas = tdCultivo.cloneNode(true)
 
-                  if(close == 'ok'){
-                    window.location = "index.php?ruta=agro/agro";
-                  }else{
-                    swal({
-                      type: "error",
-                      title: "Hubo un error al cerrar la campaña.",
-                      showConfirmButton: true,
-                      confirmButtonText: "Cerrar"
-                      })
-                  }
+    let ultimoCaracter = key.slice(-1);
+    
+    if(!isNaN(ultimoCaracter)){
 
-                })         
-                .catch(err=>console.log(err))
+      let index = key.search(/\d/); 
 
-            }
-       
-          })
+      if (index !== -1) {
 
-        })
+        let parteAntesDelNumero = key.slice(0, index);
 
+        let numero = key.slice(index);
+
+        tdCultivo.innerText = capitalizarPrimeraLetra(`${parteAntesDelNumero} ${numero}°`);
+        
       }
 
+    } else { 
+      tdCultivo.innerText = capitalizarPrimeraLetra(key)
+    }
 
+    tdCostoHas.innerText = `u$s ${cultivos[key]['costo'].toLocaleString('de-DE')}`
+    tdHas.innerText = cultivos[key]['has']
 
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+    tr.append(tdCultivo)
+    tr.append(tdHas)
+    tr.append(tdCostoHas)
 
+    content.append(tr)
+
+  }
+  
+  tbody.append(content)
+  table.append(tbody)
+  document.getElementById(idDetalle).appendChild(table)
+  
 }
-
-// if(campania){
-
-//   mostrarInfoPlanificacion(campania)
-
-//   // PLANIFICACION
-//   campania = campania.split('/')
-
-//   let props = {
-//     campo: 'LA BETY',
-//     idGrafico: 'graficoPlanifiacionBety',
-//     idInfo:'Bety',
-//     campania1: campania[0],
-//     campania2: campania[1]
-//   }
-
-//   cargarInfoPlanificacion(props)
-
-//   props = {
-//     campo: 'EL PICHI',
-//     idGrafico: 'graficoPlanifiacionPichi',
-//     idInfo:'Pichi',
-//     campania1: campania[0],
-//     campania2: campania[1]
-//   }
-
-//   cargarInfoPlanificacion(props)
-
-//   // EJECUCION
-
-//   props = {
-//     etapa: '1',
-//     campania1: campania[0],
-//     campania2: campania[1]
-//   }
-
-//   cargarInfoEjecucion(props)
-
-// }
-
-const btnCostosPlanificacion = document.getElementById('btnCostosPlanificacion')
-
-// setTimeout(() => {
-  
-//   if(btnCostosPlanificacion != null){
-    
-//     let campania = document.getElementById('campania').innerText.split('/')
-    
-//     let [campania1,campania2] = campania
-
-//     let url = 'ajax/agro.ajax.php'
-  
-//     let data = new FormData()
-//     data.append('accion','mostrarCostos')
-//     data.append('cultivo','')
-//     data.append('campania1',campania1)
-//     data.append('campania2',campania2)
-//     data.append('seccion','planificacion')
-  
-//     fetch(url,{
-//       method:'post',
-//       body:data
-//     }).then(resp => resp.json())
-//     .then(respuesta=>{
-      
-//       document.getElementById('tituloCostoPlanifiacion').innerText = 'Costos Planificación'
-
-//       let inputs = document.createDocumentFragment()
-      
-//       let inputCampania1 = document.createElement('INPUT')
-//       let inputCampania2 = document.createElement('INPUT')
-//       inputCampania1.setAttribute('name','campania1')      
-//       inputCampania2.setAttribute('name','campania2')      
-//       inputCampania1.setAttribute('type','hidden')      
-//       inputCampania2.setAttribute('type','hidden')     
-//       inputCampania1.setAttribute('value',campania1)      
-//       inputCampania2.setAttribute('value',campania2)    
-       
-//       inputs.appendChild(inputCampania1)
-//       inputs.appendChild(inputCampania2)
-
-//       respuesta.map(reg=>{
-
-//         let row = document.createElement('DIV')
-//         let label = row.cloneNode(true)
-//         let inputDiv = row.cloneNode(true)
-//         let input = document.createElement('INPUT')
-
-//         row.setAttribute('class','row')
-//         row.setAttribute('style','margin-bottom:5px;')
-        
-//         label.setAttribute('class','col-md-7')
-        
-//         inputDiv.setAttribute('class','col-md-5')
-//         input.setAttribute('class','form-control costosPlanificacion')
-//         input.setAttribute('type','number')
-//         input.setAttribute('step','0.01')
-//         input.setAttribute('name',`${reg.cultivo}Costo`)
-//         input.setAttribute('id',`${reg.cultivo}Costo`)
-//         input.setAttribute('required','required')
-//         input.setAttribute('value', reg.costo)
-        
-//         let regex = /(\d+)/g
-        
-//         let cultivoNumerico = reg.cultivo.match(regex)
-            
-//         let cultivo = reg.cultivo
-
-//         if(cultivoNumerico != null){
-
-//             let index = reg.cultivo.indexOf(cultivoNumerico[0])
-
-//             cultivo = reg.cultivo.split('')
-//             cultivo.splice(index, 0, ' ')
-//             cultivo = cultivo.join('')
-          
-//         }
-                
-//         label.innerText = capitalizarPrimeraLetra(cultivo)        
-
-//         inputDiv.appendChild(input)
-//         row.appendChild(label)
-//         row.appendChild(inputDiv)
-
-//         inputs.appendChild(row)
-
-//       })
-      
-//       document.getElementById('formCostosPlanificacion').appendChild(inputs)
-      
-//     })
-//     .catch(er=>console.log(er))
-  
-//   }
-
-//   // ELIMINAR DATOS PLANIFICACION⁄
-//   document.querySelectorAll('.eliminarArchivoAgro').forEach(btnEliminar => {
-
-//     btnEliminar.addEventListener('click',()=>{
-
-//       let campo = btnEliminar.getAttribute('campo')    
-//       let seccion = btnEliminar.getAttribute('seccion')
-//       let [campania1,campania2] = document.getElementById('campania').innerText.split('/')
-
-//       eliminarArchivoCampo(campo,seccion,campania1,campania2)
-    
-//     })
-    
-//   });
-
-// }, 200);
-
-
 const btnMostrarCampania = document.getElementById('btnMostrarCampania')
 
 btnMostrarCampania.addEventListener('click',(e)=>{
   e.preventDefault()
+  console.log('asdasd')
   let campaniaAgro = document.getElementById('campaniaAgro').value
   localStorage.setItem('campaniaAgro',campaniaAgro)
-  window.location = 'index.php?ruta=agro/agro'
+  window.location = `index.php?ruta=agro/agro&campania=${campaniaAgro}`
 
 })
+
+if(campania){
+
+  $('#campania').text(campania)
+
+  let cargaPlanificacion = $('select[name="cargaPlanificacion"]').val()
+
+  cargarInfoPlanificacion(campania,cargaPlanificacion)
+
+}
+
+const btnCostosPlanificacion = document.getElementById('btnCostosPlanificacion')
+
+if(btnCostosPlanificacion != null){
+    
+    let campania = localStorage.getItem('campaniaAgro')
+
+    let cargaCampania = $('select[name="cargaPlanificacion"]').val()
+
+    let url = 'ajax/agro.ajax.php'
+  
+    let data = new FormData()
+    data.append('accion','mostrarCostos')
+    data.append('campania',campania)
+    data.append('cargaCampania',cargaCampania)
+  
+    fetch(url,{
+      method:'post',
+      body:data
+    }).then(resp => resp.json())
+    .then(respuesta=>{
+
+      let row = document.createElement('DIV')
+      row.setAttribute('class','box-body no-padding')
+      
+      let table = document.createElement('TABLE')                
+      table.setAttribute('class','table table-striped')
+      
+      let tbody = document.createElement('TBODY')
+
+      let content = document.createDocumentFragment()
+
+      respuesta.map(reg=>{
+
+        let tr = document.createElement('TR')
+        let tdCultivo = document.createElement('TD')
+        let tdCosto = tdCultivo.cloneNode(true)
+
+        let ultimoCaracter = reg.cultivo.slice(-1);
+        
+        if(!isNaN(ultimoCaracter)){
+
+          let index = reg.cultivo.search(/\d/); 
+
+          if (index !== -1) {
+
+            let parteAntesDelNumero = reg.cultivo.slice(0, index);
+
+            let numero = reg.cultivo.slice(index);
+
+            tdCultivo.innerText = capitalizarPrimeraLetra(`${parteAntesDelNumero} ${numero}°`);
+            
+          }
+
+        } else { 
+          tdCultivo.innerText = capitalizarPrimeraLetra(reg.cultivo)
+        }
+
+        tdCosto.innerText = `u$s ${reg.costo}`
+
+        tr.append(tdCultivo)
+        tr.append(tdCosto)
+
+        content.append(tr)
+
+      })
+      
+      tbody.append(content)
+      table.append(tbody)
+      row.append(table)
+
+      document.getElementById('costoInversionCultivos').appendChild(row)
+      
+    })
+    .catch(er=>console.log(er))
+  
+}
+
+

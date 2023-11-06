@@ -27,8 +27,8 @@
 
                                     <span class="description-text" style="font-size:1.5em">FINA</span>
                                     <h4 class="description-text">
-                                        <span id="hasTrigoPlanificacion<?php echo $campoId;?>"></span> Has. <br>
-                                        <span id="totalCostoTrigoPlanificacion<?php echo $campoId;?>"></span> U$D <br>
+                                        <span id="hasFinaPlanificacion<?php echo $campoId;?>"></span> Has. <br>
+                                        <span id="totalCostoFinaPlanificacion<?php echo $campoId;?>"></span> U$D <br>
                                         <span id="costoFinaPlanificacionHas<?php echo $campoId;?>"></span> U$D/Has <br>
                                     </h4>
                                 </div>
@@ -52,8 +52,8 @@
                                 <div class="description-block btn" data-toggle="modal" data-target="#<?=strtolower($campoId)?>GruesaDetalleModal">
                                     <span class="description-text" style="font-size:1.5em">GRUESA</span>
                                     <h4 class="description-text">
-                                        <span id="hasRestoPlanificacion<?php echo $campoId;?>"></span> Has. <br>
-                                        <span id="totalCostoRestoPlanificacion<?php echo $campoId;?>"></span> U$D <br>
+                                        <span id="hasGruesaPlanificacion<?php echo $campoId;?>"></span> Has. <br>
+                                        <span id="totalCostoGruesaPlanificacion<?php echo $campoId;?>"></span> U$D <br>
                                         <span id="costoGruesaPlanificacionHas<?php echo $campoId;?>"></span> U$D/Has <br>
                                     </h4>
                                 </div>

@@ -2,7 +2,7 @@
   
   <div class="modal-dialog">
 
-    <div class="modal-content" style="width:250px;left:250px;">
+    <div class="modal-content" style="width:300px">
 
       <form role="form" method="post" enctype="multipart/form-data">
 
@@ -26,25 +26,22 @@
 
           <div class="box-body" >
 
-            <div class="form-group" id="inputPeriodoInforme" style="font-size:2em;display:inline-block">
-              
-                <div class="panel">Campa&ntilde;a</div>
+            <div class="form-group">
 
-                <select name="campaniaAgro" id="campaniaAgro">
-                    <?php
-                    $tabla = 'info_planificacion';
-                    $item = 'laBety';
-                    $value = 1;
-                    $item2 = 'elPichi';
-                    $value2 = 1;
+              <label for="campaniaAgro">Campa&ntilde;a</label>
 
-                    $campanias = ControladorAgro::ctrMostrarData($tabla, $item, $value, $item2, $value2, null, null);
+              <select name="campaniaAgro" class="form-control" id="campaniaAgro">
+                <?php
+                $tabla = 'planificaciones';
+  
+                $campanias = ControladorAgro::ctrMostrarCampanias();
+  
+                foreach ($campanias as $key => $value) {
+                    echo "<option value='" . $value['campania'] . "'>" . $value['campania'] . "</option>";
+                }
+                ?>
+              </select>
 
-                    foreach ($campanias as $key => $value) {
-                        echo "<option value='" . $value['campania'] . "'>" . $value['campania'] . "</option>";
-                    }
-                    ?>
-                </select>
             </div>
 
           </div>

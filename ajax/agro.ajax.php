@@ -11,9 +11,9 @@ class AjaxAgro{
 
 	public $campania;
 	
-	public $campania1;
+	public $idPlanificacion;
 
-	public $campania2;
+	public $carga;
 
     public $campo;
 
@@ -23,82 +23,33 @@ class AjaxAgro{
 
 	public $data;
 
-	public function ajaxMostrarData(){
+	public function ajaxMostrarDataPlanificacion(){
 
-		$item = "campania1";
+		$cargaPlanificacion = $this->carga;
+		$campania = $this->campania;
 
-		$valor = $this->campania1;
-		
-		$item2 = "campania2";
+		$idPlanificacion = ControladorAgro::ctrGetCampaignId($campania,$cargaPlanificacion);
 
-		$valor2 = $this->campania2;
+		$cultivos = ControladorAgro::ctrMostrarDataCultivosPlanificacion($idPlanificacion);
 
-		$tabla = $this->seccion;
-		
-		if($tabla == 'planificacion'){
+		$costos = ControladorAgro::ctrMostrarCostos('planificaciones',$campania,$idPlanificacion);
 
-			$item3 = "campo";
-	
-			$valor3= $this->campo;
-			
-		}else{
+		$dataCostos = array();
 
-			$item3 = "etapa";
-	
-			$valor3= $this->etapa;
+		foreach ($costos as $costo) {
+			$dataCostos[$costo['cultivo']] = $costo['costo'];
+ 		}
 
-		}
+		$data = array('cultivos'=>$cultivos,'costos'=>$dataCostos);
 
-
-		$respuesta = ControladorAgro::ctrMostrarData($tabla, $item, $valor, $item2, $valor2, $item3, $valor3);
-		
-		echo json_encode($respuesta);
-
-	}
-
-	public function ajaxMostrarInfo(){
-
-		$item = "campania";
-
-		$valor = $this->campania;
-
-		$tabla = $this->seccion;
-
-		$respuesta = ControladorAgro::ctrMostrarData($tabla, $item, $valor, $item2, $valor2, $item3, $valor3);
-		
-		echo json_encode($respuesta);
-
-	}
-
-	public function ajaxCerrarCampania(){
-
-		$item = "campania";
-
-		$valor = $this->campania;
-
-		$respuesta = ControladorAgro::ctrCerrarCampania($item, $valor);
-
-		echo json_encode($respuesta);
+		echo json_encode($data);
 
 	}
 
 	public function ajaxMostrarCostos(){
 
-		$item = 'cultivo';
-
-		$valor = '';
-
-		$item2 = "campania1";
-		
-		$valor2 = $this->campania1;
-
-		$item3 = "campania2";
-		
-		$valor3 = $this->campania2;
-
-		$tabla = $this->seccion;
-
-		$respuesta = ControladorAgro::ctrMostrarCostos($tabla,$item,$cultivo,$item2,$campania1,$item3,$campania2);
+		$tabla = 'planificaciones';
+		$respuesta = ControladorAgro::ctrMostrarCostos($tabla,$this->campania,$this->idPlanificacion);
 
 		echo json_encode($respuesta);
 
@@ -133,19 +84,11 @@ if(isset($_POST["accion"])){
 
 	$accion = $_POST['accion'];
 
-	if($accion == 'mostrarData'){
-
+	if($accion == 'mostrarDataPlanificacion'){
 		$mostrarData = new AjaxAgro();
+        $mostrarData -> carga = $_POST["carga"];
         $mostrarData -> campania = $_POST["campania"];
-        $mostrarData -> seccion = $_POST["seccion"];
-
-		if($_POST['seccion'] == 'planificacion'){
-			$mostrarData -> campo = $_POST["campo"];
-		}else{
-			$mostrarData -> etapa = $_POST["etapa"];
-		}
-
-        $mostrarData -> ajaxMostrarData();
+        $mostrarData -> ajaxMostrarDataPlanificacion();
 
     }
 
@@ -161,18 +104,9 @@ if(isset($_POST["accion"])){
 	if($accion == 'mostrarCostos'){
 
 		$mostrarData = new AjaxAgro();
-        $mostrarData -> campania1 = $_POST["campania1"];
-        $mostrarData -> campania2 = $_POST["campania2"];
-        $mostrarData -> seccion = $_POST["seccion"];
-        $mostrarData -> ajaxMostrarCostos();
-
-    }
-
-	if($accion == 'cerrarPlanifiacion'){
-
-		$mostrarData = new AjaxAgro();
         $mostrarData -> campania = $_POST["campania"];
-        $mostrarData -> ajaxCerrarCampania();
+        $mostrarData -> idPlanificacion = $_POST["idPlanificacion"];
+        $mostrarData -> ajaxMostrarCostos();
 
     }
 

@@ -25,7 +25,7 @@
 
           <div class="box-body" style="margin:0;padding:0;">
           
-            <div class="box-header with-border" style="margin-bottom:0">
+            <div class="box-header with-border" style="margin-bottom:0" id="<?=$idModalDetalle?>">
                    
             </div>
 

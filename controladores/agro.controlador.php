@@ -204,198 +204,215 @@ class ControladorAgro{
                 if($respuesta == 'ok'){
                     echo "<script> window.location = 'index.php?ruta=agro/agro&idPlanificacion=" . $cargaPlanificacion . "&accion=costosCultivos'</script>";
                 }else{
-                    // TODO HUBO UN ERROR AL CARGAR EL EXCEL
+                    
+                    echo'<script>
+
+                    swal({
+                            type: "error",
+                            title: "Hubo un error al cargar el excel.Informar",
+                            showConfirmButton: true,
+                            confirmButtonText: "Cerrar"
+                            }).then(function(result) {
+                                    if (result.value) {
+
+                                        window.location = "index.php?ruta=agro/agro"
+
+                                    }
+                                })
+
+                    </script>';
+                die();
                 }
 
             }
             
         // CARGA EJECUCION
-            if(in_array($_FILES["nuevosDatosEjecucion"]["type"],$allowedFileType)){
+            // if(in_array($_FILES["nuevosDatosEjecucion"]["type"],$allowedFileType)){
                 
-                $tabla = 'ejecucion';
+            //     $tabla = 'ejecucion';
 
-                $ruta = "carga/" . $_FILES['nuevosDatosEjecucion']['name'];
+            //     $ruta = "carga/" . $_FILES['nuevosDatosEjecucion']['name'];
                 
-                move_uploaded_file($_FILES['nuevosDatosEjecucion']['tmp_name'], $ruta);
+            //     move_uploaded_file($_FILES['nuevosDatosEjecucion']['tmp_name'], $ruta);
                 
-                $nombreArchivo = str_replace(' ', '',$_FILES['nuevosDatosEjecucion']['name']);
+            //     $nombreArchivo = str_replace(' ', '',$_FILES['nuevosDatosEjecucion']['name']);
                                         
-                $rowNumber = 0;
+            //     $rowNumber = 0;
                 
-                $rowValida = false;
+            //     $rowValida = false;
 
-                $data = array();
+            //     $data = array();
 
-                $cultivoCosto = array();
+            //     $cultivoCosto = array();
                 
-                $dateTime = date('Y-m-d H:i:s');
+            //     $dateTime = date('Y-m-d H:i:s');
 
-                $Reader = new SpreadsheetReader($ruta);	
+            //     $Reader = new SpreadsheetReader($ruta);	
                 
-                $sheetCount = count($Reader->sheets());
+            //     $sheetCount = count($Reader->sheets());
         
-                $primeraValida = true;
+            //     $primeraValida = true;
 
-                for($i=0;$i<$sheetCount;$i++){
+            //     for($i=0;$i<$sheetCount;$i++){
         
-                    $Reader->ChangeSheet($i);
+            //         $Reader->ChangeSheet($i);
 
-                    foreach ($Reader as $Row){
+            //         foreach ($Reader as $Row){
                         
-                        if($rowNumber == 1 AND $Row[0] != 'PLANILLA EJECUCION'){
+            //             if($rowNumber == 1 AND $Row[0] != 'PLANILLA EJECUCION'){
 
-                            echo'<script>
+            //                 echo'<script>
 
-                                swal({
-                                        type: "error",
-                                        title: "La planilla seleccionada no corresponde a una planilla de Ejecución",
-                                        showConfirmButton: true,
-                                        confirmButtonText: "Cerrar"
-                                        }).then(function(result) {
-                                                if (result.value) {
+            //                     swal({
+            //                             type: "error",
+            //                             title: "La planilla seleccionada no corresponde a una planilla de Ejecución",
+            //                             showConfirmButton: true,
+            //                             confirmButtonText: "Cerrar"
+            //                             }).then(function(result) {
+            //                                     if (result.value) {
 
-                                                    window.location = "index.php?ruta=agro/agro"
+            //                                         window.location = "index.php?ruta=agro/agro"
 
-                                                }
-                                            })
+            //                                     }
+            //                                 })
 
-                                </script>';
-                            die();
+            //                     </script>';
+            //                 die();
 
-                        }
+            //             }
 
-                        if($rowNumber == 0){
+            //             if($rowNumber == 0){
 
-                            $campania = trim(str_replace('EJECUCION','',$Row[4]));
+            //                 $campania = trim(str_replace('EJECUCION','',$Row[4]));
 
-                            list($campania1,$campania2) = explode('-',$campania);
+            //                 list($campania1,$campania2) = explode('-',$campania);
 
-                        }
+            //             }
 
-                        if($rowNumber == 1){
-                            $etapa = getEtapa($Row[4]);
+            //             if($rowNumber == 1){
+            //                 $etapa = getEtapa($Row[4]);
                         
-                            // VALIDAR SI YA ESTA CARGADA⁄
+            //                 // VALIDAR SI YA ESTA CARGADA⁄
 
-                            $tabla = 'ejecucion';
+            //                 $tabla = 'ejecucion';
 
-                            $item = 'campania1';
+            //                 $item = 'campania1';
                             
-                            $item2 = 'campania2';
+            //                 $item2 = 'campania2';
                             
-                            $item3 = 'etapa';
+            //                 $item3 = 'etapa';
 
-                            $resultado = ControladorAgro::ctrMostrarData($tabla,$item,$campania1,$item2,$campania2,$item3,$etapa);
+            //                 $resultado = ControladorAgro::ctrMostrarData($tabla,$item,$campania1,$item2,$campania2,$item3,$etapa);
                             
-                           if(sizeof($resultado) > 0){
-                               echo'<script>
+            //                if(sizeof($resultado) > 0){
+            //                    echo'<script>
 
-                                   swal({
-                                           type: "error",
-                                           title: "La planilla de la campaña '.$campania1.'-'.$campania2.' , etapa '. $Row[4].' ya ha sido cargada.",
-                                           showConfirmButton: true,
-                                           confirmButtonText: "Cerrar"
-                                           }).then(function(result) {
-                                           if (result.value) {
+            //                        swal({
+            //                                type: "error",
+            //                                title: "La planilla de la campaña '.$campania1.'-'.$campania2.' , etapa '. $Row[4].' ya ha sido cargada.",
+            //                                showConfirmButton: true,
+            //                                confirmButtonText: "Cerrar"
+            //                                }).then(function(result) {
+            //                                if (result.value) {
                                                
-                                               window.location = "index.php?ruta=agro/agro"
+            //                                    window.location = "index.php?ruta=agro/agro"
 
-                                           }
-                                       })
+            //                                }
+            //                            })
 
-                                   </script>';
-                                   die();
-                           }
-                        }
+            //                        </script>';
+            //                        die();
+            //                }
+            //             }
 
-                        if($Row[0] == 'TOTAL'){
-                            $rowValida = false;
-                        }
+            //             if($Row[0] == 'TOTAL'){
+            //                 $rowValida = false;
+            //             }
 
-                        if($rowValida){
+            //             if($rowValida){
 
-                            if($Row[0] == ''){
+            //                 if($Row[0] == ''){
 
-                                $rowValida = false;
+            //                     $rowValida = false;
 
-                            }else{
+            //                 }else{
 
-                                $data = array('campania1'=>$campania1,'campania2'=>$campania2,'etapa'=>$etapa,'campo'=>$campo,'lote'=>$Row[0],'has'=>$Row[1],'cultivo'=>strtolower(trim($Row[2])),'actividad'=>strtolower(trim($Row[3])),'costoActividad'=>$Row[4],'actividad2'=>strtolower($Row[5]),'costoActividad2'=>$Row[6],'periodoTime'=>$dateTime);
+            //                     $data = array('campania1'=>$campania1,'campania2'=>$campania2,'etapa'=>$etapa,'campo'=>$campo,'lote'=>$Row[0],'has'=>$Row[1],'cultivo'=>strtolower(trim($Row[2])),'actividad'=>strtolower(trim($Row[3])),'costoActividad'=>$Row[4],'actividad2'=>strtolower($Row[5]),'costoActividad2'=>$Row[6],'periodoTime'=>$dateTime);
 
-                                $respuesta = ModeloAgro::mdlCargarArchivo($tabla,$data);                               
+            //                     $respuesta = ModeloAgro::mdlCargarArchivo($tabla,$data);                               
                                 
-                                $errors = array($respuesta);
-                            }
+            //                     $errors = array($respuesta);
+            //                 }
 
-                        }
+            //             }
 
-                        if($Row[0] == 'LOTES'){
+            //             if($Row[0] == 'LOTES'){
 
-                            $rowValida = true;
+            //                 $rowValida = true;
 
-                            if($primeraValida){
+            //                 if($primeraValida){
 
-                                $campo = 'EL PICHI';
-                                $primeraValida = false;
+            //                     $campo = 'EL PICHI';
+            //                     $primeraValida = false;
 
-                            }else{
+            //                 }else{
 
-                                $campo = 'LA BETY';
+            //                     $campo = 'LA BETY';
 
-                            }
+            //                 }
 
-                        }
+            //             }
 
                         
-                        $rowNumber++;
+            //             $rowNumber++;
 
-                    }
+            //         }
 
                     
-                }
+            //     }
                 
-            }
+            // }
 
         // VALIDA PROGRAMA DE CARGA                    
-            if(in_array('error',$errors)){
+            // if(in_array('error',$errors)){
 
-                echo'<script>
+            //     echo'<script>
 
-                    swal({
-                            type: "error",
-                            title: "¡No se pudo cargar la planilla!",
-                            showConfirmButton: true,
-                            confirmButtonText: "Cerrar"
-                            }).then(function(result) {
-                            if (result.value) {
+            //         swal({
+            //                 type: "error",
+            //                 title: "¡No se pudo cargar la planilla!",
+            //                 showConfirmButton: true,
+            //                 confirmButtonText: "Cerrar"
+            //                 }).then(function(result) {
+            //                 if (result.value) {
                                 
-                                window.location = "index.php?ruta=agro/agro"
+            //                     window.location = "index.php?ruta=agro/agro"
 
-                            }
-                        })
+            //                 }
+            //             })
 
-                    </script>';
+            //         </script>';
 
-            }else{
+            // }else{
 
-                echo'<script>
+            //     echo'<script>
 
-                swal({
-                        type: "success",
-                        title: "La planilla ha sido cargada correctamente",
-                        showConfirmButton: true,
-                        confirmButtonText: "Cerrar"
-                        }).then(function(result) {
-                                if (result.value) {
+            //     swal({
+            //             type: "success",
+            //             title: "La planilla ha sido cargada correctamente",
+            //             showConfirmButton: true,
+            //             confirmButtonText: "Cerrar"
+            //             }).then(function(result) {
+            //                     if (result.value) {
 
-                                    window.location = "index.php?ruta=agro/agro"
+            //                         window.location = "index.php?ruta=agro/agro"
 
-                                }
-                            })
+            //                     }
+            //                 })
 
-                </script>';
+            //     </script>';
 
-            }
+            // }
 
         }
 
@@ -412,90 +429,12 @@ class ControladorAgro{
 	}
 
     /*=============================================
-	EDITAR COSTOS
-	=============================================*/
-
-	static public function ctrEditarCostos(){
-
-        if(isset($_POST['btnEditarCosto'])){
-
-            $tabla = $_POST['seccion'];
-
-            $data = array();
-
-            foreach ($_POST as $key => $value) {
-                
-                if($key != 'seccion' AND $key != 'btnEditarCosto' AND $key != 'campania1' AND $key != 'campania2'){
-                        
-                    $data[str_replace('Costo','',$key)] = $value;
-
-                }
-
-            }
-            
-            $item = 'cultivo';
-
-            $item2 = 'campania1';
-            
-            $item3 = 'campania2';
-
-            $errors = array();
-            foreach ($data as $key => $value) {
-                        
-                $errors[] = ModeloAgro::mdlEditarCosto($tabla,$item,$key,$item2,$_POST['campania1'],$item3,$_POST['campania2'],$value);
-            
-            }
-            
-            if(in_array('error',$errors)){
-
-                echo'<script>
-
-                    swal({
-                            type: "error",
-                            title: "¡No se pudieron modificar los costos!",
-                            showConfirmButton: true,
-                            confirmButtonText: "Cerrar"
-                            }).then(function(result) {
-                            if (result.value) {
-                                
-                                
-
-                            }
-                        })
-
-                    </script>';
-
-            }else{
-
-                echo'<script>
-
-                swal({
-                        type: "success",
-                        title: "Los costos han sido modificados correctamente",
-                        showConfirmButton: true,
-                        confirmButtonText: "Cerrar"
-                        }).then(function(result) {
-                                if (result.value) {
-
-
-                                }
-                            })
-
-                </script>';
-
-            }
-
-        }
-
-	}
-
-    /*=============================================
 	VER COSTOS
 	=============================================*/
 
-	static public function ctrMostrarCostos($tabla,$item,$value,$item2,$value2,$item3,$value3){
+	static public function ctrMostrarCostos($tabla,$campania,$idPlanificacion){
 
-        return $respuesta = ModeloAgro::mdlMostrarCostos($tabla,$item,$value,$item2,$value2,$item3,$value3);
+        return $respuesta = ModeloAgro::mdlMostrarCostos($tabla,$campania,$idPlanificacion);
 
 	}
 
@@ -503,21 +442,9 @@ class ControladorAgro{
 	VER DATA
 	=============================================*/
     
-	static public function ctrMostrarData($tabla, $item, $valor, $item2 = null, $valor2 = null, $item3 = null, $valor3 = null){
+	static public function ctrMostrarDataPlanificacion($tabla, $item, $valor, $item2 = null, $valor2 = null, $item3 = null, $valor3 = null){
 
         return $respuesta = ModeloAgro::mdlMostrarData($tabla, $item, $valor, $item2, $valor2, $item3, $valor3);
-
-	}
-
-    /*=============================================
-	CERRAR CAMPAÑA
-	=============================================*/
-
-	static public function ctrCerrarCampania($item,$valor){
-
-        $tabla = 'info_planificacion';
-                
-        return $respuesta = ModeloAgro::mdlCerrarCampania($tabla,$item,$valor);
 
 	}
 
@@ -619,11 +546,11 @@ class ControladorAgro{
 	ELIMINAR ARCHIVO
 	=============================================*/
     
-	static public function ctrCultivosPorPlanificacion($idPlanificacion){
+	static public function ctrCultivosUnicosPorPlanificacion($idPlanificacion){
         
         $tabla = 'cultivosplanificacion';
 
-        $resultado = ModeloAgro::mdlCultivosPorPlanificacion($tabla,$idPlanificacion);
+        $resultado = ModeloAgro::mdlCultivosUnicosPorPlanificacion($tabla,$idPlanificacion);
 
         $cultivos = array();
 
@@ -634,6 +561,43 @@ class ControladorAgro{
         return $cultivos;
 
     }
+
+    static public function ctrMostrarCampanias($idPlanificacion = null, $campos = '*' ,$full = false){
+
+        $tabla = 'planificaciones';
+
+        return ModeloAgro::mdlMostrarCampanias($tabla,$idPlanificacion,$campos,$full);
+
+    }
+
+    static public function ctrMostrarCargasPorCampania($campania){
+
+        $tabla = 'planificaciones';
+
+        return ModeloAgro::mdlMostrarCargasPorCampania($tabla,$campania);
+
+    }
+
+    static public function ctrMostrarDataCultivosPlanificacion($idPlanificacion){
+
+        $tabla = 'cultivosplanificacion';
+
+        return ModeloAgro::mdlMostrarDataCultivosPlanificacion($tabla,$idPlanificacion['id']);
+
+    }
+
+    static public function ctrGetCampaignId($campania,$cargaPlanificacion){
+
+        $tabla = 'planificaciones';
+
+		$idPlanificacion = ModeloAgro::mdlGetCampaignId($tabla,$campania,$cargaPlanificacion);
+
+        return $idPlanificacion['id'];
+
+    }
+
+    
+
 }
 
 	

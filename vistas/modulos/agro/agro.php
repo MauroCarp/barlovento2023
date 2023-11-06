@@ -1,9 +1,10 @@
-<?php
+<?php         
+
 if(isset($_GET['accion']) && $_GET['accion'] == 'costosCultivos'){
 
   $idPlanificacion = $_GET['idPlanificacion'];
 
-  $cultivos = ControladorAgro::ctrCultivosPorPlanificacion($idPlanificacion);
+  $cultivos = ControladorAgro::ctrCultivosUnicosPorPlanificacion($idPlanificacion);
 
   $html = '<div class="row">';
 
@@ -28,66 +29,67 @@ if(isset($_GET['accion']) && $_GET['accion'] == 'costosCultivos'){
 
 ?>
 
-<script>
-   swal({
-    title: 'Costo de Cultivos',
-    html:`<?=$html?>`,
-    showCancelButton: false, // Oculta el botón "Cancelar"
-    showCloseButton: false, // Oculta el botón para cerrar
-    allowOutsideClick: false, // Impide cerrar haciendo clic fuera del SweetAlert
-    allowEscapeKey: false,
-    confirmButtonText: 'Cargar',
-    showLoaderOnConfirm: true,
-  }).then((result) => {
+  <script>
+    swal({
+      title: 'Costo de Cultivos',
+      html:`<?=$html?>`,
+      showCancelButton: false, // Oculta el botón "Cancelar"
+      showCloseButton: false, // Oculta el botón para cerrar
+      allowOutsideClick: false, // Impide cerrar haciendo clic fuera del SweetAlert
+      allowEscapeKey: false,
+      confirmButtonText: 'Cargar',
+      showLoaderOnConfirm: true,
+    }).then((result) => {
 
-    if (result) {
-      let data = {
-        'idPlanificacion': <?=$idPlanificacion?>,
-        'accion':'cargarCostos'
+      if (result) {
+        let data = {
+          'idPlanificacion': <?=$idPlanificacion?>,
+          'accion':'cargarCostos'
+        }
+
+        let costosCultivos = {}
+
+        $('.cultivos').each(function(){
+
+          let cultivo = $(this).attr('name')
+          costosCultivos[cultivo] = $(this).val()
+
+        })
+
+        data.cultivos = costosCultivos;
+
+        let url = 'ajax/agro.ajax.php'
+        $.ajax({
+          method:'post',
+          url,
+          data:`accion=cargarCostos&data=${JSON.stringify(data)}`,
+          success:function(response){
+
+            if(response == 'ok'){
+              swal({
+                type: "success",
+                title: "La carga ha sido correcta.",
+                showConfirmButton: true,
+                confirmButtonText: "Cerrar"
+                }).then(function(result) {
+
+                  if (result.value) {
+
+                  window.location = "index.php?ruta=agro/agro";
+
+                  }
+
+                })
+            }
+            
+          }
+        })
+        
       }
 
-      let costosCultivos = {}
+    })
+  </script>
 
-      $('.cultivos').each(function(){
-
-        let cultivo = $(this).attr('name')
-        costosCultivos[cultivo] = $(this).val()
-
-      })
-
-      data.cultivos = costosCultivos;
-
-      let url = 'ajax/agro.ajax.php'
-      $.ajax({
-        method:'post',
-        url,
-        data:`accion=cargarCostos&data=${JSON.stringify(data)}`,
-        success:function(response){
-
-          if(response == 'ok'){
-            swal({
-						  type: "success",
-						  title: "Los costos se han cargado correctamente.",
-						  showConfirmButton: true,
-						  confirmButtonText: "Cerrar"
-						  }).then(function(result) {
-
-                if (result.value) {
-
-                window.location = "index.php?ruta=agro/agro";
-
-                }
-
-              })
-          }
-          
-        }
-      })
-      
-    }
-
-  })
-</script>
 <?php
   die;
 }

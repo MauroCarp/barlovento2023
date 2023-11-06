@@ -45,7 +45,7 @@ const cargarInfoEjecucion = (props)=>{
       body:data
   }).then(resp=>resp.json())
   .then(respuesta=>{
-    console.log(respuesta)
+
     if(respuesta.length == 0){
       document.getElementById(`hasInvEjecucionBety`).innerText = '-'
       document.getElementById(`hasInvEjecucionPichi`).innerText = '-'

@@ -17,7 +17,6 @@ const cargarInfoPlanificacion = (campania,carga)=>{
       body:data
   }).then(resp=>resp.json())
   .then(respuesta=>{
-      console.log(respuesta)
       
       let data = {
         'pichi':{
@@ -176,7 +175,7 @@ const cargarInfoPlanificacion = (campania,carga)=>{
             datasets: [
               {
                 type: 'line',
-                label: 'Inversión U$D/Has',
+                label: 'Inversión USD',
                 borderColor: window.chartColors.red,
                 fill:false,
                 yAxisID: 'A',
@@ -327,21 +326,25 @@ const cargarDetallesCulltivos = (cultivos,idDetalle)=>{
   
   tbody.append(content)
   table.append(tbody)
-  document.getElementById(idDetalle).appendChild(table)
+
+  document.getElementById(idDetalle).innerHTML = '' 
+
+  document.getElementById(idDetalle).append(table)
   
 }
 const btnMostrarCampania = document.getElementById('btnMostrarCampania')
 
 btnMostrarCampania.addEventListener('click',(e)=>{
   e.preventDefault()
-  console.log('asdasd')
   let campaniaAgro = document.getElementById('campaniaAgro').value
   localStorage.setItem('campaniaAgro',campaniaAgro)
   window.location = `index.php?ruta=agro/agro&campania=${campaniaAgro}`
 
 })
 
-if(campania){
+let campaniaValida = getQueryVariable('campania')
+
+if(campania && campaniaValida){
 
   $('#campania').text(campania)
 
@@ -361,8 +364,6 @@ if(btnCostosPlanificacion != null){
 
     let url = 'ajax/agro.ajax.php'
   
-    console.log(cargaCampania)
-
     let data = new FormData()
     data.append('accion','mostrarCostos')
     data.append('campania',campania)

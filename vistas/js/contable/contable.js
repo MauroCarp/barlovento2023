@@ -416,8 +416,6 @@
       }
       // PERIODO VISIBLE
 
-      console.log(respuesta)
-
       document.getElementById('periodoVisible').innerHTML = respuesta[0].periodoVisible
 
         /* CAJAS SUPERIORES */

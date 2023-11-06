@@ -115,26 +115,26 @@
 
 $idModalDetalle = 'betyFina';
 
-include 'vistas\modulos\modales\agro\detalleCultivos.php';
+include 'detalleCultivos.php';
 
 $idModalDetalle = 'betyCobertura';
 
-include 'vistas\modulos\modales\agro\detalleCultivos.php';
+include 'detalleCultivos.php';
 
 $idModalDetalle = 'betyGruesa';
 
-include 'vistas\modulos\modales\agro\detalleCultivos.php';
+include 'detalleCultivos.php';
 
 $idModalDetalle = 'pichiFina';
 
-include 'vistas\modulos\modales\agro\detalleCultivos.php';
+include 'detalleCultivos.php';
 
 $idModalDetalle = 'pichiCobertura';
 
-include 'vistas\modulos\modales\agro\detalleCultivos.php';
+include 'detalleCultivos.php';
 
 $idModalDetalle = 'pichiGruesa';
 
-include 'vistas\modulos\modales\agro\detalleCultivos.php';
+include 'detalleCultivos.php';
 
 ?>

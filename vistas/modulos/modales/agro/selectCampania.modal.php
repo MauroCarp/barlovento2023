@@ -34,7 +34,7 @@
                 <?php
                 $tabla = 'planificaciones';
   
-                $campanias = ControladorAgro::ctrMostrarCampanias();
+                $campanias = ControladorAgro::ctrMostrarCampanias(null,'DISTINCT(campania)');
   
                 foreach ($campanias as $key => $value) {
                     echo "<option value='" . $value['campania'] . "'>" . $value['campania'] . "</option>";

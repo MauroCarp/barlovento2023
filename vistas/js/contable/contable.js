@@ -307,10 +307,6 @@
               data.push(Number(respuesta[key].graficos[dato]).toFixed(2))
             }else{
 
-              if(dato == 'sueldos12Honorarios' && respuesta[key].periodo == 'Sep'){
-                // console.log(respuesta[key].periodo);console.log(respuesta[key].graficos[dato]);console.log(respuesta[Number(key) + 1].graficos[dato])
-                // console.log(respuesta[key].graficos[dato] - respuesta[Number(key) + 1].graficos[dato])
-              } 
               data.push((respuesta[key].graficos[dato] - respuesta[Number(key) + 1].graficos[dato]).toFixed(2))
             }
 
@@ -464,17 +460,11 @@
           // ECONOMICO
             let divId = 'ventasChart'
 
-            // console.log('ver')
-            // console.log(respuesta)
             let dataAgricultura1 = getMonthData(respuesta,'agricultura1')
-            // console.log(dataAgricultura1)
             dataAgricultura1.reverse()
-            // let dataAgricultura = respuesta.map(registro=> Number(registro.graficos.agricultura).toFixed(2))
             let dataAgricultura2 = getMonthData(respuesta,'agricultura2')
-            // console.log(dataAgricultura2)
             dataAgricultura2.reverse()
 
-            // let dataGanaderiaResto = respuesta.map(registro=> Number(registro.graficos.ganaderiaResto).toFixed(2))
             let dataGanaderiaResto1= getMonthData(respuesta,'ganaderiaResto1')
             dataGanaderiaResto1.reverse()
 
@@ -494,13 +484,11 @@
                             borderWidth: 1, 
                             data: dataAgricultura2
                         }
-                      ]
+            ]
 
             
             let labels = []; 
           
-            // let labels = respuesta.map((registro,index)=> { if(index < 6) registro.periodo})
-
             for (let index = 0; index < 6; index++) {
 
               if(respuesta[index]?.periodo != undefined){
@@ -515,33 +503,8 @@
             generarGraficoMultiBar(divId,labels,registros)
             generarGraficoMultiBar('idGraficoVentas',labels,registros)
 
-            // divId = 'ventasChart2'
-
-            // var registrosGanaderia = [{
-            //                   label: 'Ganaderia / Resto 1',
-            //                   backgroundColor: 'rgba(255,0,100,.2)',
-            //                   borderColor: 'rgb(255,0,0)',
-            //                   borderWidth: 1, 
-            //                   data: dataGanaderiaResto1
-            //               },{
-            //                 label: 'Ganaderia / Resto 2',
-            //                 backgroundColor: 'rgba(50,0,255,.2)',
-            //                 borderColor: 'rgb(0,0,255)',
-            //                 borderWidth: 1, 
-            //                 data: dataGanaderiaResto2
-            //             }
-            //           ]
-     
-                      
-            // generarGraficoMultiBar(divId,labels,registrosGanaderia)
-            // generarGraficoMultiBar('idGraficoVentas2',labels,registrosGanaderia)
-
             divId = 'ventasChart2'
-
-            // var totalGanaderiaResto = dataGanaderiaResto1.map((value,key)=>{
-            //   return Number(value) + Number(dataGanaderiaResto2[key]);
-            // })
-                  
+            
             var registrosGanaderia = {
               labels: labels,
               datasets: [
@@ -561,14 +524,61 @@
                   borderWidth: 1,
                   stack: 'Stack 0',
                 },
-                // {
-                //   label: 'Total',
-                //   data: totalGanaderiaResto,
-                //   backgroundColor: 'rgba(0,255,0,.2)',
-                //   borderColor: 'rgb(0,255,0)',
-                //   borderWidth: 1,
-                //   stack: 'Stack 1',
-                // },
+              ]
+            };
+                                  
+            generarGraficoStackedGroup(divId,labels,registrosGanaderia)
+            generarGraficoStackedGroup('idGraficoVentas2',labels,registrosGanaderia)
+
+            divId = 'ventasGanaderiaChart'
+                          
+            let dataVaquillonasNovillos= getMonthData(respuesta,'vaquillonasNovillos')
+            dataVaquillonasNovillos.reverse()
+
+            let dataCarneSubproductos= getMonthData(respuesta,'carneSubproductos')
+            dataCarneSubproductos.reverse()
+
+            let dataExportacion= getMonthData(respuesta,'exportacion')
+            dataExportacion.reverse()
+
+            let dataProduccionHacienda= getMonthData(respuesta,'produccionHacienda')
+            dataProduccionHacienda.reverse()
+
+            let registrosGanaderia2 = {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Vaquillonas y Novillos',
+                  data: dataVaquillonasNovillos,
+                  backgroundColor: 'rgba(255,0,100,.2)',
+                  borderColor: 'rgb(255,0,0)',
+                  borderWidth: 1, 
+                  stack: 'Stack 0',
+                },
+                {
+                  label: 'Carnes y Subproductos',
+                  data: dataCarneSubproductos,
+                  backgroundColor: 'rgba(50,0,255,.2)',
+                  borderColor: 'rgb(0,0,255)',
+                  borderWidth: 1,
+                  stack: 'Stack 0',
+                },
+                {
+                  label: 'Exportación',
+                  data: dataExportacion,
+                  backgroundColor: 'rgba(50,0,255,.2)',
+                  borderColor: 'rgb(0,255,0)',
+                  borderWidth: 1,
+                  stack: 'Stack 0',
+                },
+                {
+                  label: 'Prod. Hacienda',
+                  data: dataProduccionHacienda,
+                  backgroundColor: 'rgba(50,0,255,.2)',
+                  borderColor: 'rgb(255,0,255)',
+                  borderWidth: 1,
+                  stack: 'Stack 0',
+                },
               ]
             };
                                   

@@ -201,6 +201,45 @@ include 'cajasEconomico.php';
 
     </div>
 
+    <div class="col-lg-4">
+        
+        <div class="row">
+
+            <div class="col-lg-12">
+                
+                <div class="box box-success">
+
+                    <div class="box-header with-border">
+
+                        <h3 class="box-title">Ventas Ganaderia 2</h3>
+
+                        <div class="box-tools pull-right" bis_skin_checked="1">
+
+                            <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoVentasGanaderiaModal" data-widget="zoom"><i class="fa fa-search-plus"></i>
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <div class="box-body">
+
+                        <div class="chart">
+
+                            <canvas id="ventasGanaderiaChart"></canvas>
+
+                        </div>
+
+                    </div>
+                
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 <?php
 
@@ -210,6 +249,11 @@ $idGrafico = 'idGraficoVentas';
 include 'graficoContable.modal.php';
 
 $tituloGrafico = 'Ventas Ganaderia';
+$idGraficoModal = 'graficoVentasGanaderiaModal';
+$idGrafico = 'idGraficoVentasGanaderia';
+include 'graficoContable.modal.php';
+
+$tituloGrafico = 'Ventas Ganaderia 2';
 $idGraficoModal = 'graficoVenta2Modal';
 $idGrafico = 'idGraficoVentas2';
 include 'graficoContable.modal.php';

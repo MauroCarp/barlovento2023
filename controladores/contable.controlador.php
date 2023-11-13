@@ -54,16 +54,48 @@ class ControladorContable{
                     
                     $sheetCount = count($Reader->sheets());
                     
-                    $data = array('archivo'=>$_FILES['nuevosDatosBarlovento']['name'],'libro'=>'Principal','prestamos' => array(),'tarjetas' => array(),'honorarios' => array());
-    
+                    $data = array('archivo'=>$_FILES['nuevosDatosBarlovento']['name'],
+                                  'libro'=>'Principal',
+                                  'prestamos' => array(),
+                                  'tarjetas' => array(),
+                                  'activos'=>0,
+                                  'activoCorriente'=>0,
+                                  'deudaTotal'=>0,
+                                  'mutuales'=>0,
+                                  'proveedores'=>0,
+                                  'cerealPL'=>0,
+                                  'seguros'=>array(),
+                                  'sgr'=>0,
+                                  'ganancias'=>0,
+                                  'perdidas'=>0,
+                                  'perdidasDirectas'=>0,
+                                  'deudaBancaria'=>0,
+                                  'saldoTecnico'=>0,
+                                  'sld'=>0,
+                                  'bienesDeCambio'=>0,
+                                  'cajaBancos'=>0,
+                                  'pasivoCorriente'=>0,
+                                  'pasivoTotal'=>0,
+                                  'patrimonioNeto'=>0,
+                                  'agricultura'=>0,
+                                  'ganaderia'=>array('4.01.00.00.000'=>0,'4.01.01.01.000'=>0),
+                                  'resto'=>0,
+                                  'ingresoBrutoMensual'=>0,
+                                  'inmobiliario'=>0,
+                                  'cargasSocialesReales'=>0,
+                                  'sueldos'=>0,
+                                  'honorarios'=>array(),
+                                  'interesesPagados'=>0
+                    );
                    
                     for($i=0;$i<$sheetCount;$i++){
     
                         $Reader->ChangeSheet($i);
     
                         foreach ($Reader as $Row){
-    
+
                             if($rowNumber == 4){
+
     
                                 $año = substr(substr($Row[4],-7),3);
     
@@ -107,7 +139,6 @@ class ControladorContable{
                                 
                                 
                             }
-
                             
                             if($rowNumber >= 6){
 
@@ -222,9 +253,8 @@ class ControladorContable{
                     $data['honorarios'] = array_sum($data['honorarios']);
                     $data['ganaderia'] = $data['ganaderia']['4.01.00.00.000'] - $data['ganaderia']['4.01.01.01.000'];
 
-                    
                     $respuesta = ModeloContable::mdlCargarArchivo($tabla,$data);
-             
+
                     if($respuesta != 'ok'){
     
                         echo'<script>
@@ -287,9 +317,7 @@ class ControladorContable{
                     $ruta = "carga/" . $_FILES['nuevosDatosBarloventoConsolidado']['name'];
                     
                     move_uploaded_file($_FILES['nuevosDatosBarloventoConsolidado']['tmp_name'], $ruta);
-                    
-                    $nombreArchivo = str_replace(' ', '',$_FILES['nuevosDatosBarloventoConsolidado']['name']);
-                                            
+                                                                
                     $rowNumber = 0;
                     
                     $rowValida = false;
@@ -299,9 +327,41 @@ class ControladorContable{
                     $Reader = new SpreadsheetReader($ruta);	
                     
                     $sheetCount = count($Reader->sheets());
-                    
-                    $data = array('archivo'=>$_FILES['nuevosDatosBarloventoConsolidado']['name'],'libro'=>'Consolidado','prestamos' => array(),'tarjetas' => array(),'honorarios' => array());
-    
+                        
+                    $data = array('archivo'=>$_FILES['nuevosDatosBarloventoConsolidado']['name'],
+                                  'libro'=>'Consolidado',
+                                  'prestamos' => array(),
+                                  'tarjetas' => array(),
+                                  'activos'=>0,
+                                  'activoCorriente'=>0,
+                                  'deudaTotal'=>0,
+                                  'mutuales'=>0,
+                                  'proveedores'=>0,
+                                  'cerealPL'=>0,
+                                  'seguros'=>array(),
+                                  'sgr'=>0,
+                                  'ganancias'=>0,
+                                  'perdidas'=>0,
+                                  'perdidasDirectas'=>0,
+                                  'deudaBancaria'=>0,
+                                  'saldoTecnico'=>0,
+                                  'sld'=>0,
+                                  'bienesDeCambio'=>0,
+                                  'cajaBancos'=>0,
+                                  'pasivoCorriente'=>0,
+                                  'pasivoTotal'=>0,
+                                  'patrimonioNeto'=>0,
+                                  'agricultura'=>0,
+                                  'ganaderia'=>array('4.01.00.00.000'=>0,'4.01.01.01.000'=>0),
+                                  'resto'=>0,
+                                  'ingresoBrutoMensual'=>0,
+                                  'inmobiliario'=>0,
+                                  'cargasSocialesReales'=>0,
+                                  'sueldos'=>0,
+                                  'honorarios'=>array(),
+                                  'interesesPagados'=>0
+                    );
+
                     for($i=0;$i<$sheetCount;$i++){
     
                         $Reader->ChangeSheet($i);
@@ -461,9 +521,7 @@ class ControladorContable{
                     $data['seguros'] = array_sum($data['seguros']);
                     $data['honorarios'] = array_sum($data['honorarios']);
                     $data['resto'] = 0;
-
-                    $respuesta = ModeloContable::mdlCargarArchivo($tabla,$data);
-             
+                    $respuesta = ModeloContable::mdlCargarArchivo($tabla,$data);          
                 
                     if($respuesta != 'ok'){
     

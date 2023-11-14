@@ -416,19 +416,19 @@
 
         /* CAJAS SUPERIORES */
           // ECONOMICO
-            document.getElementById('agricultura1').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.agricultura1 / 100).toFixed(0))
-            document.getElementById('agricultura2').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.agricultura2 / 100).toFixed(0))
-            document.getElementById('ganaderiaResto1').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto1 / 100).toFixed(0))
-            document.getElementById('ganaderiaResto2').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto2 / 100).toFixed(0))
+            document.getElementById('agricultura1').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.agricultura1 / 1000).toFixed(0))
+            document.getElementById('agricultura2').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.agricultura2 / 1000).toFixed(0))
+            document.getElementById('ganaderiaResto1').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto1 / 1000).toFixed(0))
+            document.getElementById('ganaderiaResto2').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto2 / 1000).toFixed(0))
             let ventasTotales = respuesta[0].cajas.agricultura1 + respuesta[0].cajas.agricultura2 + respuesta[0].cajas.ganaderiaResto1 + respuesta[0].cajas.ganaderiaResto2
-            document.getElementById('ventasTotales').innerHTML = '$ ' + numberWithCommas((ventasTotales / 100).toFixed(0))
+            document.getElementById('ventasTotales').innerHTML = '$ ' + numberWithCommas((ventasTotales / 1000).toFixed(0))
             
           
           // FINANCIERO
-            document.getElementById('deudaTotal').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.deudaTotal / 100).toFixed(0))
-            document.getElementById('pasivoTotal').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.pasivoTotal / 100).toFixed(0))
-            document.getElementById('activoCirculante').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.activoCirculante / 100).toFixed(0))
-            document.getElementById('patrimonioNeto').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.patrimonioNeto / 100).toFixed(0))
+            document.getElementById('deudaTotal').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.deudaTotal / 1000).toFixed(0))
+            document.getElementById('pasivoTotal').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.pasivoTotal / 1000).toFixed(0))
+            document.getElementById('activoCirculante').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.activoCirculante / 1000).toFixed(0))
+            document.getElementById('patrimonioNeto').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.patrimonioNeto / 1000).toFixed(0))
 
             let deudaBienes = respuesta[0].cajas.deudaBancaria / respuesta[0].cajas.bienesDeCambio
             document.getElementById('duedaBienes').innerHTML = numberWithCommas((deudaBienes * 100).toFixed(2)) + '%'
@@ -442,18 +442,17 @@
 
             let actPasCorriente = Number(respuesta[0].cajas.activoCorriente) / Number(respuesta[0].cajas.pasivoCorriente)
             document.getElementById('indiceActPasCorriente').innerHTML = numberWithCommas((actPasCorriente).toFixed(2))
-            // document.getElementById('indiceActPasCorriente').innerHTML = numberWithCommas((pasivoPatrimonio * 100).toFixed(2)) + '%'
 
           // IMPOSITIVO
-            document.getElementById('ingresoBruto').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ingresosBrutos / 100).toFixed(0))
-            document.getElementById('inmobiliarioComuna').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.inmobiliarioComuna / 100).toFixed(0))
-            document.getElementById('cargasSociales').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.cargasSociales / 100).toFixed(0))
+            document.getElementById('ingresoBruto').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ingresosBrutos / 1000).toFixed(0))
+            document.getElementById('inmobiliarioComuna').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.inmobiliarioComuna / 1000).toFixed(0))
+            document.getElementById('cargasSociales').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.cargasSociales / 1000).toFixed(0))
 
             let sueldosVentas = respuesta[0].cajas.sueldos / ventasTotales
 
-            document.getElementById('sueldosVentas').innerHTML = '$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12') / 100).toFixed(0))
+            document.getElementById('sueldosVentas').innerHTML = '$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12') / 1000).toFixed(0))
 
-            document.getElementById('sueldosTotal').innerHTML = '$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12Honorarios') / 100).toFixed(0))
+            document.getElementById('sueldosTotal').innerHTML = '$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12Honorarios') / 1000).toFixed(0))
 
         /* GRAFICOS */
 

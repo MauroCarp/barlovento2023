@@ -12,7 +12,7 @@
             <b style="font-size:1.8em;">Periodo: <span id="periodoVisible"></span></b>
           </div>
           <div class="col-lg-9" style="text-align:right">
-            <small><b>*Los valores de los recuadros superiores se representan en n/100</b></small>
+            <small><b>*Los valores de los recuadros superiores se representan en n/1000</b></small>
           </div>
         </div>
         <div class="row">

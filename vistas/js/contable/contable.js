@@ -368,13 +368,12 @@
     data.append('periodo',periodoData)
     data.append('accion','mostrarData')
 
-    // console.log(periodoData)
     fetch(url,{
         method:'POST',
         body:data
     }).then(resp=>resp.json())
     .then(respuesta=>{
-      // console.log(respuesta)
+
       if(!respuesta){
 
         swal({
@@ -410,6 +409,7 @@
           return
         
       }
+
       // PERIODO VISIBLE
 
       document.getElementById('periodoVisible').innerHTML = respuesta[0].periodoVisible
@@ -550,7 +550,7 @@
                 {
                   label: 'Vaquillonas y Novillos',
                   data: dataVaquillonasNovillos,
-                  backgroundColor: 'rgba(255,0,100,.2)',
+                  backgroundColor: 'rgba(255,0,0,.2)',
                   borderColor: 'rgb(255,0,0)',
                   borderWidth: 1, 
                   stack: 'Stack 0',
@@ -558,7 +558,7 @@
                 {
                   label: 'Carnes y Subproductos',
                   data: dataCarneSubproductos,
-                  backgroundColor: 'rgba(50,0,255,.2)',
+                  backgroundColor: 'rgba(0,0,255,.2)',
                   borderColor: 'rgb(0,0,255)',
                   borderWidth: 1,
                   stack: 'Stack 0',
@@ -566,7 +566,7 @@
                 {
                   label: 'Exportación',
                   data: dataExportacion,
-                  backgroundColor: 'rgba(50,0,255,.2)',
+                  backgroundColor: 'rgba(0,255,0,.2)',
                   borderColor: 'rgb(0,255,0)',
                   borderWidth: 1,
                   stack: 'Stack 0',
@@ -574,7 +574,7 @@
                 {
                   label: 'Prod. Hacienda',
                   data: dataProduccionHacienda,
-                  backgroundColor: 'rgba(50,0,255,.2)',
+                  backgroundColor: 'rgba(255,0,255,.2)',
                   borderColor: 'rgb(255,0,255)',
                   borderWidth: 1,
                   stack: 'Stack 0',
@@ -582,18 +582,13 @@
               ]
             };
                                   
-            // generarGraficoStackedGroup(divId,labels,registrosGanaderia)
-            // generarGraficoStackedGroup('idGraficoVentas2',labels,registrosGanaderia)
+            generarGraficoStackedGroup(divId,labels,registrosGanaderia2)
+            generarGraficoStackedGroup('idGraficoGanaderia2',labels,registrosGanaderia2)
 
 
             divId = 'margenVentasChart'
             tituloLabel = 'Margen/Ventas'
-            // registros = respuesta.map((registro,index)=> {
-            //                                                 console.log(index);
-            //                                                 if(index < 5){
-            //                                                     return Number(registro.graficos.margenSobreVentas).toFixed(2)
-            //                                                   }
-            //                                                 })
+
             registros = []
 
             for (const key in respuesta) {
@@ -603,7 +598,6 @@
             }
             registros.reverse()      
             
-            // dataResultExpl = respuesta.map(registro=>Number(registro.graficos.resultadoExplotacion2).toFixed(2))
             dataResultExpl = getMonthData(respuesta,'resultadoExplotacion2')
             console.log(dataResultExpl);  
             dataResultExpl.reverse()
@@ -701,7 +695,6 @@
               }
             }
 
-            // registros = respuesta.map(registro=>  Number(registro.graficos.rentabilidadEconomica).toFixed(2))
             registros.reverse()
 
             let configRentabilidadChart = {
@@ -752,7 +745,8 @@
           // FINANCIERO
             divId = 'endeudamientoChart'
 
-            // let dataPrestamos = respuesta.map(registro=> Number(registro.graficos.endeudamiento.prestamos).toFixed(2))
+            /** */
+
             let dataPrestamos = []
 
             for (const key in respuesta) {
@@ -763,7 +757,8 @@
 
             dataPrestamos.reverse()
 
-            // let dataTarjetas = respuesta.map(registro=> Number(registro.graficos.endeudamiento.tarjetas).toFixed(2))
+            /** */
+
             let dataTarjetas = []
 
             for (const key in respuesta) {
@@ -774,7 +769,8 @@
 
             dataTarjetas.reverse()
 
-            // let dataProveedores = respuesta.map(registro=> Number(registro.graficos.endeudamiento.proveedores).toFixed(2))
+            /** */
+
             let dataProveedores = []
 
             for (const key in respuesta) {
@@ -785,7 +781,7 @@
 
             dataProveedores.reverse()
 
-            // let dataSgr = respuesta.map(registro=> Number(registro.graficos.endeudamiento.sgr).toFixed(2))
+            /** */
 
             let dataSgr = []
 
@@ -797,7 +793,8 @@
 
             dataSgr.reverse()
 
-            // let dataMutuales = respuesta.map(registro=> Number(registro.graficos.endeudamiento.mutuales).toFixed(2))
+            /** */
+            
             let dataMutuales = []
 
             for (const key in respuesta) {
@@ -808,7 +805,8 @@
 
             dataMutuales.reverse()
             
-            // let dataCLP = respuesta.map(registro=> Number(registro.graficos.endeudamiento.cerealPL).toFixed(2))
+            /** */
+
             let dataCLP = []
 
             for (const key in respuesta) {
@@ -860,7 +858,9 @@
             generarGraficoMultiBar('idGraficoDeudaBancaria',labels,registros)
 
             divId = 'deudaBancariaChart'
-            // let dataDeudaBancaria = respuesta.map(registro=> Number(registro.graficos.deudaBancaria).toFixed(2))
+            
+            /** */
+
             let dataDeudaBancaria = []
 
             for (const key in respuesta) {
@@ -875,14 +875,6 @@
             generarGraficoBarSimple(dataDeudaBancaria,divId,labels,tituloLabel)
 
             divId = 'interesesPagadosChart'
-            // let dataDeudaBancaria = respuesta.map(registro=> Number(registro.graficos.deudaBancaria).toFixed(2))
-            // let datainteresesPagados = []
-
-            // for (const key in respuesta) {
-            //   if(key < 6){
-            //     datainteresesPagados.push(Number(respuesta[key].graficos.interesesPagados).toFixed(2))
-            //   }
-            // }
 
             datainteresesPagados = getMonthData(respuesta,'interesesPagados')
 
@@ -895,7 +887,8 @@
 
                             
             divId = 'saldoIva'
-            // let dataSld = respuesta.map(registro=> Number(registro.graficos.saldos.sld).toFixed(2))
+            
+            /** */
 
             let dataSld = []
 
@@ -907,8 +900,7 @@
 
             dataSld.reverse()
 
-
-            // let dataSaldoTecnico = respuesta.map(registro=> Number(registro.graficos.saldos.saldoTecnico).toFixed(2))
+            /** */
 
             let dataSaldoTecnico = []
 
@@ -917,6 +909,7 @@
                 dataSaldoTecnico.push(Number(respuesta[key].graficos.saldos.saldoTecnico).toFixed(2))
               }
             }
+
             dataSaldoTecnico.reverse()
 
             registros = [{
@@ -940,7 +933,7 @@
             let ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
 
             divId = 'sueldos12Ventas'
-            // let dataSueldos12 = respuesta.map(registro=> Number(registro.graficos.sueldos12).toFixed(2))
+
             let dataSueldos12 = getMonthData(respuesta,'sueldos12')
             let dataSueldos12Ventas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
             
@@ -948,8 +941,6 @@
             dataSueldos12Ventas.reverse()
 
             tituloLabel = 'Sueldos 1 + 2 / Ventas'
-
-            // generarGraficoBarSimple(dataSueldosHonorariosVentas,divId,labels,tituloLabel)
 
             let configSueldos12VentasChart = {
               type: 'bar',
@@ -1032,12 +1023,11 @@
                   
             generarGraficoBar(divId,configSueldos12VentasChart,'noOption');
             generarGraficoBar('idGraficoSueldo12',configSueldos12VentasChart,'noOption');
-            // generarGraficoBar('idGraficoSueldos12Ventas',configSueldos12VentasChart,'noOption')
             
             divId = 'sueldos12HonorariosVentas'
-            // let dataSueldos12Honorarios = respuesta.map(registro=> Number(registro.graficos.sueldos12Honorarios).toFixed(2))
+
             let dataSueldos12Honorarios = getMonthData(respuesta,'sueldos12Honorarios')
-            // console.log(dataSueldos12Honorarios)
+
             ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
             let dataSueldos12HonorariosVentas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
 
@@ -1130,9 +1120,6 @@
             generarGraficoBar(divId,configSueldos12HonorariosVentasChart,'noOption');
 
             generarGraficoBar('idGraficoSueldo12Honorario',configSueldos12HonorariosVentasChart,'noOption');
-
-            // generarGraficoBarSimple(dataSueldosVentas,divId,labels,tituloLabel)
-
           
         const btnsZoomGrafico = document.querySelectorAll('.zoomGraficos')
 
@@ -1156,6 +1143,11 @@
 
                 break;
 
+                case 'zGraficoGanaderia':
+                  $('#graficoGanaderiaModal').modal('show')
+
+                break;
+
                 case 'zGraficoEndeudamiento':
                   $('#graficoDeudaBancariaModal').modal('show')
 
@@ -1172,6 +1164,10 @@
                 case 'zGraficoSueldos12Honorarios':
                   $('#graficoSueldo12HonorarioModal').modal('show')
                   break;
+           
+                // case 'zGraficoVentasGanaderia':
+                //   $('#idGraficoVentasGanaderia2').modal('show')
+                //   break;
             
               default:
                 break;

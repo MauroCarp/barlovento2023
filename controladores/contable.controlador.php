@@ -155,8 +155,7 @@ class ControladorContable{
             '2.00.00.00.000' => 'pasivoTotal',
             '3.00.00.00.000' => 'patrimonioNeto',
             '4.01.01.00.000' => 'agricultura',
-            '4.01.00.00.000' => 'ganaderia',
-            '4.01.01.01.000' => 'ganaderia',
+            '4.01.02.01.000' => 'ganaderia',
             '5.02.01.01.001' => 'ingresoBrutoMensual',
             '5.02.01.06.005' => 'inmobiliario',
             '5.02.01.05.002' => 'cargasSocialesReales',
@@ -205,7 +204,7 @@ class ControladorContable{
                       'pasivoTotal'=>0,
                       'patrimonioNeto'=>0,
                       'agricultura'=>0,
-                      'ganaderia'=>array('4.01.00.00.000'=>0,'4.01.01.01.000'=>0),
+                      'ganaderia'=>0,
                       'resto'=>0,
                       'ingresoBrutoMensual'=>0,
                       'inmobiliario'=>0,
@@ -285,15 +284,7 @@ class ControladorContable{
 
                         if(is_array($data[$key])){
 
-                            if ($key == 'ganaderia'){
-
-                                $data[$key][$Row[1]] = $Row[5];
-
-                            } else {
-
-                                $data[$key][] = $Row[5];
-
-                            }
+                            $data[$key][] = $Row[5];
 
                         } else {
 
@@ -319,7 +310,7 @@ class ControladorContable{
         $data['tarjetas'] = array_sum($data['tarjetas']);
         $data['seguros'] = array_sum($data['seguros']);
         $data['honorarios'] = array_sum($data['honorarios']);
-        $data['ganaderia'] = $data['ganaderia']['4.01.00.00.000'] - $data['ganaderia']['4.01.01.01.000'];
+        $data['ganaderia'] = ($data['ganaderia'] + $data['exportacion']) - $data['produccionHacienda'];
         $data['vaquillonasNovillos'] = array_sum($data['vaquillonasNovillos']);
         $data['carneSubproductos'] = array_sum($data['carneSubproductos']);
 
@@ -481,8 +472,8 @@ class ControladorContable{
 
                     // SUELDOS HONORARIOS / VENTAS
                 
-                        $sueldos12Ventas = ($ventasTotales > 0) ? $sueldos12 / $ventasTotales : 0;
-                        $sueldos12HonorariosVentas = ($ventasTotales > 0) ? $sueldos12Honorarios / $ventasTotales : 0;           
+                        $sueldos12Ventas = $sueldos12 / $ventasTotales;
+                        $sueldos12HonorariosVentas = $sueldos12Honorarios / $ventasTotales;           
                         
             return array(
                 'periodo'=>$labelMeses[$ultimoMes - 1],

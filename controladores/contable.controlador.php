@@ -168,6 +168,7 @@ class ControladorContable{
             '5.03.01.01.004' => 'interesesPagados',
             '4.01.02.01.002' => 'vaquillonasNovillos',
             '4.01.02.01.003' => 'vaquillonasNovillos',
+            '4.01.02.01.005' => 'vaquillonasNovillos',
             '4.01.02.01.010' => 'carneSubproductos',
             '4.01.02.01.011' => 'carneSubproductos',
             '4.01.04.01.000' => 'exportacion',
@@ -384,19 +385,6 @@ class ControladorContable{
                     // GANADERIAS  Y RESTOS
                         $ganaderiaResto1 = $principal['ganaderia'];
                         $ganaderiaResto2 = $consolidado['ganaderia'] - $ganaderiaResto1;
-                    
-                    // DESGLOSE GANADERIA
-                        // $vaquillonasNovillos1 = $principal['vaquillonasNovillos'];
-                        // $vaquillonasNovillos = $consolidado['vaquillonasNovillos'] - $vaquillonasNovillos1;
-
-                        // $carneSubproductos1 = $principal['carneSubproductos'];
-                        // $carneSubproductos = $consolidado['carneSubproductos'] - $carneSubproductos1;
-
-                        // $exportacion1 = $principal['ganaderiaExportacion'];
-                        // $exportacion = $consolidado['ganaderiaExportacion'] - $exportacion1;
-
-                        // $produccionHacienda1 = $principal['produccionHacienda'];
-                        // $produccionHacienda = $consolidado['produccionHacienda'] - $produccionHacienda1;
 
                     // VENTAS TOTALES
                         $ventasTotales = $agricultura1 + $agricultura2 + $ganaderiaResto1 + $ganaderiaResto2; 
@@ -495,7 +483,7 @@ class ControladorContable{
                 
                         $sueldos12Ventas = ($ventasTotales > 0) ? $sueldos12 / $ventasTotales : 0;
                         $sueldos12HonorariosVentas = ($ventasTotales > 0) ? $sueldos12Honorarios / $ventasTotales : 0;           
-
+                        
             return array(
                 'periodo'=>$labelMeses[$ultimoMes - 1],
                 'periodoVisible'=> $labelMeses[$ultimoMes - 1] . ' ' . $anio,

@@ -211,7 +211,7 @@ include 'cajasEconomico.php';
 
                     <div class="box-header with-border">
 
-                        <h3 class="box-title">Ventas Ganaderia 2</h3>
+                        <h3 class="box-title">Ventas Ganader&iacute;a por L&iacute;neas de Producto</h3>
 
                         <div class="box-tools pull-right" bis_skin_checked="1">
 
@@ -253,7 +253,7 @@ $idGraficoModal = 'graficoVenta2Modal';
 $idGrafico = 'idGraficoVentas2';
 include 'graficoContable.modal.php';
 
-$tituloGrafico = 'Ventas Ganaderia 2';
+$tituloGrafico = 'Ventas Ganaderia por Lineas de Producto';
 $idGraficoModal = 'graficoGanaderiaModal';
 $idGrafico = 'idGraficoGanaderia2';
 include 'graficoContable.modal.php';

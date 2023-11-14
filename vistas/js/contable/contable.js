@@ -1164,10 +1164,6 @@
                 case 'zGraficoSueldos12Honorarios':
                   $('#graficoSueldo12HonorarioModal').modal('show')
                   break;
-           
-                // case 'zGraficoVentasGanaderia':
-                //   $('#idGraficoVentasGanaderia2').modal('show')
-                //   break;
             
               default:
                 break;

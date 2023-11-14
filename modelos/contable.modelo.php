@@ -55,7 +55,11 @@ class ModeloContable{
 			honorarios,
 			sgr,
 			cerealPL,
-			interesesPagados
+			interesesPagados,
+			vaquillonasNovillos,
+			carneSubproductos,
+			ganaderiaExportacion,
+			produccionHacienda
 			) VALUES(:archivo,
 			:libro,
 			:periodo,
@@ -88,7 +92,11 @@ class ModeloContable{
 			:honorarios,
 			:sgr,
 			:cerealPL,
-			:interesesPagados)");
+			:interesesPagados,
+			:vaquillonasNovillos,
+			:carneSubproductos,
+			:ganaderiaExportacion,
+			:produccionHacienda)");
 			
 			$stmt -> bindParam(":archivo", $data['archivo'], PDO::PARAM_STR);
 			$stmt -> bindParam(":libro", $data['libro'], PDO::PARAM_STR);
@@ -123,8 +131,11 @@ class ModeloContable{
 			$stmt -> bindParam(":sgr", $data['sgr'], PDO::PARAM_STR);
 			$stmt -> bindParam(":cerealPL", $data['cerealPL'], PDO::PARAM_STR);
 			$stmt -> bindParam(":interesesPagados", $data['interesesPagados'], PDO::PARAM_STR);
+			$stmt -> bindParam(":vaquillonasNovillos", $data['vaquillonasNovillos'], PDO::PARAM_STR);
+			$stmt -> bindParam(":carneSubproductos", $data['carneSubproductos'], PDO::PARAM_STR);
+			$stmt -> bindParam(":ganaderiaExportacion", $data['exportacion'], PDO::PARAM_STR);
+			$stmt -> bindParam(":produccionHacienda", $data['produccionHacienda'], PDO::PARAM_STR);
 			
-
 		}
 
 		if($stmt->execute()){
@@ -137,10 +148,6 @@ class ModeloContable{
 
 			
 		}
-		
-		$stmt->close();
-		
-		$stmt = null;
 	
 	}
 

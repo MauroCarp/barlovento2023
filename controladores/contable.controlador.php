@@ -28,551 +28,45 @@ class ControladorContable{
             require_once('extensiones/excel/php-excel-reader/excel_reader2.php');
             require_once('extensiones/excel/SpreadsheetReader.php');
 
-            if(isset($_FILES['nuevosDatosBarlovento'])){
+            $tabla = 'contable';
 
-                $tabla = 'contable';
-                
-                $error = false;
-                
-                $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+            $respuesta = null;
+
+            if (isset($_FILES['nuevosDatosBarlovento'])){
     
                 if(in_array($_FILES["nuevosDatosBarlovento"]["type"],$allowedFileType)){
     
                     $ruta = "carga/" . $_FILES['nuevosDatosBarlovento']['name'];
                     
                     move_uploaded_file($_FILES['nuevosDatosBarlovento']['tmp_name'], $ruta);
-                    
-                    $nombreArchivo = str_replace(' ', '',$_FILES['nuevosDatosBarlovento']['name']);
-                                            
-                    $rowNumber = 0;
-                    
-                    $rowValida = false;
-                    
-                    $dateTime = date('Y-m-d H:i:s');
-    
-                    $Reader = new SpreadsheetReader($ruta);	
-                    
-                    $sheetCount = count($Reader->sheets());
-                    
-                    $data = array('archivo'=>$_FILES['nuevosDatosBarlovento']['name'],
-                                  'libro'=>'Principal',
-                                  'prestamos' => array(),
-                                  'tarjetas' => array(),
-                                  'activos'=>0,
-                                  'activoCorriente'=>0,
-                                  'deudaTotal'=>0,
-                                  'mutuales'=>0,
-                                  'proveedores'=>0,
-                                  'cerealPL'=>0,
-                                  'seguros'=>array(),
-                                  'sgr'=>0,
-                                  'ganancias'=>0,
-                                  'perdidas'=>0,
-                                  'perdidasDirectas'=>0,
-                                  'deudaBancaria'=>0,
-                                  'saldoTecnico'=>0,
-                                  'sld'=>0,
-                                  'bienesDeCambio'=>0,
-                                  'cajaBancos'=>0,
-                                  'pasivoCorriente'=>0,
-                                  'pasivoTotal'=>0,
-                                  'patrimonioNeto'=>0,
-                                  'agricultura'=>0,
-                                  'ganaderia'=>array('4.01.00.00.000'=>0,'4.01.01.01.000'=>0),
-                                  'resto'=>0,
-                                  'ingresoBrutoMensual'=>0,
-                                  'inmobiliario'=>0,
-                                  'cargasSocialesReales'=>0,
-                                  'sueldos'=>0,
-                                  'honorarios'=>array(),
-                                  'interesesPagados'=>0
-                    );
-                   
-                    for($i=0;$i<$sheetCount;$i++){
-    
-                        $Reader->ChangeSheet($i);
-    
-                        foreach ($Reader as $Row){
 
-                            if($rowNumber == 4){
+                    $nombreArchivo = $_FILES['nuevosDatosBarlovento']['name'];
 
-    
-                                $año = substr(substr($Row[4],-7),3);
-    
-                                $mes = substr(substr($Row[4],-7),0,2);
-    
-                                $date = "$año-$mes-01";
-
-                                $data['periodo'] = $date;
-    
-                                $item = 'libro';
-                                
-                                $valor = 'Principal';
-    
-                                $item2 = 'periodo';
-    
-                                $valor2 = $data['periodo'];
-                                                       
-                                $cargaValida = ControladorContable::ctrMostrarDatos($item,$valor,$item2,$valor2);
-                             
-                                if($cargaValida){
-                                    
-                                    echo'<script>
-        
-                                        swal({
-                                                type: "error",
-                                                title: "Ya hay una planilla Principal en este periodo!",
-                                                showConfirmButton: true,
-                                                confirmButtonText: "Cerrar"
-                                                }).then(function(result) {
-                                                if (result.value) {
-                                                    
-                                                    window.location = "index.php?ruta=contable/contable"
-                    
-                                                }
-                                            })
-                    
-                                        </script>';
-
-                                        die();
-                                }
-                                
-                                
-                            }
-                            
-                            if($rowNumber >= 6){
-
-                                if($Row[1] == '1.00.00.00.000')
-                                    $data['activos'] = $Row[5]; 
-                                
-                                if($Row[1] == '1.01.00.00.000')
-                                    $data['activoCorriente'] = $Row[5]; 
-                                
-                                if($Row[1] == '2.01.01.00.000')
-                                    $data['deudaTotal'] = $Row[5];    
-
-                                if($Row[1] == '2.01.01.02.010' || $Row[1] == '2.01.01.02.011' || $Row[1] == '2.01.01.02.015' || $Row[1] == '2.01.01.02.016' || $Row[1] == '2.01.01.08.000')
-                                    $data['prestamos'][] = $Row[5];
-    
-                                
-                                if($Row[1] == '2.01.01.02.012' || $Row[1] == '2.01.01.02.013' || $Row[1] == '2.01.01.02.014')
-                                    $data['tarjetas'][] = $Row[5];
-    
-                                
-                                if($Row[1] == '2.01.01.07.000')
-                                    $data['mutuales'] = $Row[5]; 
-    
-                            
-                                if($Row[1] == '2.01.01.01.000')
-                                    $data['proveedores'] = $Row[5]; 
-
-                                if($Row[1] == '2.01.01.06.002')
-                                    $data['cerealPL'] = $Row[5];                            
-
-                                if($Row[1] == '5.01.01.14.004' || $Row[1] == '5.01.01.14.005' || $Row[1] == '5.01.01.14.006' || $Row[1] == '5.02.01.02.017' || $Row[1] == '5.02.01.05.003' || $Row[1] == '5.02.01.06.011')
-                                    $data['seguros'][] = $Row[5]; 
-    
-                                if($Row[1] == '2.01.01.09.000')
-                                    $data['sgr'] = ($Row[5] != null) ? $data['sgr'] : 0;                
-    
-                                if($Row[1] == '4.00.00.00.000')
-                                    $data['ganancias'] = $Row[5]; 
-    
-                                if($Row[1] == '5.00.00.00.000')
-                                    $data['perdidas'] = $Row[5]; 
-                                
-                                if($Row[1] == '5.01.00.00.000')
-                                    $data['perdidasDirectas'] = $Row[5]; 
-    
-                                if($Row[1] == '2.01.01.02.000')
-                                    $data['deudaBancaria'] = $Row[5]; 
-    
-                                if($Row[1] == '1.01.03.03.006')
-                                    $data['saldoTecnico'] = $Row[5]; 
-
-                                if($Row[1] == '1.01.03.03.008')
-                                    $data['sld'] = $Row[5]; 
-                                
-                                if($Row[1] == '1.01.04.00.000')
-                                    $data['bienesDeCambio'] = $Row[5]; 
-                                
-                                if($Row[1] == '1.01.01.01.000')
-                                    $data['cajaBancos'] = $Row[5]; 
-                                
-                                if($Row[1] == '2.01.00.00.000')
-                                    $data['pasivoCorriente'] = $Row[5]; 
-                                
-                                if($Row[1] == '2.00.00.00.000')
-                                    $data['pasivoTotal'] = $Row[5]; 
-                            
-                                if($Row[1] == '3.00.00.00.000')
-                                    $data['patrimonioNeto'] = $Row[5]; 
-    
-                                if($Row[1] == '4.01.01.00.000')
-                                    $data['agricultura'] = $Row[5]; 
-                                
-                                if($Row[1] == '4.01.00.00.000' || $Row[1] == '4.01.01.01.000')
-                                    $data['ganaderia'][$Row[1]] = $Row[5]; 
-    
-                                if($Row[1] == '4.01.05.00.000' || $Row[1] == '4.01.05.02.000')
-                                    $data['resto'][] = $Row[5]; 
-    
-                                if($Row[1] == '5.02.01.01.001')
-                                    $data['ingresoBrutoMensual'] = $Row[5]; 
-                                
-                                if($Row[1] == '5.02.01.06.005')
-                                    $data['inmobiliario'] = $Row[5]; 
-    
-                                if($Row[1] == '5.02.01.05.002')
-                                    $data['cargasSocialesReales'] = $Row[5]; 
-    
-                                if($Row[1] == '5.02.01.05.001')
-                                    $data['sueldos'] = $Row[5]; 
-                            
-                                if($Row[1] == '5.02.01.06.006' || $Row[1] == '5.02.01.06.007' || $Row[1] == '5.02.01.06.008' || $Row[1] == '5.02.01.06.009')
-                                    $data['honorarios'][] = $Row[5]; 
-
-                                if($Row[1] == '5.03.01.01.004')
-                                    $data['interesesPagados'] = $Row[5];
-                        
-                            }
-                                
-                            $rowNumber++;
-    
-                        }
-                            
-                    }
-                
-                    $data['sgr'] = ($data['sgr'] != null) ? $data['sgr'] : 0; 
-                    $data['cerealPL'] = ($data['cerealPL'] != null) ? $data['cerealPL'] : 0; 
-                    $data['inmobiliario'] = ($data['inmobiliario'] != null) ? $data['inmobiliario'] : 0; 
-                    $data['resto'] = 0;
-                    $data['prestamos'] = array_sum($data['prestamos']);
-                    $data['tarjetas'] = array_sum($data['tarjetas']);
-                    $data['seguros'] = array_sum($data['seguros']);
-                    $data['honorarios'] = array_sum($data['honorarios']);
-                    $data['ganaderia'] = $data['ganaderia']['4.01.00.00.000'] - $data['ganaderia']['4.01.01.01.000'];
-
-                    $respuesta = ModeloContable::mdlCargarArchivo($tabla,$data);
-
-                    if($respuesta != 'ok'){
-    
-                        echo'<script>
-        
-                            swal({
-                                    type: "error",
-                                    title: `¡No se pudo cargar la planilla!';
-
-                                    if($_SESSION['usuario'] == 'tecnicoContable'){
-                                        echo json_encode($respuesta);
-                                    }
-
-                                    echo '`,
-                                    showConfirmButton: true,
-                                    confirmButtonText: "Cerrar"
-                                    }).then(function(result) {
-                                    if (result.value) {
-                                        
-                                        
-        
-                                    }
-                                })
-        
-                            </script>';
-    
-                    }else{
-    
-                        echo'<script>
-    
-                        swal({
-                                type: "success",
-                                title: "La planilla ha sido cargada correctamente",
-                                showConfirmButton: true,
-                                confirmButtonText: "Cerrar"
-                                }).then(function(result) {
-                                        if (result.value) {
-    
-    
-                                        }
-                                    })
-    
-                        </script>';
-    
-                    }
+                    $respuesta = ControladorContable::ctrProcesoExcel($ruta,$nombreArchivo,$tabla,'principal');
     
                 }
 
             }
     
-            if(isset($_FILES['nuevosDatosBarloventoConsolidado'])){
-    
-                $tabla = 'contable';
-    
-                $error = false;
-                
-                $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-
+            if (isset($_FILES['nuevosDatosBarloventoConsolidado'])){
+        
                 if(in_array($_FILES["nuevosDatosBarloventoConsolidado"]["type"],$allowedFileType)){
     
                     $ruta = "carga/" . $_FILES['nuevosDatosBarloventoConsolidado']['name'];
                     
                     move_uploaded_file($_FILES['nuevosDatosBarloventoConsolidado']['tmp_name'], $ruta);
-                                                                
-                    $rowNumber = 0;
-                    
-                    $rowValida = false;
-                    
-                    $dateTime = date('Y-m-d H:i:s');
-    
-                    $Reader = new SpreadsheetReader($ruta);	
-                    
-                    $sheetCount = count($Reader->sheets());
                         
-                    $data = array('archivo'=>$_FILES['nuevosDatosBarloventoConsolidado']['name'],
-                                  'libro'=>'Consolidado',
-                                  'prestamos' => array(),
-                                  'tarjetas' => array(),
-                                  'activos'=>0,
-                                  'activoCorriente'=>0,
-                                  'deudaTotal'=>0,
-                                  'mutuales'=>0,
-                                  'proveedores'=>0,
-                                  'cerealPL'=>0,
-                                  'seguros'=>array(),
-                                  'sgr'=>0,
-                                  'ganancias'=>0,
-                                  'perdidas'=>0,
-                                  'perdidasDirectas'=>0,
-                                  'deudaBancaria'=>0,
-                                  'saldoTecnico'=>0,
-                                  'sld'=>0,
-                                  'bienesDeCambio'=>0,
-                                  'cajaBancos'=>0,
-                                  'pasivoCorriente'=>0,
-                                  'pasivoTotal'=>0,
-                                  'patrimonioNeto'=>0,
-                                  'agricultura'=>0,
-                                  'ganaderia'=>array('4.01.00.00.000'=>0,'4.01.01.01.000'=>0),
-                                  'resto'=>0,
-                                  'ingresoBrutoMensual'=>0,
-                                  'inmobiliario'=>0,
-                                  'cargasSocialesReales'=>0,
-                                  'sueldos'=>0,
-                                  'honorarios'=>array(),
-                                  'interesesPagados'=>0
-                    );
+                    $nombreArchivo = $_FILES['nuevosDatosBarloventoConsolidado']['name'];
 
-                    for($i=0;$i<$sheetCount;$i++){
-    
-                        $Reader->ChangeSheet($i);
-    
-                        foreach ($Reader as $Row){
-    
-                            if($rowNumber == 4){
-    
-                                $año = substr(substr($Row[4],-7),3);
-    
-                                $mes = substr(substr($Row[4],-7),0,2);
-    
-                                $date = "$año-$mes-01";
-                            
-                                $data['periodo'] = $date;
+                    $respuesta = ControladorContable::ctrProcesoExcel($ruta,$nombreArchivo,$tabla,'consolidado');
 
-                                $item = 'libro';
-                                
-                                $valor = 'Consolidado';
-    
-                                $item2 = 'periodo';
-    
-                                $valor2 = $data['periodo'];
-                                                       
-                                $cargaValida = ControladorContable::ctrMostrarDatos($item,$valor,$item2,$valor2);
-    
-                                if($cargaValida){
-
-                                    echo'<script>
-        
-                                        swal({
-                                                type: "error",
-                                                title: "Ya hay una planilla Consolidado en este periodo!",
-                                                showConfirmButton: true,
-                                                confirmButtonText: "Cerrar"
-                                                }).then(function(result) {
-                                                if (result.value) {
-                                                    
-                                                    window.location = "index.php?ruta=contable/contable"
-                    
-                                                }
-                                            })
-                    
-                                        </script>';
-
-                                        die();
-                                        
-
-                                }
-
-                            }                          
-
-                            
-                            if($rowNumber >= 6){
-
-                                if($Row[1] == '1.00.00.00.000')
-                                    $data['activos'] = $Row[5]; 
-                                
-                                if($Row[1] == '1.01.00.00.000')
-                                    $data['activoCorriente'] = $Row[5]; 
-                                
-                                if($Row[1] == '2.01.01.00.000')
-                                    $data['deudaTotal'] = $Row[5];    
-
-                                if($Row[1] == '2.01.01.02.010' || $Row[1] == '2.01.01.02.011' || $Row[1] == '2.01.01.02.015' || $Row[1] == '2.01.01.02.016' || $Row[1] == '2.01.01.08.000')
-                                    $data['prestamos'][] = $Row[5];
-                                
-                                if($Row[1] == '2.01.01.02.012' || $Row[1] == '2.01.01.02.013' || $Row[1] == '2.01.01.02.014')
-                                    $data['tarjetas'][] = $Row[5];
-                                
-                                if($Row[1] == '2.01.01.07.000')
-                                    $data['mutuales'] = $Row[5]; 
-
-                                if($Row[1] == '2.01.01.06.002')
-                                    $data['cerealPL'] = $Row[5];   
-                            
-                                if($Row[1] == '2.01.01.01.000')
-                                    $data['proveedores'] = $Row[5]; 
-                            
-                                if($Row[1] == '5.01.01.14.004' || $Row[1] == '5.01.01.14.005' || $Row[1] == '5.01.01.14.006' || $Row[1] == '5.02.01.02.017' || $Row[1] == '5.02.01.05.003' || $Row[1] == '5.02.01.06.011')
-                                    $data['seguros'][] = $Row[5]; 
-    
-                                if($Row[1] == '2.01.01.09.000')
-                                    $data['sgr'] = $Row[5];
-    
-                                if($Row[1] == '4.00.00.00.000')
-                                    $data['ganancias'] = $Row[5]; 
-    
-                                if($Row[1] == '5.00.00.00.000')
-                                    $data['perdidas'] = $Row[5]; 
-                                
-                                if($Row[1] == '5.01.00.00.000')
-                                    $data['perdidasDirectas'] = $Row[5]; 
-                                
-                                if($Row[1] == '2.01.01.02.000')
-                                    $data['deudaBancaria'] = $Row[5]; 
-    
-                                if($Row[1] == '1.01.03.03.006')
-                                    $data['saldoTecnico'] = $Row[5]; 
-
-                                if($Row[1] == '1.01.03.03.008')
-                                    $data['sld'] = $Row[5]; 
-                                
-                                if($Row[1] == '1.01.04.00.000')
-                                    $data['bienesDeCambio'] = $Row[5]; 
-                                
-                                if($Row[1] == '1.01.01.01.000')
-                                    $data['cajaBancos'] = $Row[5]; 
-                                
-                                if($Row[1] == '2.01.00.00.000')
-                                    $data['pasivoCorriente'] = $Row[5]; 
-                                
-                                if($Row[1] == '2.00.00.00.000')
-                                    $data['pasivoTotal'] = $Row[5]; 
-                            
-                                if($Row[1] == '3.00.00.00.000')
-                                    $data['patrimonioNeto'] = $Row[5]; 
-    
-                                if($Row[1] == '4.01.01.00.000')
-                                    $data['agricultura'] = $Row[5]; 
-                                
-                                if($Row[1] == '4.01.00.00.000' || $Row[1] == '4.01.01.01.000')
-                                    $data['ganaderia'][$Row[1]] = $Row[5]; 
-    
-                                if($Row[1] == '5.02.01.01.001')
-                                    $data['ingresoBrutoMensual'] = $Row[5]; 
-                                
-                                if($Row[1] == '5.02.01.06.005')
-                                    $data['inmobiliario'] = $Row[5]; 
-    
-                                if($Row[1] == '5.02.01.05.002')
-                                    $data['cargasSocialesReales'] = $Row[5]; 
-    
-                                if($Row[1] == '5.02.01.05.001')
-                                    $data['sueldos'] = $Row[5]; 
-                            
-                                if($Row[1] == '5.02.01.06.006' || $Row[1] == '5.02.01.06.007' || $Row[1] == '5.02.01.06.008' || $Row[1] == '5.02.01.06.009')
-                                    $data['honorarios'][] = $Row[5]; 
-
-                                if($Row[1] == '5.03.01.01.004')
-                                    $data['interesesPagados'] = $Row[5];
-    
-                            }
-                                
-                            $rowNumber++;
-    
-                        }
-                            
-                    }
-                    
-                    $data['sgr'] = ($data['sgr'] != null) ? $data['sgr'] : 0; 
-                    $data['cerealPL'] = ($data['cerealPL'] != null) ? $data['cerealPL'] : 0; 
-                    $data['inmobiliario'] = ($data['inmobiliario'] != null) ? $data['inmobiliario'] : 0; 
-                    $data['ganaderia'] = $data['ganaderia']['4.01.00.00.000'] - $data['ganaderia']['4.01.01.01.000'];
-                    $data['prestamos'] = array_sum($data['prestamos']);
-                    $data['tarjetas'] = array_sum($data['tarjetas']);
-                    $data['seguros'] = array_sum($data['seguros']);
-                    $data['honorarios'] = array_sum($data['honorarios']);
-                    $data['resto'] = 0;
-                    $respuesta = ModeloContable::mdlCargarArchivo($tabla,$data);          
-                
-                    if($respuesta != 'ok'){
-    
-                        echo'<script>
-        
-                        swal({
-                                type: "error",
-                                title: `¡No se pudo cargar la planilla!';
-
-                                if($_SESSION['usuario'] == 'tecnicoContable'){
-                                    echo json_encode($respuesta);
-                                }
-
-                                echo '`,
-                                showConfirmButton: true,
-                                confirmButtonText: "Cerrar"
-                                }).then(function(result) {
-                                if (result.value) {
-                                    
-                                    
-    
-                                }
-                            })
-    
-                        </script>';
-    
-                    }else{
-    
-                        echo'<script>
-    
-                        swal({
-                                type: "success",
-                                title: "La planilla ha sido cargada correctamente",
-                                showConfirmButton: true,
-                                confirmButtonText: "Cerrar"
-                                }).then(function(result) {
-                                        if (result.value) {
-    
-    
-                                        }
-                                    })
-    
-                        </script>';
-    
-                    }
-    
                 }
     
             }
             
-            if(isset($_FILES['nuevosDatosPaihuen'])){
+            /* if (isset($_FILES['nuevosDatosPaihuen'])){
     
                 $tabla = 'contablePaihuen';
 
@@ -726,12 +220,266 @@ class ControladorContable{
     
                 }
     
-            }
+            } */
 
+            if ($respuesta != 'ok'){
+    
+                echo'<script>
+
+                swal({
+                        type: "error",
+                        title: `¡No se pudo cargar la planilla!';
+
+                        if($_SESSION['usuario'] == 'tecnicoContable'){
+                            echo json_encode($respuesta);
+                        }
+
+                        echo '`,
+                        showConfirmButton: true,
+                        confirmButtonText: "Cerrar"
+                        }).then(function(result) {
+                        if (result.value) {
+                            
+                            
+
+                        }
+                    })
+
+                </script>';
+
+            } else {
+
+                echo'<script>
+
+                swal({
+                        type: "success",
+                        title: "La planilla ha sido cargada correctamente",
+                        showConfirmButton: true,
+                        confirmButtonText: "Cerrar"
+                        }).then(function(result) {
+                                if (result.value) {
+
+
+                                }
+                            })
+
+                </script>';
+
+            }
         }
             
         
 	}
+
+    /*=============================================
+	PROCESO EXCEL DATOS
+	=============================================*/
+    static public function ctrProcesoExcel($ruta,$nombreArchivo,$tabla,$libro){
+
+        $mapping = [
+            '1.00.00.00.000' => 'activos',
+            '1.01.00.00.000' => 'activoCorriente',
+            '2.01.01.00.000' => 'deudaTotal',
+            '2.01.01.02.010' => 'prestamos',
+            '2.01.01.02.011' => 'prestamos',
+            '2.01.01.02.015' => 'prestamos',
+            '2.01.01.02.016' => 'prestamos',
+            '2.01.01.08.000' => 'prestamos',
+            '2.01.01.02.012' => 'tarjetas',
+            '2.01.01.02.013' => 'tarjetas',
+            '2.01.01.02.014' => 'tarjetas',
+            '2.01.01.07.000' => 'mutuales',
+            '2.01.01.06.002' => 'cerealPL',
+            '2.01.01.01.000' => 'proveedores',
+            '5.01.01.14.004' => 'seguros',
+            '5.01.01.14.005' => 'seguros',
+            '5.01.01.14.006' => 'seguros',
+            '5.02.01.02.017' => 'seguros',
+            '5.02.01.05.003' => 'seguros',
+            '5.02.01.06.011' => 'seguros',
+            '2.01.01.09.000' => 'sgr',
+            '4.00.00.00.000' => 'ganancias',
+            '5.00.00.00.000' => 'perdidas',
+            '5.01.00.00.000' => 'perdidasDirectas',
+            '2.01.01.02.000' => 'deudaBancaria',
+            '1.01.03.03.006' => 'saldoTecnico',
+            '1.01.03.03.008' => 'sld',
+            '1.01.04.00.000' => 'bienesDeCambio',
+            '1.01.01.01.000' => 'cajaBancos',
+            '2.01.00.00.000' => 'pasivoCorriente',
+            '2.00.00.00.000' => 'pasivoTotal',
+            '3.00.00.00.000' => 'patrimonioNeto',
+            '4.01.01.00.000' => 'agricultura',
+            '4.01.00.00.000' => 'ganaderia',
+            '4.01.01.01.000' => 'ganaderia',
+            '5.02.01.01.001' => 'ingresoBrutoMensual',
+            '5.02.01.06.005' => 'inmobiliario',
+            '5.02.01.05.002' => 'cargasSocialesReales',
+            '5.02.01.05.001' => 'sueldos',
+            '5.02.01.06.006' => 'honorarios',
+            '5.02.01.06.007' => 'honorarios',
+            '5.02.01.06.008' => 'honorarios',
+            '5.02.01.06.009' => 'honorarios',
+            '5.03.01.01.004' => 'interesesPagados',
+            '4.01.02.01.002' => 'vaquillonasNovillos',
+            '4.01.02.01.003' => 'vaquillonasNovillos',
+            '4.01.02.01.010' => 'carneSubproductos',
+            '4.01.02.01.011' => 'carneSubproductos',
+            '4.01.04.01.000' => 'exportacion',
+            '4.01.02.01.012' => 'produccionHacienda',
+        ];
+
+        $rowNumber = 0;
+
+        $Reader = new SpreadsheetReader($ruta);	
+                    
+        $sheetCount = count($Reader->sheets());
+        
+        $data = array('archivo'=>$nombreArchivo,
+                      'libro'=>$libro,
+                      'prestamos' => array(),
+                      'tarjetas' => array(),
+                      'activos'=>0,
+                      'activoCorriente'=>0,
+                      'deudaTotal'=>0,
+                      'mutuales'=>0,
+                      'proveedores'=>0,
+                      'cerealPL'=>0,
+                      'seguros'=>array(),
+                      'sgr'=>0,
+                      'ganancias'=>0,
+                      'perdidas'=>0,
+                      'perdidasDirectas'=>0,
+                      'deudaBancaria'=>0,
+                      'saldoTecnico'=>0,
+                      'sld'=>0,
+                      'bienesDeCambio'=>0,
+                      'cajaBancos'=>0,
+                      'pasivoCorriente'=>0,
+                      'pasivoTotal'=>0,
+                      'patrimonioNeto'=>0,
+                      'agricultura'=>0,
+                      'ganaderia'=>array('4.01.00.00.000'=>0,'4.01.01.01.000'=>0),
+                      'resto'=>0,
+                      'ingresoBrutoMensual'=>0,
+                      'inmobiliario'=>0,
+                      'cargasSocialesReales'=>0,
+                      'sueldos'=>0,
+                      'honorarios'=>array(),
+                      'interesesPagados'=>0,
+                      'vaquillonasNovillos'=>array(),
+                      'carneSubproductos'=>array(),
+                      'exportacion'=>0,
+                      'produccionHacienda'=>0
+        );
+       
+        for($i=0;$i<$sheetCount;$i++){
+
+            $Reader->ChangeSheet($i);
+
+            foreach ($Reader as $Row){
+
+                if($rowNumber == 4){
+
+
+                    $año = substr(substr($Row[4],-7),3);
+
+                    $mes = substr(substr($Row[4],-7),0,2);
+
+                    $date = "$año-$mes-01";
+
+                    $data['periodo'] = $date;
+
+                    $item = 'libro';
+                    
+                    $valor = $libro;
+
+                    $item2 = 'periodo';
+
+                    $valor2 = $data['periodo'];
+                                           
+                    $cargaValida = ControladorContable::ctrMostrarDatos($item,$valor,$item2,$valor2);
+                 
+                    if($cargaValida){
+                        
+                        echo '<script>
+
+                            swal({
+                                    type: "error",
+                                    title: "Ya hay una planilla ' . ucfirst($libro) . ' en este periodo!",
+                                    showConfirmButton: true,
+                                    confirmButtonText: "Cerrar"
+                                    }).then(function(result) {
+                                    if (result.value) {
+                                        
+                                        window.location = "index.php?ruta=contable/contable"
+        
+                                    }
+                                })
+        
+                            </script>';
+
+                            die();
+                    }
+                    
+                    
+                }
+                
+                if($rowNumber >= 6){
+
+                    if (isset($mapping[$Row[1]])) {
+
+                        $key = $mapping[$Row[1]];
+                        
+                        if (!isset($data[$key])) {
+
+                            $data[$key] = [];
+
+                        }
+
+                        if(is_array($data[$key])){
+
+                            if ($key == 'ganaderia'){
+
+                                $data[$key][$Row[1]] = $Row[5];
+
+                            } else {
+
+                                $data[$key][] = $Row[5];
+
+                            }
+
+                        } else {
+
+                            $data[$key] = $Row[5];
+
+                        }
+
+                    }
+
+                }
+                    
+                $rowNumber++;
+
+            }
+                
+        }
+                    
+        $data['sgr'] = ($data['sgr'] != null) ? $data['sgr'] : 0; 
+        $data['cerealPL'] = ($data['cerealPL'] != null) ? $data['cerealPL'] : 0; 
+        $data['inmobiliario'] = ($data['inmobiliario'] != null) ? $data['inmobiliario'] : 0; 
+        $data['resto'] = 0;
+        $data['prestamos'] = array_sum($data['prestamos']);
+        $data['tarjetas'] = array_sum($data['tarjetas']);
+        $data['seguros'] = array_sum($data['seguros']);
+        $data['honorarios'] = array_sum($data['honorarios']);
+        $data['ganaderia'] = $data['ganaderia']['4.01.00.00.000'] - $data['ganaderia']['4.01.01.01.000'];
+        $data['vaquillonasNovillos'] = array_sum($data['vaquillonasNovillos']);
+        $data['carneSubproductos'] = array_sum($data['carneSubproductos']);
+
+        return ModeloContable::mdlCargarArchivo($tabla,$data);
+
+    }
 
     /*=============================================
 	MOSTRAR DATOS
@@ -791,6 +539,19 @@ class ControladorContable{
                     // GANADERIAS  Y RESTOS
                         $ganaderiaResto1 = $principal['ganaderia'];
                         $ganaderiaResto2 = $consolidado['ganaderia'] - $ganaderiaResto1;
+                    
+                    // DESGLOSE GANADERIA
+                        // $vaquillonasNovillos1 = $principal['vaquillonasNovillos'];
+                        // $vaquillonasNovillos = $consolidado['vaquillonasNovillos'] - $vaquillonasNovillos1;
+
+                        // $carneSubproductos1 = $principal['carneSubproductos'];
+                        // $carneSubproductos = $consolidado['carneSubproductos'] - $carneSubproductos1;
+
+                        // $exportacion1 = $principal['ganaderiaExportacion'];
+                        // $exportacion = $consolidado['ganaderiaExportacion'] - $exportacion1;
+
+                        // $produccionHacienda1 = $principal['produccionHacienda'];
+                        // $produccionHacienda = $consolidado['produccionHacienda'] - $produccionHacienda1;
 
                     // VENTAS TOTALES
                         $ventasTotales = $agricultura1 + $agricultura2 + $ganaderiaResto1 + $ganaderiaResto2; 
@@ -887,8 +648,8 @@ class ControladorContable{
 
                     // SUELDOS HONORARIOS / VENTAS
                 
-                        $sueldos12Ventas = $sueldos12 / $ventasTotales;
-                        $sueldos12HonorariosVentas = $sueldos12Honorarios / $ventasTotales;           
+                        $sueldos12Ventas = ($ventasTotales > 0) ? $sueldos12 / $ventasTotales : 0;
+                        $sueldos12HonorariosVentas = ($ventasTotales > 0) ? $sueldos12Honorarios / $ventasTotales : 0;           
 
             return array(
                 'periodo'=>$labelMeses[$ultimoMes - 1],
@@ -916,6 +677,10 @@ class ControladorContable{
                                   'ganaderiaResto1'=>floatVal($ganaderiaResto1),  
                                   'agricultura2'=>(floatVal($agricultura2)),
                                   'ganaderiaResto2'=>floatVal($ganaderiaResto2),
+                                  'vaquillonasNovillos'=>floatVal($consolidado['vaquillonasNovillos']),
+                                  'carneSubproductos'=>floatVal($consolidado['carneSubproductos']),
+                                  'exportacion'=>floatVal($consolidado['ganaderiaExportacion']),
+                                  'produccionHacienda'=>floatVal($consolidado['produccionHacienda']),
                                   'margenSobreVentas'=>$margenSobreVentas,
                                   'resultadoExplotacion'=>$resultadoExplotacion,
                                   'resultadoExplotacion2'=>$resultadoExplotacion2,

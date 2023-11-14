@@ -582,8 +582,8 @@
               ]
             };
                                   
-            generarGraficoStackedGroup(divId,labels,registrosGanaderia)
-            generarGraficoStackedGroup('idGraficoVentas2',labels,registrosGanaderia)
+            // generarGraficoStackedGroup(divId,labels,registrosGanaderia)
+            // generarGraficoStackedGroup('idGraficoVentas2',labels,registrosGanaderia)
 
 
             divId = 'margenVentasChart'

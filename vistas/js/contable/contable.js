@@ -542,48 +542,38 @@
 
             let dataProduccionHacienda= getMonthData(respuesta,'produccionHacienda')
             dataProduccionHacienda.reverse()
+                 
+            registrosGanaderia2 = [{
+                label: 'Vaquillonas y Novillos',
+                backgroundColor: 'rgba(255,0,100,.2)',
+                borderColor: 'rgb(255,0,0)',
+                borderWidth: 1, 
+                data: dataVaquillonasNovillos
+              },{
+                label: 'Carnes y Subproductos',
+                backgroundColor: 'rgba(50,0,255,.2)',
+                borderColor: 'rgb(0,0,255)',
+                borderWidth: 1, 
+                data: dataCarneSubproductos
+              },{
+                label: 'Exportación',
+                backgroundColor: 'rgba(0,255,0,.2)',
+                borderColor: 'rgb(0,255,0)',
+                borderWidth: 1, 
+                data: dataExportacion
+              },{
+                label: 'Prod. Hacienda',
+                backgroundColor: 'rgba(0,255,255,.2)',
+                borderColor: 'rgb(0,255,255)',
+                borderWidth: 1, 
+                data: dataProduccionHacienda
+            }]
 
-            let registrosGanaderia2 = {
-              labels: labels,
-              datasets: [
-                {
-                  label: 'Vaquillonas y Novillos',
-                  data: dataVaquillonasNovillos,
-                  backgroundColor: 'rgba(255,0,0,.2)',
-                  borderColor: 'rgb(255,0,0)',
-                  borderWidth: 1, 
-                  stack: 'Stack 0',
-                },
-                {
-                  label: 'Carnes y Subproductos',
-                  data: dataCarneSubproductos,
-                  backgroundColor: 'rgba(0,0,255,.2)',
-                  borderColor: 'rgb(0,0,255)',
-                  borderWidth: 1,
-                  stack: 'Stack 0',
-                },
-                {
-                  label: 'Exportación',
-                  data: dataExportacion,
-                  backgroundColor: 'rgba(0,255,0,.2)',
-                  borderColor: 'rgb(0,255,0)',
-                  borderWidth: 1,
-                  stack: 'Stack 0',
-                },
-                {
-                  label: 'Prod. Hacienda',
-                  data: dataProduccionHacienda,
-                  backgroundColor: 'rgba(255,0,255,.2)',
-                  borderColor: 'rgb(255,0,255)',
-                  borderWidth: 1,
-                  stack: 'Stack 0',
-                },
-              ]
-            };
-                                  
-            generarGraficoStackedGroup(divId,labels,registrosGanaderia2)
-            generarGraficoStackedGroup('idGraficoGanaderia2',labels,registrosGanaderia2)
+            generarGraficoMultiBar(divId,labels,registrosGanaderia2)
+            generarGraficoMultiBar('idGraficoGanaderia2',labels,registrosGanaderia2)
 
+            // generarGraficoStackedGroup(divId,labels,registrosGanaderia2)
+            // generarGraficoStackedGroup('idGraficoGanaderia2',labels,registrosGanaderia2)
 
             divId = 'margenVentasChart'
             tituloLabel = 'Margen/Ventas'
@@ -856,9 +846,9 @@
             generarGraficoMultiBar(divId,labels,registros)
             generarGraficoMultiBar('idGraficoDeudaBancaria',labels,registros)
 
-            divId = 'deudaBancariaChart'
-            
             /** */
+
+            divId = 'deudaBancariaChart'
 
             let dataDeudaBancaria = []
 

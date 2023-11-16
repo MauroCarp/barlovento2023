@@ -14,7 +14,7 @@
       
             <div class="box-body">
       
-                <div class="chart">
+                <div class="chart" style="background-color:rgba(111,111,111,0.1)">
             
                     <canvas id="<?php echo $idGraficoPlanificacion;?>"></canvas>
             

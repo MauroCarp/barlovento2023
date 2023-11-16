@@ -1,5 +1,16 @@
 const cobertura = ['vicia','triticale','avena','avena cobertura','cebada','vicia-triticale','cebadilla','triticale espinillo','camelina']
 
+function calcularSuggestedMax(datos,tipo) {
+
+  let max = Math.max(...datos)
+  let min = Math.min(...datos)
+  let margen = (max * 0.05)
+  if(tipo == 'min')
+    return min - margen;
+  
+  return max + margen;
+}
+
 const cargarInfoPlanificacion = (campania,carga)=>{
   
   // Obtener DATA
@@ -127,7 +138,8 @@ const cargarInfoPlanificacion = (campania,carga)=>{
         
         data[cultivo.campo].grafico.labels.push(`${cultivo.cultivo} / ${cultivo.lote}`)
         data[cultivo.campo].grafico.has.push(has)
-        data[cultivo.campo].grafico.costoHas.push(costo)
+        // data[cultivo.campo].grafico.costoHas.push(costo)
+        data[cultivo.campo].grafico.costoHas.push(respuesta['costos'][cultivo.cultivo])
 
       });
 
@@ -175,7 +187,7 @@ const cargarInfoPlanificacion = (campania,carga)=>{
             datasets: [
               {
                 type: 'line',
-                label: 'Inversión USD',
+                label: 'Inversión USD/Has',
                 borderColor: window.chartColors.red,
                 fill:false,
                 yAxisID: 'A',
@@ -206,11 +218,16 @@ const cargarInfoPlanificacion = (campania,carga)=>{
                 id: 'A',
                 type: 'linear',
                 position: 'left',
+                ticks: {
+                  suggestedMin: calcularSuggestedMax(data[campo].grafico.costoHas,'min'),
+                  suggestedMax: calcularSuggestedMax(data[campo].grafico.costoHas,'max')
+                },
               
               }, {
                 id: 'B',
                 type: 'linear',
                 position: 'right',
+
               }]
             },
             plugins:{
@@ -218,13 +235,15 @@ const cargarInfoPlanificacion = (campania,carga)=>{
                   render:function(reg){
                       return reg.value.toLocaleString('de-DE')
                   },
-              }
+              },
             },
             legend:{
               labels: {
                     boxWidth: 5
               }
-            }
+            },
+            backgroundColor: 'rgba(255,0,0,0.9)'
+
           }
         }
             
@@ -381,6 +400,16 @@ if(btnCostosPlanificacion != null){
       let table = document.createElement('TABLE')                
       table.setAttribute('class','table table-striped')
       
+      let thead = document.createElement('THEAD')
+      let thCultivo = document.createElement('TH')
+      let thCosto = thCultivo.cloneNode(true)
+      thCultivo.innerHTML = 'Cultivo'
+      thCosto.innerHTML = 'U$D/Has'
+
+      thead.append(thCultivo)
+      thead.append(thCosto)
+      table.append(thead)
+      
       let tbody = document.createElement('TBODY')
 
       let content = document.createDocumentFragment()
@@ -411,7 +440,7 @@ if(btnCostosPlanificacion != null){
           tdCultivo.innerText = capitalizarPrimeraLetra(reg.cultivo)
         }
 
-        tdCosto.innerText = `u$s ${reg.costo}`
+        tdCosto.innerText = `u$d ${reg.costo}`
 
         tr.append(tdCultivo)
         tr.append(tdCosto)

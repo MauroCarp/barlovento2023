@@ -11,7 +11,7 @@
                 <b>Ingresos Brutos</b>
                 <br>
                 <br>
-                <span class="cajaContableNumber" id="ingresoBruto"></span>
+                <span class="cajaContableNumber" id="ingresoBruto<?=$campo?>"></span>
 
                 
                 </div>
@@ -34,7 +34,7 @@
                 
                 <b>Inmobiliario / Comuna</b>
                 <br>
-                <span class="cajaContableNumber" id="inmobiliarioComuna"></span>
+                <span class="cajaContableNumber" id="inmobiliarioComuna<?=$campo?>"></span>
 
                 
                 </div>
@@ -57,7 +57,7 @@
                 
                 <b>Cargas Sociales Reales</b>
                 <br>
-                <span class="cajaContableNumber" id="cargasSociales"></span>
+                <span class="cajaContableNumber" id="cargasSociales<?=$campo?>"></span>
 
                 
                 </div>
@@ -80,7 +80,7 @@
                 
                 <b>Sueldos 1 + 2</b>
                 <br>
-                <span class="cajaContableNumber" id="sueldosVentas"></span>
+                <span class="cajaContableNumber" id="sueldosVentas<?=$campo?>"></span>
 
                 
                 </div>
@@ -103,7 +103,7 @@
                 
                 <b>Sueldos 1 + 2 + Honorarios</b>
                 <br>
-                <span class="cajaContableNumber" id="sueldosTotal"></span>
+                <span class="cajaContableNumber" id="sueldosTotal<?=$campo?>"></span>
 
                 
                 </div>

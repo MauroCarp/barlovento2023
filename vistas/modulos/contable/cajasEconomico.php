@@ -11,7 +11,7 @@
                 
                 <b>Agricultura 1</b>
                     <br>
-                <span class="cajaContableNumber" id="agricultura1"></span>
+                <span class="cajaContableNumber" id="agricultura1<?=$campo?>"></span>
                 
                 </div>
                 
@@ -34,7 +34,7 @@
                 
                 <b>Agricultura 2</b>
                     <br>
-                <span class="cajaContableNumber" id="agricultura2"></span>
+                <span class="cajaContableNumber" id="agricultura2<?=$campo?>"></span>
                 
                 </div>
                 
@@ -57,7 +57,7 @@
                 
                 <b>Ganaderia y Resto 1</b>
                     <br>
-                <span class="cajaContableNumber" id="ganaderiaResto1"></span>
+                <span class="cajaContableNumber" id="ganaderiaResto1<?=$campo?>"></span>
                 
                 </div>
                 
@@ -80,7 +80,7 @@
                 
                 <b>Ganaderia y Resto 2</b>
                     <br>
-                <span class="cajaContableNumber" id="ganaderiaResto2"></span>
+                <span class="cajaContableNumber" id="ganaderiaResto2<?=$campo?>"></span>
                 
                 </div>
                 
@@ -103,7 +103,7 @@
                 
                 <b>Ventas Totales</b>
                     <br>
-                <span class="cajaContableNumber" id="ventasTotales"></span>
+                <span class="cajaContableNumber" id="ventasTotales<?=$campo?>"></span>
                 
                 </div>
                 

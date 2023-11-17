@@ -346,6 +346,753 @@
 
     const btnGenerarReporte = document.getElementById('generarReporteContabilidad')
 
+    const cargarDatosCampo = (campo,respuesta)=>{
+
+      /* CAJAS SUPERIORES */
+        // ECONOMICO
+          $(`#agricultura1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura1 / 1000).toFixed(0)))
+          $(`#agricultura2${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura2 / 1000).toFixed(0)))
+          $(`#ganaderiaResto1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto1 / 1000).toFixed(0)))
+          $(`#ganaderiaResto2${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto2 / 1000).toFixed(0)))
+          let ventasTotales = respuesta[0].cajas.agricultura1 + respuesta[0].cajas.agricultura2 + respuesta[0].cajas.ganaderiaResto1 + respuesta[0].cajas.ganaderiaResto2
+          $(`#ventasTotales${campo}`).html('$ ' + numberWithCommas((ventasTotales / 1000).toFixed(0)))
+            
+        
+        // FINANCIERO
+          $(`#deudaTotal${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.deudaTotal / 1000).toFixed(0)))          
+          $(`#pasivoTotal${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.pasivoTotal / 1000).toFixed(0)))          
+          $(`#activoCirculante${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.activoCirculante / 1000).toFixed(0)))          
+          $(`#patrimonioNeto${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.patrimonioNeto / 1000).toFixed(0)))          
+
+          let deudaBienes = respuesta[0].cajas.deudaBancaria / respuesta[0].cajas.bienesDeCambio
+          $(`#duedaBienes${campo}`).html(numberWithCommas((deudaBienes * 100).toFixed(2)) + '%')          
+
+          let activoCircActivoCorr = respuesta[0].cajas.activoCirculante / respuesta[0].cajas.activoCorriente
+
+          $(`#activoCircActivoCorr${campo}`).html(numberWithCommas((activoCircActivoCorr * 100).toFixed(2)) + '%')          
+
+          let pasivoPatrimonio = respuesta[0].cajas.pasivoTotal / respuesta[0].cajas.patrimonioNeto
+          $(`#pasivoPatrimonio${campo}`).html(numberWithCommas((pasivoPatrimonio * 100).toFixed(2)) + '%')
+
+          let actPasCorriente = Number(respuesta[0].cajas.activoCorriente) / Number(respuesta[0].cajas.pasivoCorriente)
+          $(`#indiceActPasCorriente${campo}`).html(numberWithCommas((actPasCorriente).toFixed(2)))
+
+        // IMPOSITIVO
+          $(`#ingresoBruto${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ingresosBrutos / 1000).toFixed(0)))
+          $(`#inmobiliarioComuna${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.inmobiliarioComuna / 1000).toFixed(0)))
+          $(`#cargasSociales${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.cargasSociales / 1000).toFixed(0)))
+
+          let sueldosVentas = respuesta[0].cajas.sueldos / ventasTotales
+
+          $(`#sueldosVentas${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12') / 1000).toFixed(0)))
+
+          $(`#sueldosTotal${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12Honorarios') / 1000).toFixed(0)))
+
+      /* GRAFICOS */
+
+        // ECONOMICO
+          let divId = `ventasChart${campo}`
+
+          let dataAgricultura1 = getMonthData(respuesta,'agricultura1')
+          dataAgricultura1.reverse()
+          let dataAgricultura2 = getMonthData(respuesta,'agricultura2')
+          dataAgricultura2.reverse()
+
+          let dataGanaderiaResto1= getMonthData(respuesta,'ganaderiaResto1')
+          dataGanaderiaResto1.reverse()
+
+          let dataGanaderiaResto2 = getMonthData(respuesta,'ganaderiaResto2')
+          dataGanaderiaResto2.reverse()
+          
+          let registros = [{
+                            label: 'Agricultura 1',
+                            backgroundColor: 'rgba(255,0,100,.2)',
+                            borderColor: 'rgb(255,0,0)',
+                            borderWidth: 1, 
+                            data: dataAgricultura1
+                        },{
+                          label: 'Agricultura 2',
+                          backgroundColor: 'rgba(50,0,255,.2)',
+                          borderColor: 'rgb(0,0,255)',
+                          borderWidth: 1, 
+                          data: dataAgricultura2
+                      }
+          ]
+          
+          let labels = []; 
+        
+          for (let index = 0; index < 6; index++) {
+
+            if(respuesta[index]?.periodo != undefined){
+              labels.push(respuesta[index]?.periodo)
+            }
+            
+          }
+
+          labels.reverse()
+
+          generarGraficoMultiBar(divId,labels,registros)
+          generarGraficoMultiBar(`idGraficoVentas${campo}`,labels,registros)
+
+          divId = `ventasChart2${campo}`
+          
+          var registrosGanaderia = {
+            labels: labels,
+            datasets: [
+              {
+                label: 'G/R 1',
+                data: dataGanaderiaResto1,
+                backgroundColor: 'rgba(255,0,100,.2)',
+                borderColor: 'rgb(255,0,0)',
+                borderWidth: 1, 
+                stack: 'Stack 0',
+              },
+              {
+                label: 'G/R 2',
+                data: dataGanaderiaResto2,
+                backgroundColor: 'rgba(50,0,255,.2)',
+                borderColor: 'rgb(0,0,255)',
+                borderWidth: 1,
+                stack: 'Stack 0',
+              },
+            ]
+          };
+                                
+          generarGraficoStackedGroup(divId,labels,registrosGanaderia)
+          generarGraficoStackedGroup(`idGraficoVentas2${campo}`,labels,registrosGanaderia)
+
+          divId = `ventasGanaderiaChart${campo}`
+                        
+          let dataVaquillonasNovillos= getMonthData(respuesta,'vaquillonasNovillos')
+          dataVaquillonasNovillos.reverse()
+
+          let dataCarneSubproductos= getMonthData(respuesta,'carneSubproductos')
+          dataCarneSubproductos.reverse()
+
+          let dataExportacion= getMonthData(respuesta,'exportacion')
+          dataExportacion.reverse()
+
+          let dataProduccionHacienda= getMonthData(respuesta,'produccionHacienda')
+          dataProduccionHacienda.reverse()
+               
+          registrosGanaderia2 = [{
+              label: 'Vaquillonas y Novillos',
+              backgroundColor: 'rgba(255,0,100,.2)',
+              borderColor: 'rgb(255,0,0)',
+              borderWidth: 1, 
+              data: dataVaquillonasNovillos
+            },{
+              label: 'Carnes y Subproductos',
+              backgroundColor: 'rgba(50,0,255,.2)',
+              borderColor: 'rgb(0,0,255)',
+              borderWidth: 1, 
+              data: dataCarneSubproductos
+            },{
+              label: 'Exportación',
+              backgroundColor: 'rgba(0,255,0,.2)',
+              borderColor: 'rgb(0,255,0)',
+              borderWidth: 1, 
+              data: dataExportacion
+            },{
+              label: 'Prod. Hacienda',
+              backgroundColor: 'rgba(0,255,255,.2)',
+              borderColor: 'rgb(0,255,255)',
+              borderWidth: 1, 
+              data: dataProduccionHacienda
+          }]
+
+          generarGraficoMultiBar(divId,labels,registrosGanaderia2)
+          generarGraficoMultiBar(`idGraficoGanaderia2${campo}`,labels,registrosGanaderia2)
+
+          divId = `margenVentasChart${campo}`
+          tituloLabel = 'Margen/Ventas'
+
+          registros = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              registros.push(Number(respuesta[key].graficos.margenSobreVentas).toFixed(2))
+            }
+          }
+          registros.reverse()      
+          
+          dataResultExpl = getMonthData(respuesta,'resultadoExplotacion2')
+          console.log(dataResultExpl);  
+          dataResultExpl.reverse()
+
+          let configMargenVentasChart = {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  type: 'line',
+                  label: 'BAAI',
+                  borderColor: window.chartColors.red,
+                  fill:false,
+                  yAxisID: 'A',
+                  data: dataResultExpl
+                }
+                ,
+                {
+                  label: 'm/v',
+                  type: 'line',
+                  backgroundColor:'rgba(0,255,0,.2)',
+                  borderColor: 'rgb(0,255,0)',
+                  yAxisID: 'B',
+                  data: registros,
+                  borderWidth: 2
+                }
+              ]
+            },
+            options: {
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+
+                      if(tooltipItem.datasetIndex == 1){
+                        return `${tooltipItem.yLabel}%`
+                      }else{
+                        return `$ ${tooltipItem.yLabel.toLocaleString('de-DE')}`
+                      }
+                    }
+                }
+              },
+              scaleShowValues: true,
+              scales: {
+                xAxes: [{
+                  display:true,
+                  ticks: {
+                    autoSkip: false,
+                  }
+                }],
+                yAxes: [{
+                  id: 'A',
+                  type: 'linear',
+                  position: 'left',
+                  ticks:{
+                    beginAtZero: true,
+                    callback: function(value, index, ticks) {
+                      return  format(value);
+                    }     
+                  }
+                }, {
+                  id: 'B',
+                  type: 'linear',
+                  position: 'right',
+                  ticks:{
+                    beginAtZero: true
+                  }
+                }]
+              },
+              plugins:{
+                labels:{                  
+                  render: (val)=>{ return format(val.value);},
+                }
+              },
+              legend:{
+                labels: {
+                      boxWidth: 5
+                }
+              }
+            }
+          }
+                
+          generarGraficoBar(divId,configMargenVentasChart,'noOption');
+          generarGraficoBar(`idGraficoMargenVentas${campo}`,configMargenVentasChart,'noOption')
+
+      
+          divId = `rentabilidadEconomicaChart${campo}`
+          tituloLabel = 'Renta/Activo'
+
+          registros = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              registros.push(Number(respuesta[key].graficos.rentabilidadEconomica).toFixed(2))
+            }
+          }
+
+          registros.reverse()
+
+          let configRentabilidadChart = {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  type: 'line',
+                  label: 'R/A',
+                  borderColor: window.chartColors.red,
+                  data: registros
+                }
+              ]
+            },
+            options: {
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                        return `${tooltipItem.yLabel}%`
+                    }
+                }
+              },
+              scaleShowValues: true,
+              scales: {
+                xAxes: [{
+                  display:true,
+                  ticks: {
+                    autoSkip: false,
+                  }
+                }],
+              },
+              plugins:{
+                labels:{                  
+                  render: (val)=>{ return format(val.value);},
+                }
+              },
+              legend:{
+                labels: {
+                      boxWidth: 5
+                }
+              }
+            }
+          }
+
+          generarGraficoBar(divId,configRentabilidadChart,'noOption');
+
+        // FINANCIERO
+          divId = `endeudamientoChart${campo}`
+
+          /** */
+
+          let dataPrestamos = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataPrestamos.push(Number(respuesta[key].graficos.endeudamiento.prestamos).toFixed(2))
+            }
+          }
+
+          dataPrestamos.reverse()
+
+          /** */
+
+          let dataTarjetas = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataTarjetas.push(Number(respuesta[key].graficos.endeudamiento.tarjetas).toFixed(2))
+            }
+          }
+
+          dataTarjetas.reverse()
+
+          /** */
+
+          let dataProveedores = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataProveedores.push(Number(respuesta[key].graficos.endeudamiento.proveedores).toFixed(2))
+            }
+          }
+
+          dataProveedores.reverse()
+
+          /** */
+
+          let dataSgr = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataSgr.push(Number(respuesta[key].graficos.endeudamiento.sgr).toFixed(2))
+            }
+          }
+
+          dataSgr.reverse()
+
+          /** */
+          
+          let dataMutuales = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataMutuales.push(Number(respuesta[key].graficos.endeudamiento.mutuales).toFixed(2))
+            }
+          }
+
+          dataMutuales.reverse()
+          
+          /** */
+
+          let dataCLP = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataCLP.push(Number(respuesta[key].graficos.endeudamiento.cerealPL).toFixed(2))
+            }
+          }
+          dataCLP.reverse()
+
+          registros = [{
+                            label: 'Prestamos',
+                            backgroundColor: 'rgba(255,0,100,.2)',
+                            borderColor: 'rgb(255,0,0)',
+                            borderWidth: 1, 
+                            data: dataPrestamos
+                        },{
+                          label: 'Tarjetas',
+                          backgroundColor: 'rgba(50,0,255,.2)',
+                          borderColor: 'rgb(0,0,255)',
+                          borderWidth: 1, 
+                          data: dataTarjetas
+                        },{
+                          label: 'Sgr',
+                          backgroundColor: 'rgba(0,255,0,.2)',
+                          borderColor: 'rgb(0,255,0)',
+                          borderWidth: 1, 
+                          data: dataSgr
+                        },{
+                          label: 'Mutuales',
+                          backgroundColor: 'rgba(0,255,255,.2)',
+                          borderColor: 'rgb(0,255,255)',
+                          borderWidth: 1, 
+                          data: dataMutuales
+                        },{
+                          label: 'Proveedores',
+                          backgroundColor: 'rgba(200,0,255,.2)',
+                          borderColor: 'rgb(200,0,255)',
+                          borderWidth: 1, 
+                          data: dataProveedores
+                        },{
+                          label: 'CPL',
+                          backgroundColor: 'rgba(236,255,0,.2)',
+                          borderColor: 'rgb(236,255,0)',
+                          borderWidth: 1, 
+                          data: dataCLP
+                        }]
+
+          generarGraficoMultiBar(divId,labels,registros)
+          generarGraficoMultiBar(`idGraficoDeudaBancaria${campo}`,labels,registros)
+
+          /** */
+
+          divId = `deudaBancariaChart${campo}`
+
+          let dataDeudaBancaria = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataDeudaBancaria.push(Number(respuesta[key].graficos.deudaBancaria).toFixed(2))
+            }
+          }
+
+          dataDeudaBancaria.reverse()
+          tituloLabel = 'Deuda Bancaria'
+
+          generarGraficoBarSimple(dataDeudaBancaria,divId,labels,tituloLabel)
+
+          divId = `interesesPagadosChart${campo}`
+
+          datainteresesPagados = getMonthData(respuesta,'interesesPagados')
+
+          datainteresesPagados.reverse()
+          tituloLabel = 'Intereses Pagados'
+
+          generarGraficoBarSimple(datainteresesPagados,divId,labels,tituloLabel)
+
+        // IMPOSITIVO
+
+                          
+          divId = `saldoIva${campo}`
+          
+          /** */
+
+          let dataSld = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataSld.push(Number(respuesta[key].graficos.saldos.sld).toFixed(2))
+            }
+          }
+
+          dataSld.reverse()
+
+          /** */
+
+          let dataSaldoTecnico = []
+
+          for (const key in respuesta) {
+            if(key < 6){
+              dataSaldoTecnico.push(Number(respuesta[key].graficos.saldos.saldoTecnico).toFixed(2))
+            }
+          }
+
+          dataSaldoTecnico.reverse()
+
+          registros = [{
+                            label: 'SLD',
+                            backgroundColor: 'rgba(255,0,100,.2)',
+                            borderColor: 'rgb(255,0,0)',
+                            borderWidth: 1, 
+                            data: dataSld
+                        },{
+                          label: 'Saldo Técnico',
+                          backgroundColor: 'rgba(50,0,255,.2)',
+                          borderColor: 'rgb(0,0,255)',
+                          borderWidth: 1, 
+                          data: dataSaldoTecnico
+          }]
+
+          generarGraficoMultiBar(divId,labels,registros)
+
+          generarGraficoMultiBar(`idGraficoSaldoIva${campo}`,labels,registros)
+
+          let ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
+
+          divId = `sueldos12Ventas${campo}`
+
+          let dataSueldos12 = getMonthData(respuesta,'sueldos12')
+          let dataSueldos12Ventas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
+          
+          dataSueldos12.reverse()
+          dataSueldos12Ventas.reverse()
+
+          tituloLabel = 'Sueldos 1 + 2 / Ventas'
+
+          let configSueldos12VentasChart = {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  type: 'bar',
+                  label: 'Suedos 1 + 2',
+                  borderColor: window.chartColors.red,
+                  backgroundColor:'rgba(255,0,0,.2)',
+                  borderColor: 'rgb(255,0,0)',
+                  yAxisID: 'A',
+                  data: dataSueldos12
+                }
+                ,
+                {
+                  label: 'Sueldos 1 + 2 / Ventas.',
+                  type: 'line',
+                  borderColor: 'rgb(0,255,0)',
+                  yAxisID: 'B',
+                  fill:false,
+                  data: dataSueldos12Ventas,
+                  borderWidth: 2
+                }
+              ]
+            },
+            options: {
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+
+                      if(tooltipItem.datasetIndex == 1){
+                        return `${tooltipItem.yLabel}%`
+                      }else{
+                        return `$ ${tooltipItem.yLabel.toLocaleString('de-DE')}`
+                      }
+                    }
+                }
+              },
+              scaleShowValues: true,
+              scales: {
+                xAxes: [{
+                  display:true,
+                  ticks: {
+                    autoSkip: false,
+                  }
+                }],
+                yAxes: [{
+                  id: 'A',
+                  type: 'linear',
+                  position: 'left',
+                  ticks:{
+                    beginAtZero: true,
+                    callback: function(value, index, ticks) {
+                      return  format(value);
+                    }     
+                  }
+                }, {
+                  id: 'B',
+                  type: 'linear',
+                  position: 'right',
+                  ticks:{
+                    beginAtZero: true
+                  }
+                }]
+              },
+              plugins:{
+                labels:{                  
+                  render: (val)=>{ return format(val.value);},
+                }
+              },
+              legend:{
+                labels: {
+                      boxWidth: 5
+                }
+              }
+            }
+          }
+                
+          generarGraficoBar(divId,configSueldos12VentasChart,'noOption');
+          generarGraficoBar(`idGraficoSueldo12${campo}`,configSueldos12VentasChart,'noOption');
+          
+          divId = `sueldos12HonorariosVentas${campo}`
+
+          let dataSueldos12Honorarios = getMonthData(respuesta,'sueldos12Honorarios')
+
+          ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
+          let dataSueldos12HonorariosVentas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
+
+
+          dataSueldos12Honorarios.reverse()
+          dataSueldos12HonorariosVentas.reverse()
+          
+          tituloLabel = 'Sueldos 1 + 2 + Honorarios / Ventas' 
+
+          let configSueldos12HonorariosVentasChart = {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  type: 'bar',
+                  label: 'Suedos 1 + 2 + Honorarios',
+                  backgroundColor:'rgba(255,0,0,.2)',
+                  borderColor: 'rgb(255,0,0)',
+                  yAxisID: 'A',
+                  data: dataSueldos12Honorarios
+                }
+                ,
+                {
+                  label: 'Sueldos 1 + 2 + Honorarios / Ventas.',
+                  type: 'line',
+                  borderColor: 'rgb(0,255,0)',
+                  yAxisID: 'B',
+                  fill:false,
+                  data: dataSueldos12HonorariosVentas,
+                  borderWidth: 2
+                }
+              ]
+            },
+            options: {
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+
+                      if(tooltipItem.datasetIndex == 1){
+                        return `${tooltipItem.yLabel}%`
+                      }else{
+                        return `$ ${tooltipItem.yLabel.toLocaleString('de-DE')}`
+                      }
+                    }
+                }
+              },
+              scaleShowValues: true,
+              scales: {
+                xAxes: [{
+                  display:true,
+                  ticks: {
+                    autoSkip: false,
+                  }
+                }],
+                yAxes: [{
+                  id: 'A',
+                  type: 'linear',
+                  position: 'left',
+                  ticks:{
+                    beginAtZero: true,
+                    callback: function(value, index, ticks) {
+                      return  format(value);
+                    }     
+                  }
+                }, {
+                  id: 'B',
+                  type: 'linear',
+                  position: 'right',
+                  ticks:{
+                    beginAtZero: true,
+                    callback: function(value, index, ticks) {
+                      return  format(value);
+                    } 
+                  }
+                }]
+              },
+              plugins:{
+                labels:{                  
+                  render: (val)=>{ return format(val.value);},
+                }
+              },
+              legend:{
+                labels: {
+                      boxWidth: 5
+                }
+              }
+            }
+          }
+
+          generarGraficoBar(divId,configSueldos12HonorariosVentasChart,'noOption');
+
+          generarGraficoBar(`idGraficoSueldo12Honorario${campo}`,configSueldos12HonorariosVentasChart,'noOption');
+        
+      const btnsZoomGrafico = document.querySelectorAll('.zoomGraficos')
+
+      btnsZoomGrafico.forEach(element => {
+
+        element.addEventListener('click',()=>{
+
+          switch (element.attributes['data-modal'].value) {
+            case `zGraficoVentas${campo}`:
+                $(`#graficoVentaModal${campo}`).modal('show')
+
+              break;
+            
+            case `zGraficoVentas2${campo}`:
+                $(`#graficoVenta2Modal${campo}`).modal('show')
+
+              break;
+
+              case `zGraficoMargenVentas${campo}`:
+                $(`#graficoMargenVentaModal${campo}`).modal('show')
+
+              break;
+
+              case `zGraficoGanaderia${campo}`:
+                $(`#graficoGanaderiaModal${campo}`).modal('show')
+
+              break;
+
+              case `zGraficoEndeudamiento${campo}`:
+                $(`#graficoDeudaBancariaModal${campo}`).modal('show')
+
+              break;
+
+              case `zGraficoSaldoIva${campo}`:
+                $(`#graficoSaldoIvaModal${campo}`).modal('show')
+                break;
+
+              case `zGraficoSueldos12${campo}`:
+                $(`#graficoSueldo12Modal${campo}`).modal('show')
+                break;
+
+              case `zGraficoSueldos12Honorarios${campo}`:
+                $(`#graficoSueldo12HonorarioModal${campo}`).modal('show')
+                break;
+          
+            default:
+              break;
+          }
+          
+        })
+
+      });
+    }
+
     if(btnGenerarReporte != null){
       btnGenerarReporte.addEventListener('click',function(){
 
@@ -368,12 +1115,21 @@
     data.append('periodo',periodoData)
     data.append('accion','mostrarData')
 
-    fetch(url,{
-        method:'POST',
-        body:data
-    }).then(resp=>resp.json())
-    .then(respuesta=>{
-
+    // fetch(url,{
+    //     method:'POST',
+    //     body:data
+    // }).then(resp=>resp.json())
+    // .then(respuesta=>{
+    $.ajax({
+      method:'post',
+      url,
+      data:{
+        'periodo':periodoData,
+        'accion':'mostrarData'
+      }
+    }).done(function(respuesta){
+      respuesta = JSON.parse(respuesta)
+      
       if(!respuesta){
 
         swal({
@@ -411,757 +1167,10 @@
       }
 
       // PERIODO VISIBLE
+      document.getElementById('periodoVisible').innerHTML = respuesta['barlovento'][0].periodoVisible
 
-      document.getElementById('periodoVisible').innerHTML = respuesta[0].periodoVisible
-
-        /* CAJAS SUPERIORES */
-          // ECONOMICO
-            document.getElementById('agricultura1').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.agricultura1 / 1000).toFixed(0))
-            document.getElementById('agricultura2').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.agricultura2 / 1000).toFixed(0))
-            document.getElementById('ganaderiaResto1').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto1 / 1000).toFixed(0))
-            document.getElementById('ganaderiaResto2').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto2 / 1000).toFixed(0))
-            let ventasTotales = respuesta[0].cajas.agricultura1 + respuesta[0].cajas.agricultura2 + respuesta[0].cajas.ganaderiaResto1 + respuesta[0].cajas.ganaderiaResto2
-            document.getElementById('ventasTotales').innerHTML = '$ ' + numberWithCommas((ventasTotales / 1000).toFixed(0))
-            
-          
-          // FINANCIERO
-            document.getElementById('deudaTotal').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.deudaTotal / 1000).toFixed(0))
-            document.getElementById('pasivoTotal').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.pasivoTotal / 1000).toFixed(0))
-            document.getElementById('activoCirculante').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.activoCirculante / 1000).toFixed(0))
-            document.getElementById('patrimonioNeto').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.patrimonioNeto / 1000).toFixed(0))
-
-            let deudaBienes = respuesta[0].cajas.deudaBancaria / respuesta[0].cajas.bienesDeCambio
-            document.getElementById('duedaBienes').innerHTML = numberWithCommas((deudaBienes * 100).toFixed(2)) + '%'
-
-            let activoCircActivoCorr = respuesta[0].cajas.activoCirculante / respuesta[0].cajas.activoCorriente
-
-            document.getElementById('activoCircActivoCorr').innerHTML = numberWithCommas((activoCircActivoCorr * 100).toFixed(2)) + '%'
-
-            let pasivoPatrimonio = respuesta[0].cajas.pasivoTotal / respuesta[0].cajas.patrimonioNeto
-            document.getElementById('pasivoPatrimonio').innerHTML = numberWithCommas((pasivoPatrimonio * 100).toFixed(2)) + '%'
-
-            let actPasCorriente = Number(respuesta[0].cajas.activoCorriente) / Number(respuesta[0].cajas.pasivoCorriente)
-            document.getElementById('indiceActPasCorriente').innerHTML = numberWithCommas((actPasCorriente).toFixed(2))
-
-          // IMPOSITIVO
-            document.getElementById('ingresoBruto').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.ingresosBrutos / 1000).toFixed(0))
-            document.getElementById('inmobiliarioComuna').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.inmobiliarioComuna / 1000).toFixed(0))
-            document.getElementById('cargasSociales').innerHTML = '$ ' + numberWithCommas((respuesta[0].cajas.cargasSociales / 1000).toFixed(0))
-
-            let sueldosVentas = respuesta[0].cajas.sueldos / ventasTotales
-
-            document.getElementById('sueldosVentas').innerHTML = '$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12') / 1000).toFixed(0))
-
-            document.getElementById('sueldosTotal').innerHTML = '$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12Honorarios') / 1000).toFixed(0))
-
-        /* GRAFICOS */
-
-          // ECONOMICO
-            let divId = 'ventasChart'
-
-            let dataAgricultura1 = getMonthData(respuesta,'agricultura1')
-            dataAgricultura1.reverse()
-            let dataAgricultura2 = getMonthData(respuesta,'agricultura2')
-            dataAgricultura2.reverse()
-
-            let dataGanaderiaResto1= getMonthData(respuesta,'ganaderiaResto1')
-            dataGanaderiaResto1.reverse()
-
-            let dataGanaderiaResto2 = getMonthData(respuesta,'ganaderiaResto2')
-            dataGanaderiaResto2.reverse()
-            
-            let registros = [{
-                              label: 'Agricultura 1',
-                              backgroundColor: 'rgba(255,0,100,.2)',
-                              borderColor: 'rgb(255,0,0)',
-                              borderWidth: 1, 
-                              data: dataAgricultura1
-                          },{
-                            label: 'Agricultura 2',
-                            backgroundColor: 'rgba(50,0,255,.2)',
-                            borderColor: 'rgb(0,0,255)',
-                            borderWidth: 1, 
-                            data: dataAgricultura2
-                        }
-            ]
-
-            
-            let labels = []; 
-          
-            for (let index = 0; index < 6; index++) {
-
-              if(respuesta[index]?.periodo != undefined){
-                labels.push(respuesta[index]?.periodo)
-              }
-              
-            }
-
-            labels.reverse()
-
-
-            generarGraficoMultiBar(divId,labels,registros)
-            generarGraficoMultiBar('idGraficoVentas',labels,registros)
-
-            divId = 'ventasChart2'
-            
-            var registrosGanaderia = {
-              labels: labels,
-              datasets: [
-                {
-                  label: 'G/R 1',
-                  data: dataGanaderiaResto1,
-                  backgroundColor: 'rgba(255,0,100,.2)',
-                  borderColor: 'rgb(255,0,0)',
-                  borderWidth: 1, 
-                  stack: 'Stack 0',
-                },
-                {
-                  label: 'G/R 2',
-                  data: dataGanaderiaResto2,
-                  backgroundColor: 'rgba(50,0,255,.2)',
-                  borderColor: 'rgb(0,0,255)',
-                  borderWidth: 1,
-                  stack: 'Stack 0',
-                },
-              ]
-            };
-                                  
-            generarGraficoStackedGroup(divId,labels,registrosGanaderia)
-            generarGraficoStackedGroup('idGraficoVentas2',labels,registrosGanaderia)
-
-            divId = 'ventasGanaderiaChart'
-                          
-            let dataVaquillonasNovillos= getMonthData(respuesta,'vaquillonasNovillos')
-            dataVaquillonasNovillos.reverse()
-
-            let dataCarneSubproductos= getMonthData(respuesta,'carneSubproductos')
-            dataCarneSubproductos.reverse()
-
-            let dataExportacion= getMonthData(respuesta,'exportacion')
-            dataExportacion.reverse()
-
-            let dataProduccionHacienda= getMonthData(respuesta,'produccionHacienda')
-            dataProduccionHacienda.reverse()
-                 
-            registrosGanaderia2 = [{
-                label: 'Vaquillonas y Novillos',
-                backgroundColor: 'rgba(255,0,100,.2)',
-                borderColor: 'rgb(255,0,0)',
-                borderWidth: 1, 
-                data: dataVaquillonasNovillos
-              },{
-                label: 'Carnes y Subproductos',
-                backgroundColor: 'rgba(50,0,255,.2)',
-                borderColor: 'rgb(0,0,255)',
-                borderWidth: 1, 
-                data: dataCarneSubproductos
-              },{
-                label: 'Exportación',
-                backgroundColor: 'rgba(0,255,0,.2)',
-                borderColor: 'rgb(0,255,0)',
-                borderWidth: 1, 
-                data: dataExportacion
-              },{
-                label: 'Prod. Hacienda',
-                backgroundColor: 'rgba(0,255,255,.2)',
-                borderColor: 'rgb(0,255,255)',
-                borderWidth: 1, 
-                data: dataProduccionHacienda
-            }]
-
-            generarGraficoMultiBar(divId,labels,registrosGanaderia2)
-            generarGraficoMultiBar('idGraficoGanaderia2',labels,registrosGanaderia2)
-
-            // generarGraficoStackedGroup(divId,labels,registrosGanaderia2)
-            // generarGraficoStackedGroup('idGraficoGanaderia2',labels,registrosGanaderia2)
-
-            divId = 'margenVentasChart'
-            tituloLabel = 'Margen/Ventas'
-
-            registros = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                registros.push(Number(respuesta[key].graficos.margenSobreVentas).toFixed(2))
-              }
-            }
-            registros.reverse()      
-            
-            dataResultExpl = getMonthData(respuesta,'resultadoExplotacion2')
-            console.log(dataResultExpl);  
-            dataResultExpl.reverse()
-
-            let configMargenVentasChart = {
-              type: 'bar',
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    type: 'line',
-                    label: 'BAAI',
-                    borderColor: window.chartColors.red,
-                    fill:false,
-                    yAxisID: 'A',
-                    data: dataResultExpl
-                  }
-                  ,
-                  {
-                    label: 'm/v',
-                    type: 'line',
-                    backgroundColor:'rgba(0,255,0,.2)',
-                    borderColor: 'rgb(0,255,0)',
-                    yAxisID: 'B',
-                    data: registros,
-                    borderWidth: 2
-                  }
-                ]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function(tooltipItem, data) {
-
-                        if(tooltipItem.datasetIndex == 1){
-                          return `${tooltipItem.yLabel}%`
-                        }else{
-                          return `$ ${tooltipItem.yLabel.toLocaleString('de-DE')}`
-                        }
-                      }
-                  }
-                },
-                scaleShowValues: true,
-                scales: {
-                  xAxes: [{
-                    display:true,
-                    ticks: {
-                      autoSkip: false,
-                    }
-                  }],
-                  yAxes: [{
-                    id: 'A',
-                    type: 'linear',
-                    position: 'left',
-                    ticks:{
-                      beginAtZero: true,
-                      callback: function(value, index, ticks) {
-                        return  format(value);
-                      }     
-                    }
-                  }, {
-                    id: 'B',
-                    type: 'linear',
-                    position: 'right',
-                    ticks:{
-                      beginAtZero: true
-                    }
-                  }]
-                },
-                plugins:{
-                  labels:{                  
-                    render: (val)=>{ return format(val.value);},
-                  }
-                },
-                legend:{
-                  labels: {
-                        boxWidth: 5
-                  }
-                }
-              }
-            }
-                  
-            generarGraficoBar(divId,configMargenVentasChart,'noOption');
-            generarGraficoBar('idGraficoMargenVentas',configMargenVentasChart,'noOption')
-
-        
-            divId = 'rentabilidadEconomicaChart'
-            tituloLabel = 'Renta/Activo'
-
-            registros = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                registros.push(Number(respuesta[key].graficos.rentabilidadEconomica).toFixed(2))
-              }
-            }
-
-            registros.reverse()
-
-            let configRentabilidadChart = {
-              type: 'line',
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    type: 'line',
-                    label: 'R/A',
-                    borderColor: window.chartColors.red,
-                    data: registros
-                  }
-                ]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function(tooltipItem, data) {
-                          return `${tooltipItem.yLabel}%`
-                      }
-                  }
-                },
-                scaleShowValues: true,
-                scales: {
-                  xAxes: [{
-                    display:true,
-                    ticks: {
-                      autoSkip: false,
-                    }
-                  }],
-                },
-                plugins:{
-                  labels:{                  
-                    render: (val)=>{ return format(val.value);},
-                  }
-                },
-                legend:{
-                  labels: {
-                        boxWidth: 5
-                  }
-                }
-              }
-            }
-
-            generarGraficoBar(divId,configRentabilidadChart,'noOption');
-
-          // FINANCIERO
-            divId = 'endeudamientoChart'
-
-            /** */
-
-            let dataPrestamos = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataPrestamos.push(Number(respuesta[key].graficos.endeudamiento.prestamos).toFixed(2))
-              }
-            }
-
-            dataPrestamos.reverse()
-
-            /** */
-
-            let dataTarjetas = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataTarjetas.push(Number(respuesta[key].graficos.endeudamiento.tarjetas).toFixed(2))
-              }
-            }
-
-            dataTarjetas.reverse()
-
-            /** */
-
-            let dataProveedores = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataProveedores.push(Number(respuesta[key].graficos.endeudamiento.proveedores).toFixed(2))
-              }
-            }
-
-            dataProveedores.reverse()
-
-            /** */
-
-            let dataSgr = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataSgr.push(Number(respuesta[key].graficos.endeudamiento.sgr).toFixed(2))
-              }
-            }
-
-            dataSgr.reverse()
-
-            /** */
-            
-            let dataMutuales = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataMutuales.push(Number(respuesta[key].graficos.endeudamiento.mutuales).toFixed(2))
-              }
-            }
-
-            dataMutuales.reverse()
-            
-            /** */
-
-            let dataCLP = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataCLP.push(Number(respuesta[key].graficos.endeudamiento.cerealPL).toFixed(2))
-              }
-            }
-            dataCLP.reverse()
-
-            registros = [{
-                              label: 'Prestamos',
-                              backgroundColor: 'rgba(255,0,100,.2)',
-                              borderColor: 'rgb(255,0,0)',
-                              borderWidth: 1, 
-                              data: dataPrestamos
-                          },{
-                            label: 'Tarjetas',
-                            backgroundColor: 'rgba(50,0,255,.2)',
-                            borderColor: 'rgb(0,0,255)',
-                            borderWidth: 1, 
-                            data: dataTarjetas
-                          },{
-                            label: 'Sgr',
-                            backgroundColor: 'rgba(0,255,0,.2)',
-                            borderColor: 'rgb(0,255,0)',
-                            borderWidth: 1, 
-                            data: dataSgr
-                          },{
-                            label: 'Mutuales',
-                            backgroundColor: 'rgba(0,255,255,.2)',
-                            borderColor: 'rgb(0,255,255)',
-                            borderWidth: 1, 
-                            data: dataMutuales
-                          },{
-                            label: 'Proveedores',
-                            backgroundColor: 'rgba(200,0,255,.2)',
-                            borderColor: 'rgb(200,0,255)',
-                            borderWidth: 1, 
-                            data: dataProveedores
-                          },{
-                            label: 'CPL',
-                            backgroundColor: 'rgba(236,255,0,.2)',
-                            borderColor: 'rgb(236,255,0)',
-                            borderWidth: 1, 
-                            data: dataCLP
-                          }]
-
-            generarGraficoMultiBar(divId,labels,registros)
-            generarGraficoMultiBar('idGraficoDeudaBancaria',labels,registros)
-
-            /** */
-
-            divId = 'deudaBancariaChart'
-
-            let dataDeudaBancaria = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataDeudaBancaria.push(Number(respuesta[key].graficos.deudaBancaria).toFixed(2))
-              }
-            }
-
-            dataDeudaBancaria.reverse()
-            tituloLabel = 'Deuda Bancaria'
-
-            generarGraficoBarSimple(dataDeudaBancaria,divId,labels,tituloLabel)
-
-            divId = 'interesesPagadosChart'
-
-            datainteresesPagados = getMonthData(respuesta,'interesesPagados')
-
-            datainteresesPagados.reverse()
-            tituloLabel = 'Intereses Pagados'
-
-            generarGraficoBarSimple(datainteresesPagados,divId,labels,tituloLabel)
-
-          // IMPOSITIVO
-
-                            
-            divId = 'saldoIva'
-            
-            /** */
-
-            let dataSld = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataSld.push(Number(respuesta[key].graficos.saldos.sld).toFixed(2))
-              }
-            }
-
-            dataSld.reverse()
-
-            /** */
-
-            let dataSaldoTecnico = []
-
-            for (const key in respuesta) {
-              if(key < 6){
-                dataSaldoTecnico.push(Number(respuesta[key].graficos.saldos.saldoTecnico).toFixed(2))
-              }
-            }
-
-            dataSaldoTecnico.reverse()
-
-            registros = [{
-                              label: 'SLD',
-                              backgroundColor: 'rgba(255,0,100,.2)',
-                              borderColor: 'rgb(255,0,0)',
-                              borderWidth: 1, 
-                              data: dataSld
-                          },{
-                            label: 'Saldo Técnico',
-                            backgroundColor: 'rgba(50,0,255,.2)',
-                            borderColor: 'rgb(0,0,255)',
-                            borderWidth: 1, 
-                            data: dataSaldoTecnico
-            }]
-
-            generarGraficoMultiBar(divId,labels,registros)
-
-            generarGraficoMultiBar('idGraficoSaldoIva',labels,registros)
-
-            let ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
-
-            divId = 'sueldos12Ventas'
-
-            let dataSueldos12 = getMonthData(respuesta,'sueldos12')
-            let dataSueldos12Ventas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
-            
-            dataSueldos12.reverse()
-            dataSueldos12Ventas.reverse()
-
-            tituloLabel = 'Sueldos 1 + 2 / Ventas'
-
-            let configSueldos12VentasChart = {
-              type: 'bar',
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    type: 'bar',
-                    label: 'Suedos 1 + 2',
-                    borderColor: window.chartColors.red,
-                    backgroundColor:'rgba(255,0,0,.2)',
-                    borderColor: 'rgb(255,0,0)',
-                    yAxisID: 'A',
-                    data: dataSueldos12
-                  }
-                  ,
-                  {
-                    label: 'Sueldos 1 + 2 / Ventas.',
-                    type: 'line',
-                    borderColor: 'rgb(0,255,0)',
-                    yAxisID: 'B',
-                    fill:false,
-                    data: dataSueldos12Ventas,
-                    borderWidth: 2
-                  }
-                ]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function(tooltipItem, data) {
-
-                        if(tooltipItem.datasetIndex == 1){
-                          return `${tooltipItem.yLabel}%`
-                        }else{
-                          return `$ ${tooltipItem.yLabel.toLocaleString('de-DE')}`
-                        }
-                      }
-                  }
-                },
-                scaleShowValues: true,
-                scales: {
-                  xAxes: [{
-                    display:true,
-                    ticks: {
-                      autoSkip: false,
-                    }
-                  }],
-                  yAxes: [{
-                    id: 'A',
-                    type: 'linear',
-                    position: 'left',
-                    ticks:{
-                      beginAtZero: true,
-                      callback: function(value, index, ticks) {
-                        return  format(value);
-                      }     
-                    }
-                  }, {
-                    id: 'B',
-                    type: 'linear',
-                    position: 'right',
-                    ticks:{
-                      beginAtZero: true
-                    }
-                  }]
-                },
-                plugins:{
-                  labels:{                  
-                    render: (val)=>{ return format(val.value);},
-                  }
-                },
-                legend:{
-                  labels: {
-                        boxWidth: 5
-                  }
-                }
-              }
-            }
-                  
-            generarGraficoBar(divId,configSueldos12VentasChart,'noOption');
-            generarGraficoBar('idGraficoSueldo12',configSueldos12VentasChart,'noOption');
-            
-            divId = 'sueldos12HonorariosVentas'
-
-            let dataSueldos12Honorarios = getMonthData(respuesta,'sueldos12Honorarios')
-
-            ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
-            let dataSueldos12HonorariosVentas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
-
-
-            dataSueldos12Honorarios.reverse()
-            dataSueldos12HonorariosVentas.reverse()
-            
-            tituloLabel = 'Sueldos 1 + 2 + Honorarios / Ventas' 
-
-            let configSueldos12HonorariosVentasChart = {
-              type: 'bar',
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    type: 'bar',
-                    label: 'Suedos 1 + 2 + Honorarios',
-                    backgroundColor:'rgba(255,0,0,.2)',
-                    borderColor: 'rgb(255,0,0)',
-                    yAxisID: 'A',
-                    data: dataSueldos12Honorarios
-                  }
-                  ,
-                  {
-                    label: 'Sueldos 1 + 2 + Honorarios / Ventas.',
-                    type: 'line',
-                    borderColor: 'rgb(0,255,0)',
-                    yAxisID: 'B',
-                    fill:false,
-                    data: dataSueldos12HonorariosVentas,
-                    borderWidth: 2
-                  }
-                ]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function(tooltipItem, data) {
-
-                        if(tooltipItem.datasetIndex == 1){
-                          return `${tooltipItem.yLabel}%`
-                        }else{
-                          return `$ ${tooltipItem.yLabel.toLocaleString('de-DE')}`
-                        }
-                      }
-                  }
-                },
-                scaleShowValues: true,
-                scales: {
-                  xAxes: [{
-                    display:true,
-                    ticks: {
-                      autoSkip: false,
-                    }
-                  }],
-                  yAxes: [{
-                    id: 'A',
-                    type: 'linear',
-                    position: 'left',
-                    ticks:{
-                      beginAtZero: true,
-                      callback: function(value, index, ticks) {
-                        return  format(value);
-                      }     
-                    }
-                  }, {
-                    id: 'B',
-                    type: 'linear',
-                    position: 'right',
-                    ticks:{
-                      beginAtZero: true,
-                      callback: function(value, index, ticks) {
-                        return  format(value);
-                      } 
-                    }
-                  }]
-                },
-                plugins:{
-                  labels:{                  
-                    render: (val)=>{ return format(val.value);},
-                  }
-                },
-                legend:{
-                  labels: {
-                        boxWidth: 5
-                  }
-                }
-              }
-            }
-            generarGraficoBar(divId,configSueldos12HonorariosVentasChart,'noOption');
-
-            generarGraficoBar('idGraficoSueldo12Honorario',configSueldos12HonorariosVentasChart,'noOption');
-          
-        const btnsZoomGrafico = document.querySelectorAll('.zoomGraficos')
-
-        btnsZoomGrafico.forEach(element => {
-
-          element.addEventListener('click',()=>{
-
-            switch (element.attributes['data-modal'].value) {
-              case 'zGraficoVentas':
-                  $('#graficoVentaModal').modal('show')
-
-                break;
-              
-              case 'zGraficoVentas2':
-                  $('#graficoVenta2Modal').modal('show')
-
-                break;
-
-                case 'zGraficoMargenVentas':
-                  $('#graficoMargenVentaModal').modal('show')
-
-                break;
-
-                case 'zGraficoGanaderia':
-                  $('#graficoGanaderiaModal').modal('show')
-
-                break;
-
-                case 'zGraficoEndeudamiento':
-                  $('#graficoDeudaBancariaModal').modal('show')
-
-                break;
-
-                case 'zGraficoSaldoIva':
-                  $('#graficoSaldoIvaModal').modal('show')
-                  break;
-
-                case 'zGraficoSueldos12':
-                  $('#graficoSueldo12Modal').modal('show')
-                  break;
-
-                case 'zGraficoSueldos12Honorarios':
-                  $('#graficoSueldo12HonorarioModal').modal('show')
-                  break;
-            
-              default:
-                break;
-            }
-          })
-
-        });
-
-
+      cargarDatosCampo('Barlovento',respuesta['barlovento'])
+      cargarDatosCampo('Paihuen',respuesta['paihuen'])
 
     })
     .catch(err=>console.log(err))

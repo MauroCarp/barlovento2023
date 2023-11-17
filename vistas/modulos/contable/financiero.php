@@ -16,7 +16,7 @@ include 'cajasFinanciero.php';
 
                 <div class="box-tools pull-right" bis_skin_checked="1">
 
-                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoEndeudamiento" data-widget="zoom"><i class="fa fa-search-plus"></i>
+                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoEndeudamiento<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
                     </button>
 
                 </div>
@@ -28,7 +28,7 @@ include 'cajasFinanciero.php';
 
                 <div class="chart">
 
-                    <canvas id="endeudamientoChart"></canvas>
+                    <canvas id="endeudamientoChart<?=$campo?>"></canvas>
 
                 </div>
 
@@ -52,7 +52,7 @@ include 'cajasFinanciero.php';
                 
                 <div class="chart">
 
-                    <canvas id="deudaBancariaChart" style="height:100px"></canvas>
+                    <canvas id="deudaBancariaChart<?=$campo?>" style="height:100px"></canvas>
                 
                 </div>
 
@@ -76,7 +76,7 @@ include 'cajasFinanciero.php';
                 
                 <div class="chart">
 
-                    <canvas id="interesesPagadosChart" style="height:100px"></canvas>
+                    <canvas id="interesesPagadosChart<?=$campo?>" style="height:100px"></canvas>
                 
                 </div>
 
@@ -86,31 +86,6 @@ include 'cajasFinanciero.php';
 
     </div>
   
-    <!-- <div class="col-lg-4">
-                
-        <div class="box box-success">
-
-
-            <div class="box-header with-border">
-                
-                <h3 class="box-title">Caja / Bancos</h3>
-                
-            </div>
-            
-            <div class="box-body">
-            
-                <div class="chart">
-                
-                    <canvas id="cajaBancosPie" style="height:100px"></canvas>
-                
-                </div>
-                
-            </div>
-
-        </div>
-
-    </div> -->
-    
 </div>
 
 <?php
@@ -118,8 +93,8 @@ include 'cajasFinanciero.php';
 include 'cajasFinancieroFooter.php';
 
 $tituloGrafico = 'Deuda Bancaria';
-$idGraficoModal = 'graficoDeudaBancariaModal';
-$idGrafico = 'idGraficoDeudaBancaria';
+$idGraficoModal = 'graficoDeudaBancariaModal' . $campo;
+$idGrafico = 'idGraficoDeudaBancaria' . $campo;
 
 include 'graficoContable.modal.php';
 

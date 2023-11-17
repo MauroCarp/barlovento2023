@@ -16,7 +16,7 @@ include 'cajasImpositivo.php';
 
                 <div class="box-tools pull-right" bis_skin_checked="1">
 
-                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoSaldoIva" data-widget="zoom"><i class="fa fa-search-plus"></i>
+                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoSaldoIva<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
                     </button>
 
                 </div>
@@ -29,7 +29,7 @@ include 'cajasImpositivo.php';
 
                 <div class="chart">
 
-                    <canvas id="saldoIva"></canvas>
+                    <canvas id="saldoIva<?=$campo?>"></canvas>
 
                 </div>
 
@@ -49,7 +49,7 @@ include 'cajasImpositivo.php';
 
                 <div class="box-tools pull-right" bis_skin_checked="1">
 
-                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoSueldos12" data-widget="zoom"><i class="fa fa-search-plus"></i>
+                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoSueldos12<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
                     </button>
 
                 </div>
@@ -60,7 +60,7 @@ include 'cajasImpositivo.php';
                 
                 <div class="chart">
 
-                    <canvas id="sueldos12Ventas" style="height:100px"></canvas>
+                    <canvas id="sueldos12Ventas<?=$campo?>" style="height:100px"></canvas>
                 
                 </div>
 
@@ -80,7 +80,7 @@ include 'cajasImpositivo.php';
 
                 <div class="box-tools pull-right" bis_skin_checked="1">
 
-                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoSueldos12Honorarios" data-widget="zoom"><i class="fa fa-search-plus"></i>
+                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoSueldos12Honorarios<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
                     </button>
 
                 </div>
@@ -91,7 +91,7 @@ include 'cajasImpositivo.php';
                 
                 <div class="chart">
 
-                    <canvas id="sueldos12HonorariosVentas" style="height:100px"></canvas>
+                    <canvas id="sueldos12HonorariosVentas<?=$campo?>" style="height:100px"></canvas>
                 
                 </div>
 
@@ -107,18 +107,18 @@ include 'cajasImpositivo.php';
 
 $tituloGrafico = 'Saldo IVA';
 $idGraficoModal = 'graficoSaldoIvaModal';
-$idGrafico = 'idGraficoSaldoIva';
+$idGrafico = 'idGraficoSaldoIva' . $campo;
 
 include 'graficoContable.modal.php';
 
 $tituloGrafico = 'Sueldos 1 + 2 / Ventas';
-$idGraficoModal = 'graficoSueldo12Modal';
-$idGrafico = 'idGraficoSueldo12';
+$idGraficoModal = 'graficoSueldo12Modal' . $campo;
+$idGrafico = 'idGraficoSueldo12' . $campo;
 
 include 'graficoContable.modal.php';
 
 $tituloGrafico = 'Sueldos 1 + 2 + Horarios / Ventas';
-$idGraficoModal = 'graficoSueldo12HonorarioModal';
-$idGrafico = 'idGraficoSueldo12Honorario';
+$idGraficoModal = 'graficoSueldo12HonorarioModal' . $campo;
+$idGrafico = 'idGraficoSueldo12Honorario' . $campo;
 
 include 'graficoContable.modal.php';

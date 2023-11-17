@@ -538,7 +538,7 @@
 						<a href="#" data-toggle="modal" data-target="#modalCarga"  class="menusCarga" data-carga="Barlovento">
 
 							<b>1</b>
-							<span><b>Cargar Principal</b></span>
+							<span><b>&nbsp Cargar Principal</b></span>
 
 						</a>
 
@@ -549,7 +549,18 @@
 					<a href="#" data-toggle="modal" data-target="#modalCarga"  class="menusCarga" data-carga="Barlovento Consolidado">
 
 							<b>2</b>
-							<span><b>Cargar Consolidado</b></span>
+							<span><b>&nbsp Cargar Consolidado</b></span>
+
+						</a>
+
+					</li>
+
+					<li>
+
+					<a href="#" data-toggle="modal" data-target="#modalCarga"  class="menusCarga" data-carga="Paihuen">
+
+							<b>P</b>
+							<span><b>&nbsp Cargar Paihuen</b></span>
 
 						</a>
 
@@ -560,7 +571,7 @@
 						<a href="archivosContable">
 
 							<b><i class="fa fa-file"></i></b>
-							<span><b>Archivos Cargados</b></span>
+							<span><b>&nbsp Archivos Cargados</b></span>
 
 
 						</a>

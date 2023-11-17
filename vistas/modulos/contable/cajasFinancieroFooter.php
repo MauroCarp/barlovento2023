@@ -11,7 +11,7 @@
                 
                 <b>Deuda Operativa / Bienes de Cambio</b>
                 <br>
-                <span class="cajaContableNumber" id="duedaBienes"></span>
+                <span class="cajaContableNumber" id="duedaBienes<?=$campo?>"></span>
                 
                 </div>
                 
@@ -34,7 +34,7 @@
                 
                 <b>Activo Circulante / Activo Corriente</b>
                 <br>
-                <span class="cajaContableNumber" id="activoCircActivoCorr"></span>
+                <span class="cajaContableNumber" id="activoCircActivoCorr<?=$campo?>"></span>
                 
                 </div>
                 
@@ -57,7 +57,7 @@
                 
                 <b>Pasivo / Patrimonio Neto</b>
                 <br>
-                <span class="cajaContableNumber" id="pasivoPatrimonio"></span>
+                <span class="cajaContableNumber" id="pasivoPatrimonio<?=$campo?>"></span>
                 
                 </div>
                 
@@ -80,7 +80,7 @@
                 
                 <b>Indice A.C/P.C</b>
                 <br>
-                <span class="cajaContableNumber" id="indiceActPasCorriente"></span>
+                <span class="cajaContableNumber" id="indiceActPasCorriente<?=$campo?>">3</span>
                 
                 </div>
                 

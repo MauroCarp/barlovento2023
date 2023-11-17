@@ -157,20 +157,13 @@ class ModeloContable{
 	=============================================*/
 	
 	static public function mdlMostrarDatos($tabla,$item,$valor,$item2,$valor2){
-			
+
 		if(is_array($valor2)){
 
-			if($tabla != 'contablePaihuen'){
 
-				$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND MONTH($item2) = :mes AND YEAR($item2) = :anio");
-				
-				$stmt -> bindParam(":".$item,$valor, PDO::PARAM_STR);
-				
-			}else{
-				
-				$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE MONTH($item2) = :mes AND YEAR($item2) = :anio");
-				
-			}
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND MONTH($item2) = :mes AND YEAR($item2) = :anio");
+			
+			$stmt -> bindParam(":".$item,$valor, PDO::PARAM_STR);
 			
 			$mes = $valor2[0];
 			$anio = $valor2[1];
@@ -180,19 +173,13 @@ class ModeloContable{
 
 		}else{
 
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item2 = :$item2");
-			
-			if($tabla != 'contablePaihuen'){
-	
-				$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2");
-				$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
-			
-			}
-	
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2");
+
+			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
 			$stmt -> bindParam(":".$item2, $valor2, PDO::PARAM_STR);
 
 		}	
-		
+
 		$stmt -> execute();
 
 		return $stmt -> fetch();

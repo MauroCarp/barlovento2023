@@ -13,7 +13,7 @@
                 
                 <b>Pasivo Total</b>
                 <br>
-                <span class="cajaContableNumber" id="pasivoTotal"></span>
+                <span class="cajaContableNumber" id="pasivoTotal<?=$campo?>"></span>
                 
                 </div>
                 
@@ -36,7 +36,7 @@
                 
                 <b>Deuda Financiera</b>
                 <br>
-                <span class="cajaContableNumber" id="deudaTotal"></span>
+                <span class="cajaContableNumber" id="deudaTotal<?=$campo?>"></span>
                 
                 </div>
                 
@@ -59,7 +59,7 @@
                 
                 <b>Activo Circulante</b>
                 <br>
-                <span class="cajaContableNumber" id="activoCirculante"></span>
+                <span class="cajaContableNumber" id="activoCirculante<?=$campo?>"></span>
                 
                 </div>
                 
@@ -82,7 +82,7 @@
                 
                 <b>Patrimonio Neto</b>
                 <br>
-                <span class="cajaContableNumber" id="patrimonioNeto"></span>
+                <span class="cajaContableNumber" id="patrimonioNeto<?=$campo?>"></span>
                 
                 </div>
                 

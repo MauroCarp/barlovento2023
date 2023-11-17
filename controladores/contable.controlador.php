@@ -150,7 +150,6 @@ class ControladorContable{
             '2.01.01.02.013' => 'tarjetas',
             '2.01.01.02.014' => 'tarjetas',
             '2.01.01.07.000' => 'mutuales',
-            '2.01.01.06.002' => 'cerealPL',
             '2.01.01.01.000' => 'proveedores',
             '5.01.01.14.004' => 'seguros',
             '5.01.01.14.005' => 'seguros',
@@ -171,7 +170,6 @@ class ControladorContable{
             '2.00.00.00.000' => 'pasivoTotal',
             '3.00.00.00.000' => 'patrimonioNeto',
             '4.01.01.00.000' => 'agricultura',
-            '4.01.02.01.000' => 'ganaderia',
             '5.02.01.01.001' => 'ingresoBrutoMensual',
             '5.02.01.06.005' => 'inmobiliario',
             '5.02.01.05.002' => 'cargasSocialesReales',
@@ -182,13 +180,20 @@ class ControladorContable{
             '5.02.01.06.009' => 'honorarios',
             '5.03.01.01.004' => 'interesesPagados',
             '4.01.02.01.002' => 'vaquillonasNovillos',
-            '4.01.02.01.003' => 'vaquillonasNovillos',
             '4.01.02.01.005' => 'vaquillonasNovillos',
             '4.01.02.01.010' => 'carneSubproductos',
             '4.01.02.01.011' => 'carneSubproductos',
             '4.01.04.01.000' => 'exportacion',
             '4.01.02.01.012' => 'produccionHacienda',
         ];
+
+        if($libro != 'paihuen'){
+
+            $mapping['4.01.02.01.003'] = 'vaquillonasNovillos';
+            $mapping['2.01.01.06.002'] = 'cerealPL';
+            $mapping['4.01.02.01.000'] = 'ganaderia';
+
+        }
 
         $rowNumber = 0;
 
@@ -233,7 +238,7 @@ class ControladorContable{
                       'exportacion'=>0,
                       'produccionHacienda'=>0
         );
-       
+
         for($i=0;$i<$sheetCount;$i++){
 
             $Reader->ChangeSheet($i);
@@ -354,9 +359,9 @@ class ControladorContable{
         
         $principal = ModeloContable::mdlUltimoPeriodo('Principal','contable');        
         $consolidado = ModeloContable::mdlUltimoPeriodo('Consolidado','contable');
-        // $paihuen = ModeloContable::mdlUltimoPeriodo(null,'contablePaihuen');
+        $paihuen = ModeloContable::mdlUltimoPeriodo('Paihuen','contable');
 
-        $periodos = array($principal[0],$consolidado[0]);
+        $periodos = array($principal[0],$consolidado[0],$paihuen[0]);
 
         if(count(array_unique($periodos)) == 1){
 
@@ -364,7 +369,7 @@ class ControladorContable{
 
         }else{
 
-            return array('error'=>true,'principal'=>$principal[0],'consolidado'=>$consolidado[0]);
+            return array('error'=>true,'principal'=>$principal[0],'consolidado'=>$consolidado[0],'paihuen'=>$paihuen[0]);
 
         }
         
@@ -508,7 +513,7 @@ class ControladorContable{
                                'pasivoCorriente' => $consolidado['pasivoCorriente'],
                                'bienesDeCambio'=>$bienesDeCambio,
                                'ingresosBrutos'=>$ingresosBrutos,
-                               'inmobiliarioComuna'=>0,
+                               'inmobiliario'=>0,
                                'cargasSociales'=>$cargasSociales,
                                'sueldos12'=>$sueldos12,
                                'sueldos12Honorarios'=>$sueldos12Honorarios,
@@ -641,8 +646,8 @@ class ControladorContable{
 
                     // SUELDOS HONORARIOS / VENTAS
                 
-                        $sueldos12Ventas = $sueldos12 / $ventasTotales;
-                        $sueldos12HonorariosVentas = $sueldos12Honorarios / $ventasTotales;           
+                        $sueldos12Ventas = ($ventasTotales > 0) ?  $sueldos12 / $ventasTotales : 0;
+                        $sueldos12HonorariosVentas = ($ventasTotales > 0) ?  $sueldos12Honorarios / $ventasTotales : 0;           
                         
             return array(
                 'periodo'=>$labelMeses[$ultimoMes - 1],
@@ -699,8 +704,8 @@ class ControladorContable{
 
         $principal = ControladorContable::ctrMostrarDatos($item,$valor,$item2,$periodo);        
 
-        // if(!$principal)
-        //     return false;
+        if(!$principal)
+            return false;
             
         $valor = 'Consolidado';
         $consolidado = ControladorContable::ctrMostrarDatos($item,$valor,$item2,$periodo);

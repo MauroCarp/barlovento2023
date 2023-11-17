@@ -17,7 +17,6 @@ class AjaxContable{
         if($periodo == 'last'){
             
             $periodo = ControladorContable::ctrUltimoPeriodo();
-                
         
         }
 

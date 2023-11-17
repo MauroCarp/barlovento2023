@@ -350,11 +350,28 @@
 
       /* CAJAS SUPERIORES */
         // ECONOMICO
-          $(`#agricultura1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura1 / 1000).toFixed(0)))
-          $(`#agricultura2${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura2 / 1000).toFixed(0)))
-          $(`#ganaderiaResto1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto1 / 1000).toFixed(0)))
-          $(`#ganaderiaResto2${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto2 / 1000).toFixed(0)))
-          let ventasTotales = respuesta[0].cajas.agricultura1 + respuesta[0].cajas.agricultura2 + respuesta[0].cajas.ganaderiaResto1 + respuesta[0].cajas.ganaderiaResto2
+        console.log(campo)
+
+          let ventasTotales = 0;
+
+          if (campo != 'Paihuen'){
+
+            $(`#agricultura1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura1 / 1000).toFixed(0)))
+            $(`#agricultura2${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura2 / 1000).toFixed(0)))
+            $(`#ganaderiaResto1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto1 / 1000).toFixed(0)))
+            $(`#ganaderiaResto2${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto2 / 1000).toFixed(0)))
+            ventasTotales = respuesta[0].cajas.agricultura1 + respuesta[0].cajas.agricultura2 + respuesta[0].cajas.ganaderiaResto1 + respuesta[0].cajas.ganaderiaResto2
+            
+          } else {
+
+            $(`#agricultura1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura / 1000).toFixed(0)))
+            $(`#agricultura2${campo}`).html('$ ' + 0)
+            $(`#ganaderiaResto1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto / 1000).toFixed(0)))
+            $(`#ganaderiaResto2${campo}`).html('$ ' + 0)
+            ventasTotales = respuesta[0].cajas.agricultura + respuesta[0].cajas.ganaderiaResto
+            
+          }
+
           $(`#ventasTotales${campo}`).html('$ ' + numberWithCommas((ventasTotales / 1000).toFixed(0)))
             
         
@@ -379,7 +396,9 @@
 
         // IMPOSITIVO
           $(`#ingresoBruto${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ingresosBrutos / 1000).toFixed(0)))
-          $(`#inmobiliarioComuna${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.inmobiliarioComuna / 1000).toFixed(0)))
+          console.log(respuesta[0].cajas)
+          $(`#inmobiliarioComuna${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.inmobiliario / 1000).toFixed(0)))
+
           $(`#cargasSociales${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.cargasSociales / 1000).toFixed(0)))
 
           let sueldosVentas = respuesta[0].cajas.sueldos / ventasTotales
@@ -517,7 +536,6 @@
           registros.reverse()      
           
           dataResultExpl = getMonthData(respuesta,'resultadoExplotacion2')
-          console.log(dataResultExpl);  
           dataResultExpl.reverse()
 
           let configMargenVentasChart = {
@@ -1128,8 +1146,9 @@
         'accion':'mostrarData'
       }
     }).done(function(respuesta){
-      respuesta = JSON.parse(respuesta)
       
+      respuesta = JSON.parse(respuesta)
+
       if(!respuesta){
 
         swal({
@@ -1157,7 +1176,8 @@
             title: "Falta cargar una planillas.",
             text: `Ultimas planillas cargadas:
             PRINCIPAL - ${formatearFecha(respuesta.principal)} ||
-            CONSOLIDADO - ${formatearFecha(respuesta.consolidado)}`,
+            CONSOLIDADO - ${formatearFecha(respuesta.consolidado)} ||
+            PAIHUEN - ${formatearFecha(respuesta.paihuen)}`,
             type: "error",
             confirmButtonText: "¡Cerrar!"
           });

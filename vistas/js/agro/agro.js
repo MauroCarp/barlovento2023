@@ -24,15 +24,8 @@ for (const menu of btnsMenusCarga) {
         if(menuCarga == 'Planificacion') 
             document.getElementById('inputCampania').classList.remove('hidden')
 
-        if(menuCarga == 'Paihuen'){
-
-            document.getElementById('inputPeriodoContable').classList.remove('hidden')
-            
-        }else{
-
+        if(menuCarga == 'Paihuen')
             document.getElementById('inputPeriodoContable').classList.add('hidden')
-       
-        }
     
     })
 

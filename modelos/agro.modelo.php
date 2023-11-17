@@ -274,7 +274,7 @@ class ModeloAgro{
 
 	static public function mdlMostrarDataCultivosPlanificacion($tabla, $idPlanificacion){
 
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE idPlanificacion = :idPlanificacion");
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE idPlanificacion = :idPlanificacion ORDER BY lote ASC");
 		$stmt -> bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_STR);
 
 		$stmt -> execute();

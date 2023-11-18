@@ -5,77 +5,124 @@ class ControladorPastoreo{
 	CARGAR PLANILLA 
 	=============================================*/
 
-	static public function ctrCargarPlanilla(){
-        
-        if( isset($_POST["cargarPlantillaPastoreo"]) ){
+	static public function ctrCargarArchivo(){
 
-            require_once('excel/php-excel-reader/excel_reader2.php');
-            require_once('excel/SpreadsheetReader.php');
-
+        if( isset($_POST["btnCargar"]) ){
+            
+            require_once('extensiones/excel/php-excel-reader/excel_reader2.php');
+            require_once('extensiones/excel/SpreadsheetReader.php');
+            
             $error = false;
 
-            $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            
+            if (isset($_FILES['nuevosDatosPastoreo'])){
 
-            if(in_array($_FILES["file"]["type"],$allowedFileType)){
-                $ruta = "carga/" . $_FILES['file']['name'];
-                move_uploaded_file($_FILES['file']['tmp_name'], $ruta);
+                $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 
-                $Reader = new SpreadsheetReader($ruta);	
-                $sheetCount = count($Reader->sheets());
+                if(in_array($_FILES["nuevosDatosPastoreo"]["type"],$allowedFileType)){
 
-                for($i=0;$i<$sheetCount;$i++){
+                    $ruta = "carga/" . $_FILES['nuevosDatosPastoreo']['name'];
+                    move_uploaded_file($_FILES['nuevosDatosPastoreo']['tmp_name'], $ruta);
 
-                    $Reader->ChangeSheet($i);
+                    $Reader = new SpreadsheetReader($ruta);	
+
+                    $sheetCount = count($Reader->sheets());
+                    
+                    $rowNumber = 0;
+
+                    $rowValida = false;
+
+                    $data = array();
+
+                    $fechaRegistro = '';
+
+                    for($i=0;$i<$sheetCount;$i++){
+
+                        $Reader->ChangeSheet($i);
 
                         foreach ($Reader as $Row){
 
-                            if($i == 0){
-                                var_dump($Row[0]);
+                            if($rowNumber == 0){
+                            
+                                $fechaRegistro = DateTime::createFromFormat('m-d-y', $Row[3])->format('Y-m-d');
+
                             }
 
+                            if($rowNumber == 3){
+                                $rowValida = true;
+                            }
 
+                            if($rowValida){
+
+                                if($Row[0] == '') break;
+
+                                $data[] = array('celula'=>"'" . ControladorPastoreo::ctrGetCelula($Row[0]) . "'",
+                                                'lote'=>$Row[0],
+                                                'parcela'=>$Row[1],
+                                                'ingresoPlanificado'=> "'" . DateTime::createFromFormat('m-d-y', $Row[2])->format('Y-m-d') . "'",
+                                                'salidaPlanificado'=> "'" . DateTime::createFromFormat('m-d-y', $Row[3])->format('Y-m-d') . "'",
+                                                'recuperacion'=>$Row[8],
+                                                'fechaRegistro'=> "'" . $fechaRegistro . "'"  
+                                );
+
+
+                            }
+
+                            $rowNumber++;
+                            
                         }		
-                }
 
-                die();
+                    }
 
-                if($error == ""){
-                    echo'<script>
+                    $tabla = 'pastoreos';
 
-                            swal({
-                                type: "success",
-                                title: "Los datos han sido cargados correctamente",
-                                showConfirmButton: true,
-                                confirmButtonText: "Cerrar"
-                                }).then(function(result) {
-                                            if (result.value) {
+                    for ($i=0; $i < sizeof($data); $i++) { 
+                        $data[$i] = "(" . implode(',',$data[$i]) . ")";
+                    }
 
-                                            window.location = "datos";
+                    $resultado = ModeloPastoreo::mdlCargarRegistros($tabla,implode(',',$data));
 
-                                            }
-                                        })
 
-                            </script>';
-                }else{
-                    echo'<script>
+                    if($resultado == "ok"){
+                        echo'<script>
 
-                            swal({
-                                    type: "error",
-                                    title: "Hubo un error, los datos no fueron cargados.",
+                                swal({
+                                    type: "success",
+                                    title: "Los datos han sido cargados correctamente",
                                     showConfirmButton: true,
                                     confirmButtonText: "Cerrar"
                                     }).then(function(result) {
-                                    if (result.value) {
+                                                if (result.value) {
 
-                                    window.location = "datos";
+                                                window.location = "pastoreo";
 
-                                    }
-                                })
+                                                }
+                                            })
 
-                        </script>';
+                                </script>';
+                    }else{
+                        echo'<script>
+
+                                swal({
+                                        type: "error",
+                                        title: "Hubo un error, los datos no fueron cargados.",
+                                        showConfirmButton: true,
+                                        confirmButtonText: "Cerrar"
+                                        }).then(function(result) {
+                                        if (result.value) {
+
+                                        window.location = "pastoreo";
+
+                                        }
+                                    })
+
+                            </script>';
+                    }
+
                 }
-
             }
+
+            die();
         }
 
 	}
@@ -242,6 +289,37 @@ class ControladorPastoreo{
         }
 
 	}
+
+	static public function ctrFechaExcel($fecha){
+
+        list($day,$month,$year) = explode('-',$fecha);
+
+        return '20' . $year . '-' . $month . '-' . $day;
+    }
+
+	static public function ctrGetCelula($lote){
+        
+        switch ($lote) {
+            case '15':
+            case '11':
+                $celula = 'roja';        
+                break;
+
+            case '1':
+            case '2':
+            case '14':
+                $celula = 'amarilla';        
+                break;
+
+            case '3':
+            case '4':
+                $celula = 'naranja';        
+                break;
+            
+        }
+
+        return $celula;
+    }
 	
 	
 }

@@ -62,13 +62,10 @@ class ModeloPastoreo{
 
 	}
 	
-    static public function mdlNuevoRegistro($tabla,$data){
-	
-        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(tropa,fechaEntrada) VALUES (:tropa,:fechaEntrada)");
-            
-        $stmt->bindParam(":tropa", $data['tropa'], PDO::PARAM_STR);
-        $stmt->bindParam(":fechaEntrada", $data['fechaEntrada'], PDO::PARAM_STR);
-		
+    static public function mdlCargarRegistros($tabla,$data){
+			
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(celula,lote,parcela,ingresoPlanificado,salidaPlanificado,recuperacion,registroDate) VALUES $data");
+
         if($stmt->execute()){
             
             return "ok";	

@@ -100,6 +100,9 @@ if($_SESSION['perfil'] == 'Agro' OR $_SESSION['perfil'] == 'Administrador Agro')
 if($_SESSION['perfil'] == 'Contable' OR $_SESSION['perfil'] == 'Administrador Contable')
   $cargarArchivo = new ControladorContable();
 
+if($_SESSION['perfil'] == 'Pastoreo' OR $_SESSION['perfil'] == 'Administrador Pastoreo')
+  $cargarArchivo = new ControladorPastoreo();
+
 
 $cargarArchivo->ctrCargarArchivo();
 

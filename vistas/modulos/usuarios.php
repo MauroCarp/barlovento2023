@@ -235,6 +235,8 @@ MODAL AGREGAR USUARIO
 
                   <option value="Trazabilidad">Trazabilidad</option>
 
+                  <option value="Pastoreo">Pastoreo</option>
+
                 </select>
 
               </div>

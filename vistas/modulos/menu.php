@@ -27,6 +27,11 @@
 					$inicio = 'trazabilidad';
 					break;
 
+				case 'Administrador Pastoreo':
+				case 'Pastoreo':
+					$inicio = 'pastoreo';
+					break;
+
 				default:
 					# code...
 					break;
@@ -580,6 +585,20 @@
 
 				}
 
+				if($_SESSION['perfil'] == 'Pastoreo'){
+					echo '<li>
+
+						<a href="#" data-toggle="modal" data-target="#modalCarga"  class="menusCarga" data-carga="Pastoreo">
+
+							<b><span class="icon-fardo"></span></b>
+							<span><b>&nbsp Cargar Pastoreo</b></span>
+
+						</a>
+
+					</li>';
+
+				}
+
 				if($_SESSION["perfil"] == "Master" OR $_SESSION["usuario"] == "Gruben" OR $_SESSION["usuario"] == "Aruben" OR $_SESSION["usuario"] == "Cruben" OR $_SESSION["usuario"] == "tecnicoGanadero" OR $_SESSION["usuario"] == "tecnicoContable"){
 
 					echo '<li>
@@ -794,7 +813,7 @@ if($_SESSION["perfil"] == "Ganadero"){
 
 }
 
-if($_SESSION["perfil"] == "Agro" OR $_SESSION["perfil"] == "Contable"){
+if($_SESSION["perfil"] == "Agro" OR $_SESSION["perfil"] == "Contable" OR $_SESSION["perfil"] == "Pastoreo"){
 	
 	include 'modales/agro/cargarAgro.modal.php';
 	

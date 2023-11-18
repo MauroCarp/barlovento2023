@@ -325,6 +325,30 @@ CUERPO DOCUMENTO
 
     }
 
+    if($_SESSION["perfil"] == 'Pastoreo'){
+
+      if(isset($_GET["ruta"])){
+        if($_GET["ruta"] == "pastoreo" ||
+        $_GET["ruta"] == "pastoreo/index" ||
+        $_GET["ruta"] == "usuarios" ||
+        $_GET["ruta"] == "salir"){
+          
+          include "modulos/".$_GET["ruta"].".php";
+          
+        }else{
+          
+          include "modulos/404.php";
+          
+        }
+        
+      }else{
+        
+        include "modulos/pastoreo/index.php";
+
+      }
+
+    }
+
     /*=============================================
     FOOTER
     =============================================*/
@@ -358,8 +382,8 @@ if($_SESSION["perfil"] == 'Administrador Contable' OR $_SESSION["perfil"] == 'Co
 }
 
 // AGRO Y CONTABLE
-
-if($_SESSION["perfil"] == 'Agro' OR $_SESSION["perfil"] == 'Administrador Agro' OR $_SESSION["perfil"] == 'Administrador Contable' OR $_SESSION["perfil"] == 'Contable'){
+$arValid = array('Agro','Administrador Agro','Administrador Contable','Contable','Pastoreo','Administrador Contable');
+if(in_array($_SESSION["perfil"],$arValid)){
 ?>
 
 <script src="vistas/js/agro/agro.js"></script>
@@ -396,6 +420,14 @@ if($_SESSION["perfil"] == 'Ganadero' OR $_SESSION["perfil"] == 'Administrador Ga
 if($_SESSION['perfil'] == 'Trazabilidad'){ ?>
 
   <script src="vistas/js/trazabilidad/trazabilidad.js"></script>
+  
+<?php
+
+}
+
+if($_SESSION['perfil'] == 'Pastoreo'){ ?>
+
+  <script src="vistas/js/pastoreo/pastoreo.js"></script>
 
 <?php
 

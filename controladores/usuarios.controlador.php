@@ -93,6 +93,11 @@ class ControladorUsuarios{
 								case 'Administrador Trazabilidad':
 									$inicio = 'trazabilidad';
 									break;
+
+									case 'Pastoreo':
+								case 'Administrador Pastoreo':
+									$inicio = 'pastoreo';
+									break;
 							
 								}
 

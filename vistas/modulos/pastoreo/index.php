@@ -67,15 +67,15 @@
             <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 708" width="500" height="708">
                     
                 <a href='#tab_naranja' data-toggle='tab'>
-                  <path id="Naranja" class="lotesPath mapaLote" d="m211.7 103.3l86.3 45.7 1.3 239h-87.3z"/>
+                  <path id="Naranja" class="mapaLote" d="m211.7 103.3l86.3 45.7 1.3 239h-87.3z"/>
                 </a>
 
                 <a href='#tab_roja' data-toggle='tab'>
-                  <path id="Roja" class="lotesPath mapaLote" d="m261 388h121l3 258.6-107 1.4-0.7-154.7-15.6 1z"/>
+                  <path id="Roja" class="mapaLote" d="m261 388h121l3 258.6-107 1.4-0.7-154.7-15.6 1z"/>
                 </a>
 
                 <a href='#tab_amarilla' data-toggle='tab'>
-                  <path id="Amarilla" class="lotesPath mapaLote" d="m127 64.6l84 38 1 289.4 45.3 0.3 0.7 104.3 17.3 0.7 3.7 150.3-110-0.3-21-131.  3-19-111-45-260z"/>
+                  <path id="Amarilla" class="mapaLote" d="m127 64.6l84 38 1 289.4 45.3 0.3 0.7 104.3 17.3 0.7 3.7 150.3-110-0.3-21-131.  3-19-111-45-260z"/>
                 </a>
 
 
@@ -89,14 +89,15 @@
     </div>
 
 </div>
+
 <style>
 
-  .lotesPath{
+  .lotesPath, .mapaLote{
     fill:transparent;
     cursor:pointer;
   }
 
-  .lotesPath:hover {
+  .lotesPath:hover, .mapaLote:hover{
       stroke: #3c8dbc;
       stroke-width: 2; /* ancho del borde */
       stroke-opacity: 1; /* aumenta la opacidad al pasar el ratón sobre el rectángulo */
@@ -105,3 +106,8 @@
     }
 
 </style>
+
+<?php
+  include 'vistas/modulos/modales/pastoreo/detalleParcela.modal.php';
+
+?>

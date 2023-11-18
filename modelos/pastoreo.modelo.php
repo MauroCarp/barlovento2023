@@ -8,58 +8,16 @@ class ModeloPastoreo{
 	MOSTRAR Datos
 	=============================================*/
 
-	static public function mdlMostrarRegistros($tabla,$campo, $item, $valor,$item2 = null,$valor2 = null){
-
-		if($item != null){
-
-			if($item2 == null){
-
-				if($valor != null){
-	
-					$stmt = Conexion::conectar()->prepare("SELECT $campo FROM $tabla WHERE $item = :$item ");
-					
-					$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
-					
-					$stmt -> execute();
-					
-					return $stmt -> fetchAll();
-	
-				} else {
-					
-					$stmt = Conexion::conectar()->prepare("SELECT $campo FROM $tabla WHERE $item IS NULL");
-	
-					$stmt -> execute();
-					
-					return $stmt -> fetchAll();
-				}
-
-			} else {
-
-				$stmt = Conexion::conectar()->prepare("SELECT $campo FROM $tabla WHERE $item = :$item AND $item2 = :$item2 ");
-					
-				$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
-				$stmt -> bindParam(":".$item2, $valor2, PDO::PARAM_STR);
-				
-				$stmt -> execute();
-				
-				return $stmt -> fetchAll();
-
-			}
-
-
+	static public function mdlMostrarRegistros($tabla,$item,$valor,$item2,$valor2){
 			
-		}else{
-			
-			$stmt = Conexion::conectar()->prepare("SELECT $campo FROM $tabla");
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2 ORDER BY registroDate ASC limit 1");
+        $stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+        $stmt->bindParam(":".$item2, $valor2, PDO::PARAM_STR);
 
-			$stmt -> execute();
+		$stmt -> execute();
 
-			return $stmt -> fetchAll();
-
-		}
+		return $stmt -> fetch();
 		
-		$stmt = null;
-
 	}
 	
     static public function mdlCargarRegistros($tabla,$data){
@@ -79,12 +37,12 @@ class ModeloPastoreo{
     
 	static public function mdlEditarRegistro($tabla,$data,$item,$valor){
 
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fechaEntrada = :fechaEntrada, fechaSalida = :fechaSalida WHERE $item = :$item");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET ingresoReal = :ingresoReal, salidaReal = :salidaReal WHERE $item = :$item");
             
-        $stmt->bindParam(":fechaEntrada", $data['fechaEntrada'], PDO::PARAM_STR);
-        $stmt->bindParam(":fechaSalida", $data['fechaSalida'], PDO::PARAM_STR);
+        $stmt->bindParam(":ingresoReal", $data['ingresoReal'], PDO::PARAM_STR);
+        $stmt->bindParam(":salidaReal", $data['salidaReal'], PDO::PARAM_STR);
         $stmt->bindParam(":$item", $valor, PDO::PARAM_STR);
-		
+
         if($stmt->execute()){
             
             return "ok";	

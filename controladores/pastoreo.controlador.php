@@ -131,51 +131,58 @@ class ControladorPastoreo{
 	MOSTRAR DATOS 
 	=============================================*/
 
-	static public function ctrMostrarRegistros($campo, $item, $valor,$item2 = null,$valor2 = null){
+	static public function ctrMostrarRegistros($id){
 
-		$tabla = "pastoreo";
+		$tabla = "pastoreos";
 
-		$respuesta = ModeloPastoreo::mdlMostrarRegistros($tabla,$campo, $item, $valor);
+        list($lote,$parcela) = explode('.',$id);
 
-        if($item == NULL){
+        $item = 'lote';
+        $item2 = 'parcela';
 
-            $data = array();
+		return ModeloPastoreo::mdlMostrarRegistros($tabla,$item,$lote,$item2,$parcela);
 
-            foreach ($respuesta as $key => $value) {
-                $data[$key]['id'] = $value['id'];
-                $data[$key]['tropa'] = $value['tropa'];
-                $data[$key]['fechaEntrada'] = $value['fechaEntrada'];
-                $data[$key]['fechaSalida'] = $value['fechaSalida'];
+        // if($item == NULL){
+
+        //     $data = array();
+
+        //     foreach ($respuesta as $key => $value) {
+        //         $data[$key]['id'] = $value['id'];
+        //         $data[$key]['tropa'] = $value['tropa'];
+        //         $data[$key]['fechaEntrada'] = $value['fechaEntrada'];
+        //         $data[$key]['fechaSalida'] = $value['fechaSalida'];
     
-                if($value['fechaSalida'] != ''){
+        //         if($value['fechaSalida'] != ''){
     
-                    $fechaEntrada = new DateTime($value['fechaEntrada']);
-                    $fechaSalida = new DateTime($value['fechaSalida']);
+        //             $fechaEntrada = new DateTime($value['fechaEntrada']);
+        //             $fechaSalida = new DateTime($value['fechaSalida']);
     
-                    // Obtener la diferencia entre las fechas
-                    $intervalo = $fechaEntrada->diff($fechaSalida);
+        //             // Obtener la diferencia entre las fechas
+        //             $intervalo = $fechaEntrada->diff($fechaSalida);
     
-                    // Obtener la diferencia en días
-                    $diferenciaEnDias = $intervalo->days;
-                    $data[$key]['diasDesdeUDP'] = $diferenciaEnDias;
-                    $data[$key]['diasProxPastorear'] = $diferenciaEnDias + 1;
+        //             // Obtener la diferencia en días
+        //             $diferenciaEnDias = $intervalo->days;
+        //             $data[$key]['diasDesdeUDP'] = $diferenciaEnDias;
+        //             $data[$key]['diasProxPastorear'] = $diferenciaEnDias + 1;
                                     
-                } else {
+        //         } else {
     
-                    $data[$key]['diasDesdeUDP'] = '-';
+        //             $data[$key]['diasDesdeUDP'] = '-';
     
-                    $data[$key]['diasProxPastorear'] = '-';
+        //             $data[$key]['diasProxPastorear'] = '-';
                     
-                }
+        //         }
                 
     
-            }
+        //     }
 
-            return $data;
+        //     return $data;
 
-        } else {
-            return $respuesta;
-        }
+        // } else {
+
+        //     return $respuesta;
+
+        // }
 
 	}
 	
@@ -186,11 +193,11 @@ class ControladorPastoreo{
 
 	static public function ctrCargarRegistro(){
 
-		$tabla = "pastoreo";
+		$tabla = "pastoreos";
 
         if(isset($_POST['cargarPastoreo'])){
             
-            $data = array('fechaEntrada'=>$_POST['entradaReal'],'fechaSalida'=>$_POST['salidaReal']);
+            $data = array('ingresoReal'=>$_POST['entradaReal'],'salidaReal'=>$_POST['salidaReal']);
 
             $respuesta = ModeloPastoreo::mdlEditarRegistro($tabla,$data,'id',$_POST['idRegistro']);
 
@@ -200,17 +207,18 @@ class ControladorPastoreo{
                 
                 swal({
                     type: "success",
-                    title: "Registro cargado correctamente",
+                    title: "Registro actualizado correctamente",
                     showConfirmButton: true,
                     confirmButtonText: "Cerrar"
                 }).then(function(result) {
                     if (result.value) {
                         
-                        window.location.href = `index.php?ruta=diasPastoreo`;
+                        window.location.href = `index.php?ruta=pastoreo`;
                     }
                 })
                 
                 </script>';
+
             }else{
                 
                 echo'<script>
@@ -223,7 +231,7 @@ class ControladorPastoreo{
                             }).then(function(result) {
                             if (result.value) {
                                 
-                                window.location.href = `index.php?ruta=diasPastoreo`;
+                                window.location.href = `index.php?ruta=pastoreo`;
                                 
     
                             }
@@ -289,13 +297,6 @@ class ControladorPastoreo{
         }
 
 	}
-
-	static public function ctrFechaExcel($fecha){
-
-        list($day,$month,$year) = explode('-',$fecha);
-
-        return '20' . $year . '-' . $month . '-' . $day;
-    }
 
 	static public function ctrGetCelula($lote){
         

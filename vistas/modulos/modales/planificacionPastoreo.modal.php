@@ -60,4 +60,4 @@
 <?php 
 
 $cargarPlantilla = new ControladorPastoreo();
-$cargarPlantilla->ctrCargarPlanilla();
+$cargarPlantilla->ctrCargarRegistro();

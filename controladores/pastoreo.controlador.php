@@ -142,48 +142,6 @@ class ControladorPastoreo{
 
 		return ModeloPastoreo::mdlMostrarRegistros($tabla,$item,$lote,$item2,$parcela);
 
-        // if($item == NULL){
-
-        //     $data = array();
-
-        //     foreach ($respuesta as $key => $value) {
-        //         $data[$key]['id'] = $value['id'];
-        //         $data[$key]['tropa'] = $value['tropa'];
-        //         $data[$key]['fechaEntrada'] = $value['fechaEntrada'];
-        //         $data[$key]['fechaSalida'] = $value['fechaSalida'];
-    
-        //         if($value['fechaSalida'] != ''){
-    
-        //             $fechaEntrada = new DateTime($value['fechaEntrada']);
-        //             $fechaSalida = new DateTime($value['fechaSalida']);
-    
-        //             // Obtener la diferencia entre las fechas
-        //             $intervalo = $fechaEntrada->diff($fechaSalida);
-    
-        //             // Obtener la diferencia en días
-        //             $diferenciaEnDias = $intervalo->days;
-        //             $data[$key]['diasDesdeUDP'] = $diferenciaEnDias;
-        //             $data[$key]['diasProxPastorear'] = $diferenciaEnDias + 1;
-                                    
-        //         } else {
-    
-        //             $data[$key]['diasDesdeUDP'] = '-';
-    
-        //             $data[$key]['diasProxPastorear'] = '-';
-                    
-        //         }
-                
-    
-        //     }
-
-        //     return $data;
-
-        // } else {
-
-        //     return $respuesta;
-
-        // }
-
 	}
 	
 

@@ -3,7 +3,7 @@
   
   <div class="modal-dialog">
 
-    <div class="modal-content" style="width:500px;">
+    <div class="modal-content" style="width:350px;margin:0 auto">
 
 
         <!--=====================================

@@ -350,12 +350,13 @@
 
       /* CAJAS SUPERIORES */
         // ECONOMICO
+
         console.log(campo)
 
           let ventasTotales = 0;
 
           if (campo != 'Paihuen'){
-
+            console.log(respuesta[0])
             $(`#agricultura1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura1 / 1000).toFixed(0)))
             $(`#agricultura2${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.agricultura2 / 1000).toFixed(0)))
             $(`#ganaderiaResto1${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ganaderiaResto1 / 1000).toFixed(0)))
@@ -412,7 +413,10 @@
         // ECONOMICO
           let divId = `ventasChart${campo}`
 
-          let dataAgricultura1 = getMonthData(respuesta,'agricultura1')
+          let datoVariable = 'agricultura1'
+          if(campo == 'Paihuen') datoVariable = 'agricultura'
+
+          let dataAgricultura1 = getMonthData(respuesta,datoVariable)
           dataAgricultura1.reverse()
           let dataAgricultura2 = getMonthData(respuesta,'agricultura2')
           dataAgricultura2.reverse()

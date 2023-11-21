@@ -75,10 +75,16 @@ $('.lotesPath').each(function(){
                 let diferenciaDiasReal = ''
 
                 if(respuesta[0].ingresoReal != null){
-                    
+
                     $('#entradaReal').val(respuesta[0].ingresoReal)
-                    console.log('etnro por aca')
-                    $("input[name='salidaReal']").removeAttr('readOnly')
+
+                    if(respuesta[0].salidaReal == '0000-00-00' || respuesta[0].salidaReal == null){
+                        setTimeout(() => {
+                            $('#salidaReal').removeAttr('readOnly')
+                        }, 500);
+
+                    }
+                    
 
                 } else {
 
@@ -89,7 +95,9 @@ $('.lotesPath').each(function(){
                 if(respuesta[0].salidaReal != null){
 
                     $('#salidaReal').val(respuesta[0].salidaReal)
-                    $('#salidaReal').attr('readOnly','readOnly')
+                    setTimeout(() => {
+                        $('#salidaReal').attr('readOnly','readOnly')
+                    }, 300);
 
                     let fecha1 = moment(respuesta[0].ingresoReal);
                     let fecha2 = moment(respuesta[0].salidaReal);

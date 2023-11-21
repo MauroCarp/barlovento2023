@@ -48,7 +48,7 @@
 
 <div class="row" style="margin-left:15px">
 
-    <div class="col-lg-8 col-xs-8" style="background-image:url(vistas/img/pastoreo/celula<?=$celula?>.png);background-repeat:no-repeat;padding-left:0;">
+    <div class="col-lg-8 col-xs-11" style="background-image:url(vistas/img/pastoreo/celula<?=$celula?>.png);background-repeat:no-repeat;padding-left:0;">
 
     <?php   
 

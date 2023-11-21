@@ -80,11 +80,18 @@
                             </li>
 
                         </ul>
-                        <button class="btn btn-primary btn-block" name="cargarPastoreo" type="submit" form="formPastoreo">Actualizar Registro</button>
+
+                        <button class="btn btn-default mostrarRegistroParsela" type="button">Mostrar Historico</button>
+
+                        <button class="btn btn-primary" name="cargarPastoreo" type="submit" form="formPastoreo" style="float:right">Actualizar Registro</button>
+                        <br>
+                        <br>
                     </div>
 
                     <div class="box-footer no-padding hidden" id="noData" >
                         <h1>No hay datos para esta Parcela</h1>
+                        <button class="btn btn-default btn-block mostrarRegistroParsela" type="button">Mostrar Historico</button>
+                        <br><br>
                     </div>
 
 

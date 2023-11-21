@@ -109,5 +109,6 @@
 
 <?php
   include 'vistas/modulos/modales/pastoreo/detalleParcela.modal.php';
+  include 'vistas/modulos/modales/pastoreo/historicoParcela.modal.php';
 
 ?>

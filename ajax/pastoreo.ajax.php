@@ -14,8 +14,8 @@ class AjaxPastoreo{
 	public function ajaxMostrarData(){
 
         $id = $this->id;
-
-		$respuesta = ControladorPastoreo::ctrMostrarRegistros($id);
+		$item = 'id';
+		$respuesta = ControladorPastoreo::ctrMostrarRegistros($item,$id);
         
         echo json_encode($respuesta);
 

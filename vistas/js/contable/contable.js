@@ -218,11 +218,11 @@
                                           labels: {
 
                                             render: (val)=>{ 
-                                              if(divId != 'endeudamientoChart'){
-                                                return format(val.value);
-                                              }else{
+                                              // if(divId != 'endeudamientoChart'){
+                                              //   return format(val.value);
+                                              // }else{
                                                 return '';
-                                              }
+                                              // }
                                             },
                                             // render: 'value',
                                           },

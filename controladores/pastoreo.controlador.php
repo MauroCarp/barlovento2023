@@ -131,16 +131,16 @@ class ControladorPastoreo{
 	MOSTRAR DATOS 
 	=============================================*/
 
-	static public function ctrMostrarRegistros($id){
+	static public function ctrMostrarRegistros($item,$valor){
 
 		$tabla = "pastoreos";
 
-        list($lote,$parcela) = explode('.',$id);
+        // list($lote,$parcela) = explode('.',$id);
 
-        $item = 'lote';
-        $item2 = 'parcela';
+        // $item = 'lote';
+        // $item2 = 'parcela';
 
-		return ModeloPastoreo::mdlMostrarRegistros($tabla,$item,$lote,$item2,$parcela);
+		return ModeloPastoreo::mdlMostrarRegistros($tabla,$item,$valor);
 
 	}
 	
@@ -155,7 +155,27 @@ class ControladorPastoreo{
 
         if(isset($_POST['cargarPastoreo'])){
             
-            $data = array('ingresoReal'=>$_POST['entradaReal'],'salidaReal'=>$_POST['salidaReal']);
+            if($_POST['entradaReal'] == ''){
+
+                echo'<script>
+                
+                swal({
+                    type: "error",
+                    title: "La fecha de entrada Real no puede ir vacia",
+                    showConfirmButton: true,
+                    confirmButtonText: "Cerrar"
+                }).then(function(result) {
+                    if (result.value) {
+                        
+                        window.location.href = `index.php?ruta=pastoreo`;
+                    }
+                })';
+
+            }
+
+            $salidaReal = ($_POST['salidaReal'] == '') ? null : $_POST['salidaReal'];
+
+            $data = array('ingresoReal'=>$_POST['entradaReal'],'salidaReal'=>$salidaReal);
 
             $respuesta = ModeloPastoreo::mdlEditarRegistro($tabla,$data,'id',$_POST['idRegistro']);
 

@@ -8,35 +8,36 @@ $('.tabsPastoreo').each(function(){
 
 })
 
-$('.mapaLote').each(function(){
+// $('.mapaLote').each(function(){
+
+//     $(this).on('click',function(){
+//         let celula = $(this).attr('id')
+        
+//         $(`#celula${celula}`).addClass('active')
+//         $(`#tab_${celula.toLowerCase()}`).removeClass('hide')
+//         $('#mapaLotes').hide()
+
+//     })
+
+// })
+
+$('.btnEditarParcela').each(function(){
 
     $(this).on('click',function(){
-        $(`#celula${$(this).attr('id')}`).addClass('active')
-        $('#mapaLotes').hide()
 
-    })
-
-})
-
-$('.lotesPath').each(function(){
-
-    $(this).on('click',function(){
-
-        let id = $(this).attr('id')
+        let id = $(this).attr('idParcela')
 
         let url = 'ajax/pastoreo.ajax.php'
 
-        let [lote,parcela] = id.split('.')
+        let cellColor = 'yellow'
 
-        let celula = 'Amarilla'
-
-        if($(this).attr('cell') == 'orange'){
-            celula = 'Naranja'
-        }else if($(this).attr('cell') == 'red'){
-            celula = 'Roja'
+        if($(this).attr('cell') == 'naranja'){
+            cellColor = 'orange'
+        }else if($(this).attr('cell') == 'roja'){
+            cellColor = 'red'
         }
 
-        let cellColor = $(this).attr('cell')
+        let celula = $(this).attr('cell')
 
         $.ajax({
 
@@ -50,6 +51,7 @@ $('.lotesPath').each(function(){
         }).done(function(resp){
 
             let respuesta = JSON.parse(resp)
+            console.log(respuesta)
 
             $('#modalHistoricoParcela').modal('hide')
             $('#modalParcela').modal('show')
@@ -57,10 +59,10 @@ $('.lotesPath').each(function(){
             $('#cabezeraModalPastoreo').removeClass()
             $('#cabezeraModalPastoreo').addClass(`bg-${cellColor}`)
             $('#cabezeraModalPastoreo').addClass(`widget-user-header`)
-            $('#detalleCelula').html(celula)
-            $('#detalleLote').html(lote)
-            $('#detalleParcela').html(parcela)
-
+            $('#detalleCelula').html(capitalizarPrimeraLetra(celula))
+            $('#detalleLote').html(respuesta[0].lote)
+            $('#detalleParcela').html(respuesta[0].parcela)
+            
             if(respuesta.length > 0){
                 // MUESTRO DATOS DETALLE
                 $('#datosParcela').removeClass('hidden')
@@ -206,4 +208,51 @@ $('.tablasModal').DataTable({
 
 });
 
+$(".tablaCelula").DataTable({   
+	"ordering": false,
+	"language": {
+
+		"sProcessing":     "Procesando...",
+		"sLengthMenu":     "Mostrar _MENU_ registros",
+		"sZeroRecords":    "No se encontraron resultados",
+		"sEmptyTable":     "Ningún dato disponible en esta tabla",
+		"sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+		"sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+		"sInfoPostFix":    "",
+		"sSearch":         "Buscar:",
+		"sUrl":            "",
+		"sInfoThousands":  ",",
+		"sLoadingRecords": "Cargando...",
+		"oPaginate": {
+		"sFirst":    "Primero",
+		"sLast":     "Último",
+		"sNext":     "Siguiente",
+		"sPrevious": "Anterior"
+		}
+
+	},
+	'responsive': true
+
+});
+
+
+$(document).ready(function () {
+    // Muestra u oculta el botón Back to Top según el desplazamiento de la página
+    $(window).scroll(function () {
+      if ($(this).scrollTop() > 100) {
+        $('#back-to-top-btn').fadeIn();
+      } else {
+        $('#back-to-top-btn').fadeOut();
+      }
+    });
+  
+    // Desplazamiento suave al principio de la página cuando se hace clic en el botón
+    $('#back-to-top-btn').click(function () {
+      $('body,html').animate({
+        scrollTop: 0
+      }, 800);
+      return false;
+    });
+  });
 

@@ -31,7 +31,8 @@ $(".tablas").DataTable({
 		"sPrevious": "Anterior"
 		}
 
-	}
+	},
+	'responsive': true
 
 });
 

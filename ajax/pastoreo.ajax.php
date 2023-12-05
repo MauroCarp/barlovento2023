@@ -21,6 +21,16 @@ class AjaxPastoreo{
 
 	}
 
+	public function ajaxEliminarPlanificacion(){
+
+        $id = $this->id;
+		$item = 'id';
+		$respuesta = ControladorPastoreo::ctrEliminarRegistro($item,$id);
+        
+        echo json_encode($respuesta);
+
+	}
+
 }
 
 /*=============================================
@@ -34,6 +44,12 @@ if(isset($_POST["accion"])){
 		$mostrarData = new AjaxPastoreo();
         $mostrarData -> id = $_POST["id"];
         $mostrarData -> ajaxMostrarData();
+    }
+
+	if($accion == 'eliminarPlanificacion'){
+		$mostrarData = new AjaxPastoreo();
+        $mostrarData -> id = $_POST["id"];
+        $mostrarData -> ajaxEliminarPlanificacion();
     }
 
 }

@@ -81,7 +81,7 @@
 
                         </ul>
 
-                        <button class="btn btn-default mostrarRegistroParsela" type="button">Mostrar Historico</button>
+                        <button class="btn btn-default" id="mostrarRegistroParsela" type="button">Mostrar Historico</button>
 
                         <button class="btn btn-primary" name="cargarPastoreo" type="submit" form="formPastoreo" style="float:right">Actualizar Registro</button>
                         <br>

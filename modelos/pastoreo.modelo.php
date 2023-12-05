@@ -22,9 +22,9 @@ class ModeloPastoreo{
 	
     static public function mdlCargarRegistros($tabla,$data){
 			
-		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(celula,lote,parcela,ingresoPlanificado,salidaPlanificado,recuperacion,registroDate) VALUES $data");
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(celula,lote,parcela,ingresoPlanificado,salidaPlanificado,registroDate) VALUES $data");
 
-        if($stmt->execute()){
+		if($stmt->execute()){
             
             return "ok";	
             

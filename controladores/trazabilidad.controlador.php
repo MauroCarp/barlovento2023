@@ -11,9 +11,9 @@ class ControladorTrazabilidad{
 	}
 
 	static public function ctrNuevaFaena(){
-
+		
 		if(isset($_POST['btnCargarFaena'])){
-	
+
 			require_once('extensiones/excel/php-excel-reader/excel_reader2.php');
 			require_once('extensiones/excel/SpreadsheetReader.php');
 
@@ -24,18 +24,18 @@ class ControladorTrazabilidad{
 				$datosFaena = array('nombre'=>$nombre,'fecha'=>$_POST['fechaFaena']);
 				$tabla = 'faenas';
 				$idFaena = ModeloTrazabilidad::mdlNuevaFaena($tabla,$datosFaena);
-
+				
 				if(!is_array($idFaena)){
 
 					if(isset($_FILES['excelTD']) && isset($_FILES['excelWC']) && isset($_FILES['excelTrazabilidad'])){
-		
+					
 						$allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 			
 						$dataTD = array();
 						$dataWC = array();
 						$dataTrazabilidad = array();
 						$rfidsTemp = array();
-						
+									
 						// TOMA DE DATOS CARGA EXCEL TD
 						if(in_array($_FILES["excelTD"]["type"],$allowedFileType)){
 			
@@ -57,15 +57,15 @@ class ControladorTrazabilidad{
 			
 								foreach ($Reader as $Row){
 
-									if($Row[0] == 'KG TOTAL') $rowValida = false;
+									if($Row[0] == 'KG TOTAL' || ($rowNumber > 14 && $Row[0] == '')) $rowValida = false;
 
 									if ($rowValida){	
 
 										if(in_array($Row[1],$rfidsTemp)){
 
-											echo '<script>
-													alert("El RFID ' . $Row[1] . ' se repite en la planilla de Toma de Decisión. La carga de uno de ellos no sera realiazada")
-												  </script>';
+											// echo '<script>
+											// 		alert("El RFID ' . $Row[1] . ' se repite en la planilla de Toma de Decisión. La carga de uno de ellos no sera realiazada")
+											// 		</script>';
 										}
 
 										$dataTD[] = array(
@@ -105,7 +105,7 @@ class ControladorTrazabilidad{
 															})
 
 												</script>';
-                            					die();
+												die();
 
 										}
 
@@ -171,40 +171,40 @@ class ControladorTrazabilidad{
 											
 											echo '<script>
 													alert("El RFID ' . $Row[3] . ' se repite en la planilla de Trazabilidad. La carga de uno de ellos no sera realiazada")
-												  </script>';
+													</script>';
 										}
 
 										$dataWC[] = array('tropa' 		=> $Row[2],
-														  'rfid'		=> str_replace('9990540000','',$Row[3]),
-														  'caravana'	=> $Row[4],
-														  'categoria'	=> $Row[5],
-														  'raza'		=> $Row[6],
-														  'estado'		=> $Row[7],
-														  'ingreso'		=> date('Y-m-d', strtotime(str_replace('-', '/', $Row[8]))),
-														  'salida'		=> date('Y-m-d', strtotime(str_replace('-', '/', $Row[9]))),
-														  'kgIngreso'	=> $Row[12],
-														  'kgEgreso'	=> $Row[13],
-														  'kgProducido' => $Row[14],
-														  'dias'	    => $Row[17],
-														  'adpv'	    => $Row[18],
-														  'convTC'      => $Row[19],
-														  'convMS'      => $Row[20],
-														  'kilosTC'     => $Row[21],
-														  'kilosMS'     => $Row[22],
-														  'costo'       => $Row[23],
-														  'proveedor'   => $Row[24],
-														  'provincia'   => $Row[25],
-														  'localidad'   => $Row[26],
-														  'transaccionWC'=> $Row[29],
-														  'clienteDestinoVenta'=> $Row[30],
-														  'corral'=> $Row[32]
+															'rfid'		=> str_replace('9990540000','',$Row[3]),
+															'caravana'	=> $Row[4],
+															'categoria'	=> $Row[5],
+															'raza'		=> $Row[6],
+															'estado'		=> $Row[7],
+															'ingreso'		=> date('Y-m-d', strtotime(str_replace('-', '/', $Row[8]))),
+															'salida'		=> date('Y-m-d', strtotime(str_replace('-', '/', $Row[9]))),
+															'kgIngreso'	=> $Row[12],
+															'kgEgreso'	=> $Row[13],
+															'kgProducido' => $Row[14],
+															'dias'	    => $Row[17],
+															'adpv'	    => $Row[18],
+															'convTC'      => $Row[19],
+															'convMS'      => $Row[20],
+															'kilosTC'     => $Row[21],
+															'kilosMS'     => $Row[22],
+															'costo'       => $Row[23],
+															'proveedor'   => $Row[24],
+															'provincia'   => $Row[25],
+															'localidad'   => $Row[26],
+															'transaccionWC'=> $Row[29],
+															'clienteDestinoVenta'=> $Row[30],
+															'corral'=> $Row[32]
 										);
 
 										$rfidsTemp[] = $Row[3];
 										
 									}
 									
-									if ($rowNumber == 7){
+									if ($rowNumber == 0){
 
 										if($Row[0] == 'Hotelero'){
 											$rowValida = true;
@@ -298,7 +298,7 @@ class ControladorTrazabilidad{
 
 											echo '<script>
 													alert("El RFID ' . $rfidTemp . ' se repite en la planilla de Trazabilidad. La carga de uno de ellos no sera realiazada")
-												  </script>';
+													</script>';
 										}
 
 										$dataTrazabilidad[] = array('rfid'		   => $rfid,
@@ -316,7 +316,7 @@ class ControladorTrazabilidad{
 									
 									if ($rowNumber == 0){
 
-										if($Row[0] == 'CARAVANA' || $Row[0] == 'Carvana'){
+										if($Row[0] == 'CARAVANA' || $Row[0] == 'Caravana'){
 											$rowValida = true;
 										} else {
 
@@ -587,16 +587,11 @@ class ControladorTrazabilidad{
 		$tabla2 = 'trazanimales';
 		$tabla3 = 'wcanimales';
 		$dataAnimales = ModeloTrazabilidad::mdlDataReporte1($idFaena,$tabla1,$tabla2,$tabla3);
-
+		
 		return array('faena'=>$dataFaena,'animales'=>$dataAnimales);
-		
-		
-
 
 	}
 
-
-	
 }
 	
 

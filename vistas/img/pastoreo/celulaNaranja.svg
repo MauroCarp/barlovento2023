@@ -1,4 +1,4 @@
-<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 222 661" width="222" height="661">
+<svg version="1.2" id="svgNaranja" xmlns="http://www.w3.org/2000/svg" width="222" height="661" style="background-repeat:no-repeat;">
 
 	<path id="6.7" cell="orange" class="lotesPath" d="m15 550h96v75h-96z"/>
 	<path id="3.6" cell="orange" class="lotesPath" d="m15 477h96v75h-96z"/>

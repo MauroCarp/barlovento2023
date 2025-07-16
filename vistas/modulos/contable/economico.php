@@ -1,208 +1,77 @@
-<?php
-
-include 'cajasEconomico.php';
 
 
-?>
+<style>
 
-<div class="row">
+    .v-tabs {
+        display: -ms-flexbox !important;
+        display: flex !important;
+        .nav-tabs > li {
+            display: block;
+            float: none;
+            &,
+            &.active {
+                > a {
+                    &,
+                    &:hover,
+                    &:focus {
+                        border-radius: 0;
+                    }
+                }
+            }
+            &.active > a,
+            & > a:focus,
+            & > a:hover {
+                z-index: 1;
+                position: relative;
+            }
+        }
+        .tab-content {
+            flex: 1;
+        }
+    }
 
+    .vertical-text {
+        writing-mode: vertical-rl; /* Establece el modo de escritura vertical */
+        text-orientation: upright; /* Asegura que el texto se visualice verticalmente */
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        background-color:white;
+    }
 
-    <div class="col-lg-4">
-        
-        <div class="row">
+</style>
 
-            <div class="col-lg-12">
-                
-                <div class="box box-success">
+<div class="tabCollapse v-tabs">
 
-                    <div class="box-header with-border">
+    <ul class="nav nav-tabs" role="tablist" style="position:fixed;z-index:2;top:40%;margin-left:-25px">
+        <li role="presentation" class="active"><a href="#home" class="nav-link vertical-text"  style="border:solid 1px rgb(220,220,220);border-top-right-radius:5px;line-height:1.5em;padding:5px;" aria-controls="home" role="tab" data-toggle="tab"><b>RESULTADO</b></a></li>
+        <li role="presentation"><a href="#profile" class="nav-link vertical-text" style="border:solid 1px rgb(220,220,220);border-bottom-right-radius:5px;line-height:1.5em;padding:5px;" aria-controls="profile" role="tab" data-toggle="tab"><b>PATRIMONIO</b></a></li>
+    </ul>
 
-                        <h3 class="box-title">Ventas Agricultura</h3>
+    <div class="tab-content">
 
-                        <div class="box-tools pull-right" bis_skin_checked="1">
+        <div role="tabpanel" class="tab-pane active" id="home">
 
-                            <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoVentas<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
-                            </button>
+            <?php
 
-                        </div>
-                    </div>
+                include 'economicoProduccion.php';
 
-
-                    <div class="box-body">
-
-                        <div class="chart">
-
-                            <canvas id="ventasChart<?=$campo?>"></canvas>
-
-                        </div>
-
-                    </div>
-                
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-4">
-    
-        <div class="row">
-
-            <div class="col-lg-12">
-            
-                <div class="box box-success">
-
-                    <div class="box-header with-border">
-
-                        <h3 class="box-title">M/V | BAAI</h3>
-
-                        <div class="box-tools pull-right" bis_skin_checked="1">
-
-                            <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoMargenVentas<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="box-body">
-
-                        <div class="chart">
-
-                            <canvas id="margenVentasChart<?=$campo?>"></canvas>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
+            ?>
 
         </div>
 
-    </div>
-
-    <div class="col-lg-4">
-    
-        <div class="row">
-
-            <div class="col-lg-12">
-            
-                <div class="box box-success">
-
-                    <div class="box-header with-border">
-
-                        <h3 class="box-title">Renta/Activo</h3>
-
-                    </div>
-
-
-                    <div class="box-body">
-
-                        <div class="chart">
+        <div role="tabpanel" class="tab-pane" id="profile">
                         
-                            <canvas id="rentabilidadEconomicaChart<?=$campo?>"></canvas>
+            <?php
 
-                        </div>
+                include 'economicoPatrimonio.php';
 
-                    </div>
-
-                </div>
-
-            </div>
+            ?>
 
         </div>
 
     </div>
 
 </div>
-<div class="row">
 
-
-    <div class="col-lg-4">
-        
-        <div class="row">
-
-            <div class="col-lg-12">
-                
-                <div class="box box-success">
-
-                    <div class="box-header with-border">
-
-                        <h3 class="box-title">Ventas Ganaderia</h3>
-
-                        <div class="box-tools pull-right" bis_skin_checked="1">
-
-                            <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoVentas2<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
-                            </button>
-
-                        </div>
-                    </div>
-
-
-                    <div class="box-body">
-
-                        <div class="chart">
-
-                            <canvas id="ventasChart2<?=$campo?>"></canvas>
-
-                        </div>
-
-                    </div>
-                
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-4">
-        
-        <div class="row">
-
-            <div class="col-lg-12">
-                
-                <div class="box box-success">
-
-                    <div class="box-header with-border">
-
-                        <h3 class="box-title">Ventas Ganader&iacute;a por L&iacute;neas de Producto</h3>
-
-                        <div class="box-tools pull-right" bis_skin_checked="1">
-
-                            <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoGanaderia<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
-                            </button>
-
-                        </div>
-                    </div>
-
-
-                    <div class="box-body">
-
-                        <div class="chart">
-
-                            <canvas id="ventasGanaderiaChart<?=$campo?>"></canvas>
-
-                        </div>
-
-                    </div>
-                
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 <?php
 
 $tituloGrafico = 'Ventas Agricultura';
@@ -220,7 +89,17 @@ $idGraficoModal = 'graficoGanaderiaModal'  . $campo;
 $idGrafico = 'idGraficoGanaderia2'  . $campo;
 include 'graficoContable.modal.php';
 
-$tituloGrafico = 'M/V - BAAI';
+$tituloGrafico = 'Bienes de Cambio';
+$idGraficoModal = 'graficoBienesDeCambioModal'  . $campo;
+$idGrafico = 'idGraficoBienesDeCambio'  . $campo;
+include 'graficoContable.modal.php';
+
+$tituloGrafico = 'Bienes de Uso';
+$idGraficoModal = 'graficoBienesDeUsoModal'  . $campo;
+$idGrafico = 'idGraficoBienesDeUso'  . $campo;
+include 'graficoContable.modal.php';
+
+$tituloGrafico = 'BAAI';
 $idGraficoModal = 'graficoMargenVentaModal' . $campo;
 $idGrafico = 'idGraficoMargenVentas' . $campo;
 include 'graficoContable.modal.php';

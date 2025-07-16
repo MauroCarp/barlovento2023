@@ -596,6 +596,32 @@ class ControladorAgro{
 
     }
 
+    static public function ctrGetLotes($campania){
+
+        $tabla = 'planificaciones';
+
+		$lotes = ModeloAgro::mdlGetLotes($tabla,$campania);
+
+        $lotesFinal = array();
+
+        foreach ($lotes as $key => $lote) {
+
+            $lotesFinal[$lote['campo']][$lote['tipo']][] = array('lote'=>$lote['lote'],'cultivo'=>$lote['cultivo']);
+
+        }
+
+        return $lotesFinal;
+
+    }
+
+    static public function ctrMostrarEjecucion($tabla,$campania){
+        
+        $ejecucionValido = ModeloAgro::mdlMostrarEjecucion($tabla,$campania);
+
+        return $ejecucionValido[0];
+    
+    }
+
     
 
 }

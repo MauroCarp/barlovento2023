@@ -111,7 +111,10 @@
                                         plugins: {
                                           labels: {
                                             // render: 'value'
-                                            render: (val)=>{ return format(val.value);},
+                                            render: (val)=>{ 
+                                              // return format(val.value);
+                                              return '';
+                                            },
 
                                           },
                                           legend: {
@@ -218,7 +221,7 @@
                                           labels: {
 
                                             render: (val)=>{ 
-                                              if(divId != 'endeudamientoChart'){
+                                              if(divId == 'saldoIvaBarlovento' || divId == 'saldoIvaPaihuen'){
                                                 return format(val.value);
                                               }else{
                                                 return '';
@@ -262,7 +265,15 @@
                                           ticks: {
                                                 beginAtZero: true,
                                                 callback: function(value, index, ticks) {
+                                                  if(divId == 'sueldos12VentasBarlovento' || divId == 'sueldos12VentasPaihuen' || divId == 'sueldos12HonorariosVentasBarlovento' || divId == 'sueldos12HonorariosVentasPaihuen'){
+
                                                     return  format(value);
+
+                                                  } else {
+                                                    
+                                                    return '';
+
+                                                  }
                                                 }
                                             }
                                         }],
@@ -276,7 +287,7 @@
                                       plugins: {
                                         labels: {
                                           render: (val)=>{ 
-                                            if(divId != 'ventasChart2'){
+                                            if(divId == 'sueldos12VentasBarlovento' || divId == 'sueldos12VentasPaihuen' || divId == 'sueldos12HonorariosVentasBarlovento' || divId == 'sueldos12HonorariosVentasPaihuen'){
                                               return format(val.value);
                                             }else{
                                               return '';
@@ -294,16 +305,17 @@
     
     }
 
-    const getMonthData = (respuesta,dato)=>{
+    const getMonthData = (respuesta,dato,start = 'Jun')=>{
 
       let data = []
 
       for (const key in respuesta) {
 
         if(key < 6){
+
           if(respuesta.length > 1){
 
-            if(respuesta[key].periodo == 'Jun'){
+            if(respuesta[key].periodo == start){
               data.push(Number(respuesta[key].graficos[dato]).toFixed(2))
             }else{
 
@@ -313,6 +325,7 @@
           }else{
             data.push(Number(respuesta[key].graficos[dato]).toFixed(2))
           } 
+
         }
 
       }
@@ -321,14 +334,14 @@
       
     }
     
-    const getMonthDataCajas = (respuesta,dato)=>{
+    const getMonthDataCajas = (respuesta,dato,start = 'Jun')=>{
       
       let data = []
 
 
         if(respuesta.length > 1){
 
-          if(respuesta[0].periodo == 'Jun'){
+          if(respuesta[0].periodo == start){
             data.push(Number(respuesta[0].cajas[dato]).toFixed(2))
           }else{
             data.push((respuesta[0].cajas[dato] - respuesta[1].cajas[dato]).toFixed(2))
@@ -351,9 +364,9 @@
       /* CAJAS SUPERIORES */
         // ECONOMICO
 
-        console.log(campo)
-
           let ventasTotales = 0;
+
+          let start = (campo != 'Paihuen') ? 'Jun' : 'Ene'
 
           if (campo != 'Paihuen'){
             console.log(respuesta[0])
@@ -396,17 +409,17 @@
           $(`#indiceActPasCorriente${campo}`).html(numberWithCommas((actPasCorriente).toFixed(2)))
 
         // IMPOSITIVO
-          $(`#ingresoBruto${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.ingresosBrutos / 1000).toFixed(0)))
-          console.log(respuesta[0].cajas)
-          $(`#inmobiliarioComuna${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.inmobiliario / 1000).toFixed(0)))
+          $(`#ingresoBruto${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'ingresosBrutos',start)/ 1000).toFixed(0)))
 
-          $(`#cargasSociales${campo}`).html('$ ' + numberWithCommas((respuesta[0].cajas.cargasSociales / 1000).toFixed(0)))
+          $(`#inmobiliarioComuna${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'inmobiliario',start) / 1000).toFixed(0)))
+
+          $(`#cargasSociales${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'cargasSociales',start) / 1000).toFixed(0)))
 
           let sueldosVentas = respuesta[0].cajas.sueldos / ventasTotales
 
-          $(`#sueldosVentas${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12') / 1000).toFixed(0)))
+          $(`#sueldosVentas${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12',start) / 1000).toFixed(0)))
 
-          $(`#sueldosTotal${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12Honorarios') / 1000).toFixed(0)))
+          $(`#sueldosTotal${campo}`).html('$ ' + numberWithCommas((getMonthDataCajas(respuesta,'sueldos12Honorarios',start) / 1000).toFixed(0)))
 
       /* GRAFICOS */
 
@@ -416,15 +429,15 @@
           let datoVariable = 'agricultura1'
           if(campo == 'Paihuen') datoVariable = 'agricultura'
 
-          let dataAgricultura1 = getMonthData(respuesta,datoVariable)
+          let dataAgricultura1 = getMonthData(respuesta,datoVariable,start)
           dataAgricultura1.reverse()
-          let dataAgricultura2 = getMonthData(respuesta,'agricultura2')
+          let dataAgricultura2 = getMonthData(respuesta,'agricultura2',start)
           dataAgricultura2.reverse()
 
-          let dataGanaderiaResto1= getMonthData(respuesta,'ganaderiaResto1')
+          let dataGanaderiaResto1= getMonthData(respuesta,'ganaderiaResto1',start)
           dataGanaderiaResto1.reverse()
 
-          let dataGanaderiaResto2 = getMonthData(respuesta,'ganaderiaResto2')
+          let dataGanaderiaResto2 = getMonthData(respuesta,'ganaderiaResto2',start)
           dataGanaderiaResto2.reverse()
           
           let registros = [{
@@ -486,16 +499,16 @@
 
           divId = `ventasGanaderiaChart${campo}`
                         
-          let dataVaquillonasNovillos= getMonthData(respuesta,'vaquillonasNovillos')
+          let dataVaquillonasNovillos= getMonthData(respuesta,'vaquillonasNovillos',start)
           dataVaquillonasNovillos.reverse()
 
-          let dataCarneSubproductos= getMonthData(respuesta,'carneSubproductos')
+          let dataCarneSubproductos= getMonthData(respuesta,'carneSubproductos',start)
           dataCarneSubproductos.reverse()
 
-          let dataExportacion= getMonthData(respuesta,'exportacion')
+          let dataExportacion= getMonthData(respuesta,'exportacion',start)
           dataExportacion.reverse()
 
-          let dataProduccionHacienda= getMonthData(respuesta,'produccionHacienda')
+          let dataProduccionHacienda= getMonthData(respuesta,'produccionHacienda',start)
           dataProduccionHacienda.reverse()
                
           registrosGanaderia2 = [{
@@ -539,7 +552,7 @@
           }
           registros.reverse()      
           
-          dataResultExpl = getMonthData(respuesta,'resultadoExplotacion2')
+          dataResultExpl = getMonthData(respuesta,'resultadoExplotacion2',start)
           dataResultExpl.reverse()
 
           let configMargenVentasChart = {
@@ -609,7 +622,7 @@
               },
               plugins:{
                 labels:{                  
-                  render: (val)=>{ return format(val.value);},
+                  render: (val)=>{ return ''},
                 }
               },
               legend:{
@@ -816,7 +829,7 @@
 
           divId = `interesesPagadosChart${campo}`
 
-          datainteresesPagados = getMonthData(respuesta,'interesesPagados')
+          datainteresesPagados = getMonthData(respuesta,'interesesPagados',start)
 
           datainteresesPagados.reverse()
           tituloLabel = 'Intereses Pagados'
@@ -870,11 +883,11 @@
 
           generarGraficoMultiBar(`idGraficoSaldoIva${campo}`,labels,registros)
 
-          let ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
+          let ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales',start)
 
           divId = `sueldos12Ventas${campo}`
 
-          let dataSueldos12 = getMonthData(respuesta,'sueldos12')
+          let dataSueldos12 = getMonthData(respuesta,'sueldos12',start)
           let dataSueldos12Ventas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
           
           dataSueldos12.reverse()
@@ -966,9 +979,9 @@
           
           divId = `sueldos12HonorariosVentas${campo}`
 
-          let dataSueldos12Honorarios = getMonthData(respuesta,'sueldos12Honorarios')
+          let dataSueldos12Honorarios = getMonthData(respuesta,'sueldos12Honorarios',start)
 
-          ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales')
+          ventasTotalesGraficos = getMonthData(respuesta,'ventasTotales',start)
           let dataSueldos12HonorariosVentas = dataSueldos12.map((registro,index)=> Number(((registro / ventasTotalesGraficos[index]) * 100)).toFixed(2))
 
 

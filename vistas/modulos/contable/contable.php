@@ -1,3 +1,5 @@
+
+
 <div class="content-wrapper">
   
     <div class="box">
@@ -7,17 +9,28 @@
           <div class="col-lg-1">
             <button class="btn btn-primary btn-block" id="btnFiltrarContable" style="margin-bottom:10px;" data-toggle="modal" data-target="#ventanaModalMensual"><b>Filtrar</b></button>
 
+            <?php if($_SESSION['usuario'] == 'tecnicoContable'){ ?>
+
+              <!-- <form action="" method="POST">
+
+                <button class="btn btn-primary btn-block" type="submit" id="btnDolar" name="btnDolar" style="margin-bottom:10px;"><b>Dolarizar</b></button>
+              </form> -->
+
+            <?php } ?>
+
           </div>
           <div class="col-lg-2">
             <b style="font-size:1.8em;">Periodo: <span id="periodoVisible"></span></b>
           </div>
 
           <div class="col-lg-9" style="text-align:right">
-            <small><b>*Los valores de los recuadros superiores se representan en n/1000</b></small>
+            <small><b>*Los valores se representan en US$ CCL <span id="precioDolarCCL" style="color:blue"><span></b></small>
           </div>
+
         </div>
 
         <div class="row">
+          
           <div class="col-lg-12">
 
             <ul class="nav nav-tabs" id="tabsCampos" style="font-size:1.5em;">
@@ -139,3 +152,7 @@
   </div>
 
 </div>
+
+<?php 
+$dolarizar = new ControladorContable();
+$dolarizar-> setearDolar();

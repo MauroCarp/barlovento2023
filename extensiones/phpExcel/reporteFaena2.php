@@ -112,6 +112,8 @@ foreach ($data['animales'] as $value) {
      
      if($temp != $value['rfidTrazabilidad']){
 
+          $fechaTD = (!is_null($value['fechaTD'])) ? date('d/m/y',strtotime($value['fechaTD'])) : '-';
+
           $hoja->setCellValue('I' . $index, $value['tropa'])
               ->setCellValue('J' . $index, $value['rfid'])
               ->setCellValue('K' . $index, $value['caravana'])
@@ -137,7 +139,7 @@ foreach ($data['animales'] as $value) {
               ->setCellValue('AE' . $index, $value['clienteDestinoVenta'])
               ->setCellValue('AF' . $index, $value['corral'])
      
-              ->setCellValue('AG'  . $index, $value['fecha'])
+              ->setCellValue('AG'  . $index, $fechaTD)
               ->setCellValue('AH'  . $index, $value['rfidTD'])
               ->setCellValue('AI'  . $index, $value['mmGrasa'])
               ->setCellValue('AJ'  . $index, $value['peso'])

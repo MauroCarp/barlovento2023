@@ -78,6 +78,13 @@ $('.tablaFaenas').on('click','.btnEliminarFaena',function(){
 })
 
 
-$('#btnCargarFaena').on('click',function(e){
-    $('#btnCargarFaena').html(`<img src="vistas/img/plantilla/loader.gif" width="150px">`)
+$('#btnCargarFaena').on('click',function(){
+
+    let i = document.createElement('I')
+    i.setAttribute('class','fa fa-refresh spin')
+    i.setAttribute('style','font-size:5em')
+
+    $('#btnCargarFaena').html("")
+    $('#btnCargarFaena').append(i)
+    
 })

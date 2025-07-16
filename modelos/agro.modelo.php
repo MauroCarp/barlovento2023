@@ -295,5 +295,27 @@ class ModeloAgro{
 
 	}
 
+	static public function mdlGetLotes($tabla, $campania){
+
+		$stmt = Conexion::conectar()->prepare("SELECT cp.lote,cp.cultivo,cp.tipo,cp.campo FROM $tabla p INNER JOIN cultivosplanificacion cp ON p.id = cp.idPlanificacion WHERE p.campania = :campania");
+		$stmt -> bindParam(":campania", $campania, PDO::PARAM_STR);
+
+		$stmt -> execute();
+		
+		return $stmt -> fetchAll();
+
+	}
+
+	static public function mdlMostrarEjecucion($tabla, $campania){
+
+		$stmt = Conexion::conectar()->prepare("SELECT COUNT(*) FROM $tabla WHERE campania = :campania");
+		$stmt -> bindParam(":campania", $campania, PDO::PARAM_STR);
+
+		$stmt -> execute();
+		
+		return $stmt -> fetch();
+
+	}
+
 
 }

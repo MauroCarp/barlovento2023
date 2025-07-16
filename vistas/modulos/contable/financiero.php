@@ -37,6 +37,41 @@ include 'cajasFinanciero.php';
         </div>
         
     </div>
+
+    <div class="col-lg-4">
+                
+        <div class="box box-success">
+
+            <div class="box-header with-border">
+
+                <h3 class="box-title">Evoluci&oacute;n de Pasivo</h3>
+
+                <div class="box-tools pull-right" bis_skin_checked="1">
+
+                    <button type="button" class="btn btn-box-tool zoomGraficos" data-modal="zGraficoEndeudamientoPasivo<?=$campo?>" data-widget="zoom"><i class="fa fa-search-plus"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="box-body">
+
+                <div class="chart">
+
+                    <canvas id="endeudamientoPasivoChart<?=$campo?>"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+<div class="row">
             
     <div class="col-lg-4">
                 
@@ -90,7 +125,7 @@ include 'cajasFinanciero.php';
 
 <?php
 
-include 'cajasFinancieroFooter.php';
+// include 'cajasFinancieroFooter.php';
 
 $tituloGrafico = 'Deuda Bancaria';
 $idGraficoModal = 'graficoDeudaBancariaModal' . $campo;

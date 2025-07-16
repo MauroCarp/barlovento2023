@@ -1,5 +1,5 @@
 
-<div id="modalParcela" class="modal fade" role="dialog">
+<div id="modalEditarParcela" class="modal fade" role="dialog">
   
   <div class="modal-dialog">
 
@@ -20,7 +20,7 @@
 
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-                        <h3>Detalle Celula <span id="detalleCelula"></span> Lote <span id="detalleLote"></span> Parcela <span id="detalleParcela"></span></h3>
+                        <h3>Detalle celula <span id="detalleCelula"></span> | Lote <span id="detalleLote"></span> Parcela <span id="detalleParcela"></span></h3>
 
                     </div>
                     <br>
@@ -81,7 +81,7 @@
 
                         </ul>
 
-                        <button class="btn btn-default mostrarRegistroParsela" type="button">Mostrar Historico</button>
+                        <button class="btn btn-default" id="mostrarRegistroParsela" type="button">Mostrar Historico</button>
 
                         <button class="btn btn-primary" name="cargarPastoreo" type="submit" form="formPastoreo" style="float:right">Actualizar Registro</button>
                         <br>

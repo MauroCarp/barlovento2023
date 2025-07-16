@@ -29,6 +29,8 @@ const cargarInfoPlanificacion = (campania,carga)=>{
   }).then(resp=>resp.json())
   .then(respuesta=>{
       
+    // generarInputFile(respuesta.lotes)
+
       let data = {
         'pichi':{
           'fina':{
@@ -235,15 +237,13 @@ const cargarInfoPlanificacion = (campania,carga)=>{
                   render:function(reg){
                       return reg.value.toLocaleString('de-DE')
                   },
-              },
+              }
             },
             legend:{
               labels: {
                     boxWidth: 5
               }
-            },
-            backgroundColor: 'rgba(255,0,0,0.9)'
-
+            }
           }
         }
             
@@ -470,6 +470,5 @@ $('select[name="cargaPlanificacion"]').on('change',function(){
   cargarInfoPlanificacion(campania,cargaPlanificacion)
 
 })
-
 
 

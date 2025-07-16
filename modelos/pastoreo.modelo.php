@@ -8,11 +8,11 @@ class ModeloPastoreo{
 	MOSTRAR Datos
 	=============================================*/
 
-	static public function mdlMostrarRegistros($tabla,$item,$valor,$item2,$valor2){
+	static public function mdlMostrarRegistros($tabla,$item,$valor){
 			
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $item2 = :$item2 ORDER BY registroDate ASC");
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item ORDER BY ingresoPlanificado ASC");
         $stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
-        $stmt->bindParam(":".$item2, $valor2, PDO::PARAM_STR);
+        // $stmt->bindParam(":".$item2, $valor2, PDO::PARAM_STR);
 
 		$stmt -> execute();
 
@@ -22,9 +22,9 @@ class ModeloPastoreo{
 	
     static public function mdlCargarRegistros($tabla,$data){
 			
-		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(celula,lote,parcela,ingresoPlanificado,salidaPlanificado,recuperacion,registroDate) VALUES $data");
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(celula,lote,parcela,ingresoPlanificado,salidaPlanificado,registroDate) VALUES $data");
 
-        if($stmt->execute()){
+		if($stmt->execute()){
             
             return "ok";	
             

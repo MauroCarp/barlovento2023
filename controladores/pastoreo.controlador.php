@@ -58,10 +58,9 @@ class ControladorPastoreo{
 
                                 $data[] = array('celula'=>"'" . ControladorPastoreo::ctrGetCelula($Row[0]) . "'",
                                                 'lote'=>$Row[0],
-                                                'parcela'=>$Row[1],
+                                                'parcela'=>($Row[0] != 14) ? $Row[1] : 0,
                                                 'ingresoPlanificado'=> "'" . DateTime::createFromFormat('m-d-y', $Row[2])->format('Y-m-d') . "'",
                                                 'salidaPlanificado'=> "'" . DateTime::createFromFormat('m-d-y', $Row[3])->format('Y-m-d') . "'",
-                                                'recuperacion'=>$Row[8],
                                                 'fechaRegistro'=> "'" . $fechaRegistro . "'"  
                                 );
 
@@ -81,8 +80,7 @@ class ControladorPastoreo{
                     }
 
                     $resultado = ModeloPastoreo::mdlCargarRegistros($tabla,implode(',',$data));
-
-
+                  
                     if($resultado == "ok"){
                         echo'<script>
 
@@ -131,16 +129,16 @@ class ControladorPastoreo{
 	MOSTRAR DATOS 
 	=============================================*/
 
-	static public function ctrMostrarRegistros($id){
+	static public function ctrMostrarRegistros($item,$valor){
 
 		$tabla = "pastoreos";
 
-        list($lote,$parcela) = explode('.',$id);
+        // list($lote,$parcela) = explode('.',$id);
 
-        $item = 'lote';
-        $item2 = 'parcela';
+        // $item = 'lote';
+        // $item2 = 'parcela';
 
-		return ModeloPastoreo::mdlMostrarRegistros($tabla,$item,$lote,$item2,$parcela);
+		return ModeloPastoreo::mdlMostrarRegistros($tabla,$item,$valor);
 
 	}
 	
@@ -155,7 +153,27 @@ class ControladorPastoreo{
 
         if(isset($_POST['cargarPastoreo'])){
             
-            $data = array('ingresoReal'=>$_POST['entradaReal'],'salidaReal'=>$_POST['salidaReal']);
+            if($_POST['entradaReal'] == ''){
+
+                echo'<script>
+                
+                swal({
+                    type: "error",
+                    title: "La fecha de entrada Real no puede ir vacia",
+                    showConfirmButton: true,
+                    confirmButtonText: "Cerrar"
+                }).then(function(result) {
+                    if (result.value) {
+                        
+                        window.location.href = `index.php?ruta=pastoreo`;
+                    }
+                })';
+
+            }
+
+            $salidaReal = ($_POST['salidaReal'] == '') ? null : $_POST['salidaReal'];
+
+            $data = array('ingresoReal'=>$_POST['entradaReal'],'salidaReal'=>$salidaReal);
 
             $respuesta = ModeloPastoreo::mdlEditarRegistro($tabla,$data,'id',$_POST['idRegistro']);
 
@@ -206,53 +224,11 @@ class ControladorPastoreo{
 	CARGAR REGISTRO 
 	=============================================*/
 
-	static public function ctrEliminarRegistro(){
+	static public function ctrEliminarRegistro($item,$id){
 
-		$tabla = "pastoreo";
-
-        if(isset($_GET['accion']) && $_GET['accion'] == 'eliminarRegistro'){
+		$tabla = "pastoreos";
             
-            $respuesta = ModeloPastoreo::mdlEliminarRegistro($tabla,'id',$_GET['id']);
-            
-            if($respuesta == 'ok'){
-                
-                echo'<script>
-                
-                swal({
-                    type: "success",
-                    title: "Registro eliminado correctamente",
-                    showConfirmButton: true,
-                    confirmButtonText: "Cerrar"
-                }).then(function(result) {
-                    if (result.value) {
-                        
-                        window.location.href = `index.php?ruta=diasPastoreo`;
-                    }
-                })
-                
-                </script>';
-            }else{
-                
-                echo'<script>
-    
-                    swal({
-                            type: "error",
-                            title: "¡Hubo un error al eliminar el registro!",
-                            showConfirmButton: true,
-                            confirmButtonText: "Cerrar"
-                            }).then(function(result) {
-                            if (result.value) {
-                                
-                                window.location.href = `index.php?ruta=diasPastoreo`;
-                                
-    
-                            }
-                        })
-    
-                    </script>';
-            }
-
-        }
+        return ModeloPastoreo::mdlEliminarRegistro($tabla,$item,$id);
 
 	}
 
@@ -266,6 +242,8 @@ class ControladorPastoreo{
 
             case '1':
             case '2':
+            case '12':
+            case '13':
             case '14':
                 $celula = 'amarilla';        
                 break;

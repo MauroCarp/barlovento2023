@@ -8,59 +8,58 @@
 
           <div class="col-lg-12">
             
-            <ul class="nav nav-tabs" id="tabsCampos" style="font-size:1.5em;">
+            <ul class="nav nav-tabs" id="tabsCampos" style="font-size:1.5em;">      
               
-              <li class='tabs tabsPastoreo' id='celulaAmarilla'><a href='#tab_amarilla' data-toggle='tab'><b>Amarilla</b></a></li>
-              <li class='tabs tabsPastoreo' id='celulaNaranja'><a href='#tab_naranja' data-toggle='tab'><b>Naranja</b></a></li>
-              <li class='tabs tabsPastoreo' id='celulaRoja'><a href='#tab_roja' data-toggle='tab'><b>Roja</b></a></li>
-            
+              <li class='tabs tabsPastoreo' id='celulaAmarilla'><a href='#tab_amarilla'><b>Amarilla</b></a></li>
+              <li class='tabs tabsPastoreo' id='celulaNaranja'><a href='#tab_naranja'><b>Naranja</b></a></li>
+              <li class='tabs tabsPastoreo' id='celulaRoja'><a href='#tab_roja'><b>Roja</b></a></li>
+              
             </ul>
-          
-            <div class="tab-content">
     
-              <div class='tab-pane' id='tab_amarilla'>
+            <div id='tab_amarilla'>
 
-                <?php
+              <?php
+              
+                $celula = 'amarilla';
+                $color = 'style="border-top:3px solid #ffe300"';
+
+                include 'celula.php';
+
+              ?>
+              
+            </div>
+
+            <div id='tab_naranja'> 
+
+              <?php
                 
-                  $celula = 'Amarilla';
+                $celula = 'naranja';
+                $color = 'warning';
 
-                  include 'celula.php';
+                include 'celula.php';
 
-                ?>
+              ?>
+
+            </div>
+
+            <div id='tab_roja'>
+
+              <?php
                 
-              </div>
+                $celula = 'roja';
+                $color = 'danger';
 
-              <div class='tab-pane' id='tab_naranja'>
+                include 'celula.php';
 
-                <?php
-                  
-                  $celula = 'Naranja';
+              ?>
 
-                  include 'celula.php';
-
-                ?>
-
-              </div>
-
-              <div class='tab-pane' id='tab_roja'>
-
-                <?php
-                  
-                  $celula = 'Roja';
-
-                  include 'celula.php';
-
-                ?>
-
-              </div>
-    
             </div>
 
           </div>
 
         </div>
 
-        <div class="row" id="mapaLotes">
+        <!-- <div class="row" id="mapaLotes">
 
           <div class="col-lg-5 col-sm-12" style="background-image:url(vistas/img/pastoreo/lotes.png);background-repeat:no-repeat;padding-left:0;">
 
@@ -82,11 +81,13 @@
             </svg>
 
           </div>
-        </div>
+        </div> -->
 
       </section>
 
     </div>
+
+    <button id="back-to-top-btn" class="btn btn-success">Volver arriba</button>
 
 </div>
 
@@ -103,6 +104,13 @@
       stroke-opacity: 1; /* aumenta la opacidad al pasar el ratón sobre el rectángulo */
       transition: stroke-opacity 1s ease; /* transición suave de opacidad */
 
+    }
+
+    #back-to-top-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
     }
 
 </style>

@@ -88,13 +88,14 @@ class ModeloTrazabilidad{
 	static public function mdlDataReporte1($idFaena,$tabla,$tabla2 = null,$tabla3 = null){
 
 		if($tabla != 'faenas'){
-
+			
 			$stmt = Conexion::conectar()->prepare("SELECT $tabla.rfid as rfidTD,
 														  $tabla.mmGrasa,	
 														  $tabla.peso,	
 														  $tabla.sexo,	
 														  $tabla.clasificacion,	
-														  $tabla.aob,	
+														  $tabla.aob,
+														  $tabla.fecha as fechaTD,	
 														  $tabla.refEco,	
 														  $tabla2.rfid as rfidTrazabilidad,
 														  $tabla2.correlacion,

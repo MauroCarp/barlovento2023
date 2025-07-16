@@ -2,14 +2,13 @@
     
     <div class="row">
 
-        <div class="col-lg-2 col-xs-6">
+        <div class="col-lg-3 col-xs-6">
 
             <div class="small-box bg-yellow">
                 
                 <div class="inner cajaContableTitulo">
                 
                 <b>Ingresos Brutos</b>
-                <br>
                 <br>
                 <span class="cajaContableNumber" id="ingresoBruto<?=$campo?>"></span>
 
@@ -18,7 +17,7 @@
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <b>US</b><i class="fa fa-dollar"></i>
                 
                 </div>
 
@@ -26,30 +25,7 @@
 
         </div>
 
-        <div class="col-lg-2 col-xs-6">
-
-            <div class="small-box bg-yellow">
-                
-                <div class="inner cajaContableTitulo">
-                
-                <b>Inmobiliario / Comuna</b>
-                <br>
-                <span class="cajaContableNumber" id="inmobiliarioComuna<?=$campo?>"></span>
-
-                
-                </div>
-                
-                <div class="icon" style="padding-top:10px;font-size:5em;">
-                
-                <i class="fa fa-dollar"></i>
-                
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-2 col-xs-6">
+        <div class="col-lg-3 col-xs-6">
 
             <div class="small-box bg-yellow">
                 
@@ -64,7 +40,7 @@
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <b>US</b><i class="fa fa-dollar"></i>
                 
                 </div>
 
@@ -72,7 +48,7 @@
 
         </div>
 
-        <div class="col-lg-2 col-xs-6">
+        <div class="col-lg-3 col-xs-6">
 
             <div class="small-box bg-yellow">
                 
@@ -87,7 +63,7 @@
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <b>US</b><i class="fa fa-dollar"></i>
                 
                 </div>
 
@@ -95,7 +71,7 @@
 
         </div>
 
-        <div class="col-lg-2 col-xs-6">
+        <div class="col-lg-3 col-xs-6">
 
             <div class="small-box bg-yellow">
                 
@@ -110,7 +86,7 @@
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <b>US</b><i class="fa fa-dollar"></i>
                 
                 </div>
 

@@ -163,6 +163,12 @@ include 'vistas/modulos/modales/agro/selectCampania.modal.php';
 
 include 'vistas/modulos/modales/agro/costosPlanificacion.modal.php';
 
+include 'vistas/modulos/modales/agro/cargarEjecucion.modal.php';
+
+$eliminarArchivo = new ControladorAgro;
+
+$eliminarArchivo -> ctrEliminarArchivo();
+
 $campaniaAgro = isset($_COOKIE['campaniaAgro']) ? true : false;
 
 ?>

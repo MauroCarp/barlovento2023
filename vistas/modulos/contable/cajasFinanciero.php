@@ -19,7 +19,7 @@
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <b>US</b><i class="fa fa-dollar"></i>
                 
                 </div>
 
@@ -34,7 +34,7 @@
                 
                 <div class="inner cajaContableTitulo">
                 
-                <b>Deuda Financiera</b>
+                <b>Deuda Bancaria</b>
                 <br>
                 <span class="cajaContableNumber" id="deudaTotal<?=$campo?>"></span>
                 
@@ -42,7 +42,7 @@
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <b>US</b><i class="fa fa-dollar"></i>
                 
                 </div>
 
@@ -50,45 +50,45 @@
 
         </div>
 
-        <!-- Activo Circulante -->
-        <div class="col-lg-2 col-xs-6">
+        <!-- Deuda/Bienes de cambio -->
+        <div class="col-lg-4 col-xs-6">
 
             <div class="small-box bg-yellow">
                 
                 <div class="inner cajaContableTitulo">
                 
-                <b>Activo Circulante</b>
+                <b>Deuda Operativa / Bienes de Cambio</b>
                 <br>
-                <span class="cajaContableNumber" id="activoCirculante<?=$campo?>"></span>
+                <span class="cajaContableNumber" id="duedaBienes<?=$campo?>"></span>
                 
                 </div>
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <i class="fa fa-percent"></i>
                 
                 </div>
 
             </div>
 
-        </div>
+            </div>
 
-        <!-- Patrimonio Neto -->
-        <div class="col-lg-3 col-xs-6">
+            <!-- Pasivo / Patrimonio Neto -->
+            <div class="col-lg-3 col-xs-6">
 
             <div class="small-box bg-yellow">
                 
                 <div class="inner cajaContableTitulo">
                 
-                <b>Patrimonio Neto</b>
+                <b>Pasivo / Patrimonio Neto</b>
                 <br>
-                <span class="cajaContableNumber" id="patrimonioNeto<?=$campo?>"></span>
+                <span class="cajaContableNumber" id="pasivoPatrimonio<?=$campo?>"></span>
                 
                 </div>
                 
                 <div class="icon" style="padding-top:10px;font-size:5em;">
                 
-                <i class="fa fa-dollar"></i>
+                <i class="fa fa-percent"></i>
                 
                 </div>
 

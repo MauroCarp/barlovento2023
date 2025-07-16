@@ -103,7 +103,7 @@
 
                 <div class="btn-group" style="float:right">
             
-                  <button class="btn btn-danger btnEliminarArchivoContable" idArchivo="<?=$valor["id"]?>" tablaDB="contablePaihuen"><i class="fa fa-times"></i></button>
+                  <button class="btn btn-danger btnEliminarArchivoContable" idArchivo="<?=$valor["id"]?>" tablaDB="contable"><i class="fa fa-times"></i></button>
 
                 </div>
               

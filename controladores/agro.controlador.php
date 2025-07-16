@@ -152,8 +152,6 @@ class ControladorAgro{
 
                         // }
 
-                        // var_dump($Row[1]);
-
                         $cultivo = strtolower(trim(str_replace(' ','',str_replace('°','',$Row[1]))));
 
                         if(trim($Row[1]) == 'EL PICHI') $campo = 'pichi';
@@ -161,12 +159,17 @@ class ControladorAgro{
                         if(trim($Row[1]) == 'LA BETY') $campo = 'bety';
 
                         if($rowValida && $cultivo != 'cerealesyoleaginosas' && $cultivo != 'elpichi' && $cultivo != 'labety' && $cultivo != ''){
+                            // var_dump($campo);
+                            // var_dump($Row[1]);
+
+                            // var_dump($cultivo);
+                            // die;
 
                             $data[] = array('cultivo'=>$cultivo,
                                                  'tipo'=>tipoCultivo($cultivo),
                                                  'tipoEstInv'=>tipoEstInv($cultivo),
                                                  'lote'=>$Row[2],
-                                                 'has'=>$Row[7],
+                                                 'has'=>$Row[5],
                                                  'idPlanificacion'=>$cargaPlanificacion,
                                                  'campo'=> $campo
                             );
@@ -422,9 +425,9 @@ class ControladorAgro{
 	CARGAR COSTOS
 	=============================================*/
 
-	static public function ctrCargarCostos($tabla,$dataSql){
+	static public function ctrCargarCostos($tabla,$dataSql,$idPlanificacion){
 
-        return $respuesta = ModeloAgro::mdlCargarCostos($tabla,$dataSql);
+        return $respuesta = ModeloAgro::mdlCargarCostos($tabla,$dataSql,$idPlanificacion);
             
 	}
 

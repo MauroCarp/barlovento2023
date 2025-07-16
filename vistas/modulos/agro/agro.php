@@ -64,7 +64,7 @@ if(isset($_GET['accion']) && $_GET['accion'] == 'costosCultivos'){
           data:`accion=cargarCostos&data=${JSON.stringify(data)}`,
           success:function(response){
 
-            if(response == 'ok'){
+            if(response != null && response != 'null' && response != 'undefined'){
               swal({
                 type: "success",
                 title: "La carga ha sido correcta.",
@@ -73,9 +73,7 @@ if(isset($_GET['accion']) && $_GET['accion'] == 'costosCultivos'){
                 }).then(function(result) {
 
                   if (result.value) {
-
-                  window.location = "index.php?ruta=agro/agro";
-
+                    window.location = "index.php?ruta=agro/agro&campania=" + response;
                   }
 
                 })

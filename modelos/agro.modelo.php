@@ -10,7 +10,7 @@ class ModeloAgro{
 	static public function mdlCargarArchivo($tabla,$campos,$data){
 		
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla($campos) VALUES $data");
-
+	
 		if($stmt->execute()){
 			
 			return "ok";	
@@ -44,13 +44,20 @@ class ModeloAgro{
 	CARGAR COSTO
 	=============================================*/
 
-	static public function mdlCargarCostos($tabla,$dataSql){
+	static public function mdlCargarCostos($tabla,$dataSql,$idPlanificacion){
 
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(idPlanificacion,cultivo,costo) VALUES $dataSql");
+		
 
 		if($stmt->execute()){
 			
-			return "ok";	
+			$stmtCampania = Conexion::conectar()->prepare("SELECT campania FROM planificaciones WHERE id = :idPlanificacion");
+			$stmtCampania->bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_INT);
+			$stmtCampania->execute();
+			$campaniaRow = $stmtCampania->fetch(PDO::FETCH_ASSOC);
+			$campania = $campaniaRow ? $campaniaRow['campania'] : null;
+
+			return $campania;	
 			
 		}else{
 			return json_encode($stmt->errorInfo());			

@@ -585,7 +585,7 @@ class ControladorAgro{
 
         $tabla = 'cultivosplanificacion';
 
-        return ModeloAgro::mdlMostrarDataCultivosPlanificacion($tabla,$idPlanificacion['id']);
+        return ModeloAgro::mdlMostrarDataCultivosPlanificacion($tabla,$idPlanificacion);
 
     }
 

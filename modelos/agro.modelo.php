@@ -283,7 +283,7 @@ class ModeloAgro{
 
 		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE idPlanificacion = :idPlanificacion ORDER BY lote ASC");
 		$stmt -> bindParam(":idPlanificacion", $idPlanificacion, PDO::PARAM_STR);
-
+		
 		$stmt -> execute();
 		
 		return $stmt -> fetchAll();

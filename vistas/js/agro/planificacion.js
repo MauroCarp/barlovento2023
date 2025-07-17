@@ -1,5 +1,6 @@
 const cobertura = ['vicia','triticale','avena','avena cobertura','cebada','vicia-triticale','cebadilla','triticale espinillo','camelina']
 
+
 function calcularSuggestedMax(datos,tipo) {
 
   let max = Math.max(...datos)
@@ -88,7 +89,7 @@ const cargarInfoPlanificacion = (campania,carga)=>{
         }
 
       }
-
+  
       respuesta['cultivos'].forEach(cultivo => {
 
         let costo = (parseInt(cultivo.has) * parseInt(respuesta['costos'][cultivo.cultivo]))
@@ -147,7 +148,7 @@ const cargarInfoPlanificacion = (campania,carga)=>{
 
       data.pichi.costoTotal = data.pichi.fina.costo + data.pichi.cobertura.costo + data.pichi.gruesa.costo
       data.bety.costoTotal = data.bety.fina.costo + data.bety.cobertura.costo + data.bety.gruesa.costo              
-
+      console.log(data)
       // PINTAR DATOS
       $('#totalHasPlanificadas').text(data.bety.hasTotal + data.pichi.hasTotal)
       $('#totalInversionPlanificada').text((data.bety.costoTotal + data.pichi.costoTotal).toLocaleString('de-DE'))
@@ -368,7 +369,7 @@ if(campania && campaniaValida){
   $('#campania').text(campania)
 
   let cargaPlanificacion = $('select[name="cargaPlanificacion"]').val()
-
+  console.log(cargaPlanificacion )
   cargarInfoPlanificacion(campania,cargaPlanificacion)
 
 }

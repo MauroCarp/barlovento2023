@@ -44,6 +44,7 @@ class AjaxAgro{
 
 		$data = array('cultivos'=>$cultivos,'costos'=>$dataCostos,'lotes'=>$lotes);
 
+		// echo json_encode($cultivos);
 		echo json_encode($data);
 
 	}
